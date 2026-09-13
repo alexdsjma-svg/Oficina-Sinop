@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0f172a">
-<meta name="description" content="Oficina Sinop - agenda, fluxo, serviços, tempos e produtividade da oficina">
+<meta name="theme-color" content="#081a47">
+<meta name="description" content="AJC Oficina - Acompanhamento da Jornada do Cliente na Oficina Sinop">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon.svg">
-<link rel="apple-touch-icon" href="icon.svg">
+<link rel="icon" type="image/svg+xml" href="ajc-oficina-icon-v2.svg?v=2">
+<link rel="apple-touch-icon" href="ajc-oficina-icon-v2.svg?v=2">
 <title>AJC Oficina • Jornada do Cliente</title>
 <style>
 :root{--bg:#f3f6fa;--card:#fff;--ink:#0f172a;--muted:#64748b;--line:#dce3ec;--nav:#0f172a;--blue:#2563eb;--blue2:#dbeafe;--green:#16a34a;--green2:#dcfce7;--orange:#d97706;--orange2:#ffedd5;--red:#dc2626;--red2:#fee2e2;--purple:#7c3aed;--purple2:#ede9fe;--shadow:0 4px 14px rgba(15,23,42,.07)}
@@ -332,7 +332,7 @@ main{padding:18px 18px 36px;max-width:1720px}
 </style>
 </head>
 <body>
-<header><div class="header-wrap"><div class="brand"><div class="logo logo-ajc"><img src="icon.svg" alt="AJC Oficina"></div><div><h1>AJC Oficina</h1><small>Acompanhamento da Jornada do Cliente • Oficina Sinop</small></div></div><div class="top-actions"><div class="user-chip" id="userChip"><span>👤</span><div><strong id="currentUserName">Não conectado</strong><div id="currentUserRole">—</div></div></div><button class="btn-light notif-btn" id="notifBtn" onclick="abrirNotificacoes()" title="Notificações">🔔<span id="notifCount" class="notif-count hidden">0</span></button><button class="btn-light" id="installBtn" hidden>Instalar App</button><button class="btn-blue" id="topImportBtn" onclick="switchTab('agenda')">Importar agenda</button><button class="btn-blue" id="topVehicleBtn" onclick="abrirNovoVeiculo()">+ Veículo</button><button class="btn-blue" id="topCheckinBtn" onclick="abrirCheckinRapido()">🚗 Receber cliente</button><button class="btn-light" id="logoutBtn" onclick="logoutUser()">Sair</button></div></div></header>
+<header><div class="header-wrap"><div class="brand"><div class="logo logo-ajc"><img src="ajc-oficina-icon-v2.svg?v=2" alt="AJC Oficina"></div><div><h1>AJC Oficina</h1><small>Acompanhamento da Jornada do Cliente • Oficina Sinop</small></div></div><div class="top-actions"><div class="user-chip" id="userChip"><span>👤</span><div><strong id="currentUserName">Não conectado</strong><div id="currentUserRole">—</div></div></div><button class="btn-light notif-btn" id="notifBtn" onclick="abrirNotificacoes()" title="Notificações">🔔<span id="notifCount" class="notif-count hidden">0</span></button><button class="btn-light" id="installBtn" hidden>Instalar App</button><button class="btn-blue" id="topImportBtn" onclick="switchTab('agenda')">Importar agenda</button><button class="btn-blue" id="topVehicleBtn" onclick="abrirNovoVeiculo()">+ Veículo</button><button class="btn-blue" id="topCheckinBtn" onclick="abrirCheckinRapido()">🚗 Receber cliente</button><button class="btn-light" id="logoutBtn" onclick="logoutUser()">Sair</button></div></div></header>
 <main>
 <nav class="tabs">
 <button class="tab active" data-tab="operacao">Operação</button><button class="tab" data-tab="agenda">Agenda</button><button class="tab" data-tab="filas">Filas</button><button class="tab" data-tab="lavagem">Lavagem</button><button class="tab" data-tab="servicos">Códigos / Tempos</button><button class="tab" data-tab="tratativas">Tratativas</button><button class="tab" data-tab="equipe">Equipe</button><button class="tab" data-tab="painel">Dashboard</button><button class="tab" data-tab="sugestoes">Sugestões de Melhoria</button><button class="tab" data-tab="apresentacao">Apresentação</button><button class="tab" data-tab="acessos">Acessos / Auditoria</button><button class="tab" data-tab="instalar">Instalar</button>
