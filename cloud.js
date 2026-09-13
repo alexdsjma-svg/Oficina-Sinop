@@ -98,8 +98,21 @@
 
   function enc(v){return encodeURIComponent(String(v))}
 
+  async function functionRequest(slug,body,{token}={}){
+    checkConfig();
+    const headers={
+      'apikey':cfg.publishableKey,
+      'Content-Type':'application/json',
+      ...(token?{'Authorization':`Bearer ${token}`}:{})
+    };
+    const res=await fetch(`${cfg.url}/functions/v1/${slug}`,{
+      method:'POST',headers,body:JSON.stringify(body||{})
+    });
+    return parseResponse(res);
+  }
+
   async function fetchProfile(userId){
-    const rows=await restRequest(`profiles?select=user_id,name,role,active&user_id=eq.${enc(userId)}`);
+    const rows=await restRequest(`profiles?select=user_id,name,username,role,active,must_change_password&user_id=eq.${enc(userId)}`);
     return Array.isArray(rows)?rows[0]:null;
   }
 
@@ -108,7 +121,7 @@
     try{
       const u=current();
       if(typeof window.isLeader==='function'&&window.isLeader()){
-        cloud.profiles=(await restRequest('profiles?select=user_id,name,role,active,created_at&order=name.asc'))||[];
+        cloud.profiles=(await restRequest('profiles?select=user_id,name,username,role,active,must_change_password,created_at&order=name.asc'))||[];
       }else cloud.profiles=u?[{user_id:u.id,name:u.name,role:u.role,active:true}]:[];
 
       if(typeof window.isAdmin==='function'&&window.isAdmin()){
@@ -235,7 +248,7 @@
     const p=await fetchProfile(user.id);
     if(!p?.active)throw new Error('Seu acesso ainda não foi liberado pelo administrador.');
     cloud._userId=user.id;
-    setCurrent({id:user.id,name:p.name,role:p.role,email:user.email});
+    setCurrent({id:user.id,name:p.name,username:p.username||'',role:p.role,email:user.email,mustChangePassword:!!p.must_change_password});
     cloud.ready=true;
     if(typeof window.applyAccessUI==='function')window.applyAccessUI();
     await loadAll();
@@ -254,19 +267,19 @@
   }
 
   async function login(){
-    const email=document.querySelector('#loginEmail')?.value.trim();
+    const username=(document.querySelector('#loginUserName')?.value||document.querySelector('#loginEmail')?.value||'').trim();
     const password=document.querySelector('#loginPassword')?.value||'';
-    if(!email||!password){notice('Informe e-mail e senha.');return}
+    if(!username||!password){notice('Informe usuário e senha.');return}
 
     try{
-      const session=await authRequest('/token?grant_type=password',{body:{email,password}});
+      const session=await functionRequest('login-username',{username,password});
       saveSession(session);
       await loadProfile(session.user);
       if(dialog()?.open)dialog().close();
       notice(`Acesso liberado: ${current()?.name||''}`);
     }catch(e){
       console.error('login',e);
-      notice(e.message||'Não foi possível entrar.');
+      notice(e.message||'Usuário ou senha inválidos.');
     }
   }
 
@@ -339,25 +352,37 @@
   }
   function stopPolling(){if(cloud.pollTimer){clearInterval(cloud.pollTimer);cloud.pollTimer=null}}
 
-  async function createInvite(){
-    if(!cloud.ready||!window.isAdmin?.()){notice('Apenas o administrador pode convidar usuários.');return}
-    const email=document.querySelector('#inviteEmail')?.value.trim().toLowerCase();
-    const name=document.querySelector('#inviteName')?.value.trim();
-    const role=document.querySelector('#inviteRole')?.value;
-    if(!email||!name||!role){notice('Preencha nome, e-mail e função.');return}
+  async function createUser(){
+    if(!cloud.ready||!window.isAdmin?.()){notice('Apenas o administrador pode criar usuários.');return}
+    const name=document.querySelector('#newUserName')?.value.trim();
+    const username=document.querySelector('#newUserLogin')?.value.trim().toLowerCase();
+    const password=document.querySelector('#newUserPassword')?.value||'';
+    const role=document.querySelector('#newUserRole')?.value;
+    if(!name||!username||password.length<8||!role){notice('Preencha nome, usuário, função e senha temporária com no mínimo 8 caracteres.');return}
     try{
-      await restRequest('invites?on_conflict=email',{
-        method:'POST',
-        body:{email,name,role,active:true,created_by:cloud._userId},
-        prefer:'resolution=merge-duplicates,return=minimal'
-      });
-      document.querySelector('#inviteEmail').value='';
-      document.querySelector('#inviteName').value='';
+      const s=await ensureSession();
+      await functionRequest('admin-user',{action:'create',name,username,password,role},{token:s.access_token});
+      document.querySelector('#newUserName').value='';
+      document.querySelector('#newUserLogin').value='';
+      document.querySelector('#newUserPassword').value='';
       await refreshDirectory();
-      notice('Acesso liberado. O colaborador já pode criar a conta.');
+      notice(`Usuário ${username} criado com sucesso.`);
     }catch(e){
-      console.error(e);notice(e.message||'Não foi possível criar o convite.');
+      console.error('createUser',e);notice(e.message||'Não foi possível criar o usuário.');
     }
+  }
+
+  async function resetPassword(userId,name){
+    if(!cloud.ready||!window.isAdmin?.())return;
+    const password=prompt(`Nova senha temporária para ${name||'o usuário'} (mínimo 8 caracteres):`);
+    if(password===null)return;
+    if(password.length<8){notice('A senha precisa ter no mínimo 8 caracteres.');return}
+    try{
+      const s=await ensureSession();
+      await functionRequest('admin-user',{action:'reset_password',user_id:userId,password},{token:s.access_token});
+      await refreshDirectory();
+      notice('Senha temporária atualizada.');
+    }catch(e){console.error(e);notice(e.message||'Não foi possível redefinir a senha.');}
   }
 
   async function setProfileActive(userId,active){
@@ -404,7 +429,8 @@
   cloud.queueSync=queueSync;
   cloud.syncNow=syncNow;
   cloud.refreshDirectory=refreshDirectory;
-  cloud.createInvite=createInvite;
+  cloud.createUser=createUser;
+  cloud.resetPassword=resetPassword;
   cloud.setProfileActive=setProfileActive;
   cloud.setProfileRole=setProfileRole;
   window.oficinaCloud=cloud;
