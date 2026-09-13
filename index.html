@@ -169,6 +169,27 @@ function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show'
 let equipe=load('oficinaFlowEquipeV3',DEFAULT_TEAM.map(([name,role])=>({id:uid(),name,role,active:true,pin:'0000'})));
 let veiculos=load('oficinaFlowVeiculos',[]),tratativas=load('oficinaFlowTratativas',[]),catalogo=load('oficinaFlowCatalogoV3',[]),monthClosures=load('oficinaFlowMonthClosuresV5',{}),presentationConfig=load('oficinaFlowPresentationConfigV5',{unidade:'Cometa Hyundai • Sinop/MT',titulo:'Fechamento Mensal do Pós-Vendas',responsavel:'Gerência de Pós-Vendas'}),sugestoes=load('oficinaFlowSugestoesV6',[]),auditLog=load('oficinaFlowAuditV6',[]),securityConfig=load('oficinaFlowSecurityV6',{adminName:'ALEX JACOB',adminPin:'2026'});
 let currentUser=null,__lastAuditSnapshot=null;
+window.__oficinaGetCurrentUser=()=>currentUser;
+window.__oficinaSetCurrentUser=(u)=>{currentUser=u};
+window.__oficinaCloudGetState=()=>({
+  team:equipe.map(x=>{const y={...x};delete y.pin;return y}),
+  vehicles:[...veiculos],
+  treatments:[...tratativas],
+  catalog:[...catalogo],
+  suggestions:[...sugestoes],
+  closures:Object.entries(monthClosures||{}).map(([id,payload])=>({id,payload})),
+  presentation:[{id:'config',payload:presentationConfig||{}}]
+});
+window.__oficinaCloudApplyState=(groups)=>{
+  if(Array.isArray(groups.team)&&groups.team.length)equipe=groups.team.map(x=>({...x,pin:'0000'}));
+  if(Array.isArray(groups.vehicles))veiculos=groups.vehicles;
+  if(Array.isArray(groups.treatments))tratativas=groups.treatments;
+  if(Array.isArray(groups.catalog))catalogo=groups.catalog;
+  if(Array.isArray(groups.suggestions))sugestoes=groups.suggestions;
+  if(groups.closures)monthClosures=groups.closures;
+  if(groups.presentation)presentationConfig=groups.presentation;
+  normalizeData();
+};
 let importRows=[],importHeaders=[],editVehicleId=null,editColabId=null,editOperacaoId=null,activeVehicleServicesId=null,activeHistoryServiceId=null,presSlideIndex=0,presSlides=[];
 const dlgVeiculo=$('#dlgVeiculo'),dlgFila=$('#dlgFila'),dlgImportar=$('#dlgImportar'),dlgColaborador=$('#dlgColaborador'),dlgOperacao=$('#dlgOperacao'),dlgServicos=$('#dlgServicos'),dlgNovoLavagem=$('#dlgNovoLavagem'),dlgLogin=$('#dlgLogin'),dlgSugestaoGestao=$('#dlgSugestaoGestao');
 function normalizeData(){
