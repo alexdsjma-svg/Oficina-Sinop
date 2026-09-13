@@ -150,6 +150,19 @@ body{background:radial-gradient(circle at 10% 0,#dbeafe 0,#f7fbff 30%,#eef2ff 70
 .journey-result.bad{background:#fff1f2;border:1px solid #fda4af;color:#9f1239}
 @media(max-width:800px){.journey-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
+
+/* ===== V8.0 • Boxes e Retrabalho da Lavagem ===== */
+.wash-box-board{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.wash-box-card{border:1px solid #dbe3ee;border-radius:15px;padding:12px;background:#fff;box-shadow:0 6px 18px rgba(15,23,42,.05)}
+.wash-box-card .box-title{font-size:14px;font-weight:1000;color:#0f172a}
+.wash-box-card .box-team{margin-top:5px;font-size:11px;color:#64748b;line-height:1.45}
+.rework-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:999px;background:#fff1f2;border:1px solid #fda4af;color:#9f1239;font-size:9px;font-weight:950}
+.rework-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.rework-options label{display:flex;align-items:flex-start;gap:7px;padding:8px 10px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;font-size:11px;line-height:1.35;cursor:pointer}
+.rework-options label:has(input:checked){background:#fff7ed;border-color:#fdba74;color:#9a3412}
+.rework-options input{margin-top:2px;accent-color:#ea580c}
+@media(max-width:700px){.wash-box-board,.rework-options{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -181,10 +194,10 @@ body{background:radial-gradient(circle at 10% 0,#dbeafe 0,#f7fbff 30%,#eef2ff 70
 </section>
 
 <section id="lavagem" class="panel">
-<div class="section"><div class="section-head"><div><h2>Controle de Lavagem</h2><p>Uma linha por placa, com início, finalização, lavador e duração.</p></div><div class="wash-mode"><button class="btn ghost small active" id="lavModoDiario" onclick="setLavagemModo('diario')">Diário</button><button class="btn ghost small" id="lavModoMensal" onclick="setLavagemModo('mensal')">Mensal</button><button class="btn purple small" onclick="abrirVeiculoNovoLavagem()">+ Veículo Novo</button></div></div></div>
+<div class="section"><div class="section-head"><div><h2>Controle de Lavagem</h2><p>Uma linha por placa, com início, finalização, equipe, box e duração.</p></div><div class="wash-mode"><button class="btn ghost small active" id="lavModoDiario" onclick="setLavagemModo('diario')">Diário</button><button class="btn ghost small" id="lavModoMensal" onclick="setLavagemModo('mensal')">Mensal</button><button class="btn purple small" onclick="abrirVeiculoNovoLavagem()">+ Veículo Novo</button></div></div></div>
 <div id="lavagemDiario">
-<div class="stats"><div class="stat"><div class="label">Na lavagem do dia</div><div class="n" id="lavQtdDia">0</div><div class="sub">placas + novos</div></div><div class="stat"><div class="label">Em andamento</div><div class="n" id="lavAtivosDia">0</div></div><div class="stat"><div class="label">Finalizados</div><div class="n" id="lavFinalDia">0</div></div><div class="stat"><div class="label">Veículos novos</div><div class="n" id="lavNovosDia">0</div><div class="sub">finalizados</div></div><div class="stat"><div class="label">Tempo médio</div><div class="n" id="lavMediaDia">0 min</div><div class="sub">finalizados</div></div><div class="stat"><div class="label">Total no mês</div><div class="n" id="lavTotalMesCard">0</div><div class="sub">finalizados</div></div></div>
-<div class="section"><div class="section-head"><div><h2>Lavagens do dia</h2><p>A placa vira o botão visual do veículo. Veículo Novo recebe identificação automática.</p></div><div class="toolbar"><div class="field"><label>Data</label><input type="date" id="lavData"></div><button class="btn purple" onclick="abrirVeiculoNovoLavagem()">+ Veículo Novo</button></div></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Placa / Identificação</th><th>Tipo</th><th>Cliente / Veículo</th><th>Lavador</th><th>Início</th><th>Finalização</th><th>Tempo</th><th>Status</th><th>Ações</th></tr></thead><tbody id="lavagemDiaBody"></tbody></table></div></div>
+<div class="stats"><div class="stat"><div class="label">Na lavagem do dia</div><div class="n" id="lavQtdDia">0</div><div class="sub">placas + novos</div></div><div class="stat"><div class="label">Em andamento</div><div class="n" id="lavAtivosDia">0</div></div><div class="stat"><div class="label">Finalizados</div><div class="n" id="lavFinalDia">0</div></div><div class="stat"><div class="label">Veículos novos</div><div class="n" id="lavNovosDia">0</div><div class="sub">finalizados</div></div><div class="stat"><div class="label">Tempo médio</div><div class="n" id="lavMediaDia">0 min</div><div class="sub">finalizados</div></div><div class="stat"><div class="label">Total no mês</div><div class="n" id="lavTotalMesCard">0</div><div class="sub">finalizados</div></div><div class="stat"><div class="label">Retrabalhos do dia</div><div class="n" id="lavRetrabalhoDia">0</div><div class="sub">retornos ao box</div></div></div>
+<div class="section"><div class="section-head"><div><h2>Lavagens do dia</h2><p>A placa vira o botão visual do veículo. Veículo Novo recebe identificação automática.</p></div><div class="toolbar"><div class="field"><label>Data</label><input type="date" id="lavData"></div><button class="btn purple" onclick="abrirVeiculoNovoLavagem()">+ Veículo Novo</button></div></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Placa / Identificação</th><th>Tipo</th><th>Cliente / Veículo</th><th>Lavador</th><th>Box</th><th>Início</th><th>Finalização</th><th>Tempo</th><th>Status</th><th>Ações</th></tr></thead><tbody id="lavagemDiaBody"></tbody></table></div></div>
 </div>
 <div id="lavagemMensal" class="hidden">
 <div class="stats"><div class="stat"><div class="label">Lavagens no mês</div><div class="n" id="lavMensalTotal">0</div></div><div class="stat"><div class="label">Clientes</div><div class="n" id="lavMensalClientes">0</div></div><div class="stat"><div class="label">Veículos novos</div><div class="n" id="lavMensalNovos">0</div></div><div class="stat"><div class="label">Tempo total</div><div class="n" id="lavMensalTempo">0h</div></div><div class="stat"><div class="label">Tempo médio</div><div class="n" id="lavMensalMedia">0 min</div></div><div class="stat"><div class="label">Dias com lavagem</div><div class="n" id="lavMensalDias">0</div></div></div>
@@ -244,7 +257,7 @@ body{background:radial-gradient(circle at 10% 0,#dbeafe 0,#f7fbff 30%,#eef2ff 70
 <div class="section"><div class="section-head"><div><h2>Auditoria de alterações</h2><p>Registro local de inclusões, edições e exclusões, identificado pelo usuário conectado.</p></div><button class="btn danger small" onclick="limparAuditoria()">Limpar histórico</button></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Data / hora</th><th>Usuário</th><th>Função</th><th>Alterações</th></tr></thead><tbody id="auditBody"></tbody></table></div></div>
 </section>
 <section id="instalar" class="panel"><div class="section"><div class="section-head"><div><h2>Instalar como aplicativo</h2><p>Publique a pasta em um endereço HTTPS para instalar em tablets e celulares.</p></div></div><div class="section-body"><div class="notice"><strong>Android/tablet:</strong> abra o endereço no Chrome ou Edge → menu → Instalar app / Adicionar à tela inicial.<br><strong>iPhone/iPad:</strong> abra no Safari → Compartilhar → Adicionar à Tela de Início.<br><strong>Importante:</strong> esta versão usa autenticação e sincronização central pelo Supabase. O navegador mantém uma cópia local de contingência.</div></div></div></section>
-<div class="footer-note">Oficina Sinop • V7.9 Jornada Automática • login por usuário • SLA por etapa • sincronização Supabase</div>
+<div class="footer-note">Oficina Sinop • V8.0 Lavagem por Box • login por usuário • SLA por etapa • sincronização Supabase</div>
 </main>
 
 
@@ -302,6 +315,39 @@ body{background:radial-gradient(circle at 10% 0,#dbeafe 0,#f7fbff 30%,#eef2ff 70
 
 <dialog id="dlgFila"><div class="modal-head"><h3>Adicionar placa à fila</h3><button class="closex" onclick="dlgFila.close()">×</button></div><div class="modal-body"><div class="form-grid"><div class="field"><label>Tipo</label><select id="filaTipo"><option value="tecnica">Linha técnica</option><option value="lavagem">Lavagem</option></select></div><div class="field"><label>Placa</label><input id="filaPlaca"></div><div class="field"><label>Data</label><input type="date" id="filaData"></div><div class="field"><label>Cliente</label><input id="filaCliente"></div><div class="field"><label>Veículo</label><input id="filaModelo"></div><div class="field full"><label>Relato</label><textarea id="filaRelato"></textarea></div></div></div><div class="modal-footer"><button class="btn secondary" onclick="dlgFila.close()">Cancelar</button><button class="btn warn" onclick="salvarNaFila()">Adicionar prioridade</button></div></dialog>
 
+
+<dialog id="dlgRetrabalhoLavagem">
+  <div class="modal-head"><div><h3>Retrabalho de Lavagem</h3><div class="muted smalltxt">Selecione os pontos que precisam retornar ao box.</div></div><button class="closex" onclick="dlgRetrabalhoLavagem.close()">×</button></div>
+  <div class="modal-body">
+    <input type="hidden" id="retrabalhoLavagemId">
+    <div id="retrabalhoLavagemResumo" class="notice"></div>
+    <div class="field" style="margin-top:12px"><label>Motivos do retrabalho *</label>
+      <div class="rework-options" id="retrabalhoMotivos">
+        <label><input type="checkbox" value="Poeira no console central"> Poeira no console central</label>
+        <label><input type="checkbox" value="Painel empoeirado"> Painel empoeirado</label>
+        <label><input type="checkbox" value="Escorrimento ou marcas nas portas"> Escorrimento / marcas nas portas</label>
+        <label><input type="checkbox" value="Vidros com manchas ou marcas"> Vidros com manchas / marcas</label>
+        <label><input type="checkbox" value="Retrovisores com marcas"> Retrovisores com marcas</label>
+        <label><input type="checkbox" value="Sujeira na parte externa"> Sujeira na parte externa</label>
+        <label><input type="checkbox" value="Rodas ou pneus sujos"> Rodas / pneus sujos</label>
+        <label><input type="checkbox" value="Caixas de roda com sujeira"> Caixas de roda com sujeira</label>
+        <label><input type="checkbox" value="Soleiras ou cantos das portas sujos"> Soleiras / cantos das portas sujos</label>
+        <label><input type="checkbox" value="Bancos ou acabamento interno com sujeira"> Bancos / acabamento interno sujo</label>
+        <label><input type="checkbox" value="Tapetes ou assoalho com sujeira"> Tapetes / assoalho sujos</label>
+        <label><input type="checkbox" value="Porta-malas com sujeira"> Porta-malas com sujeira</label>
+        <label><input type="checkbox" value="Tela multimídia com marcas"> Multimídia com marcas</label>
+        <label><input type="checkbox" value="Maçanetas ou acabamentos com marcas"> Maçanetas / acabamentos com marcas</label>
+        <label><input type="checkbox" value="Resíduo de produto ou cera"> Resíduo de produto / cera</label>
+        <label><input type="checkbox" value="Secagem incompleta ou marcas de água"> Secagem incompleta / marcas de água</label>
+        <label><input type="checkbox" value="Detalhamento insuficiente em frestas"> Frestas / detalhes insuficientes</label>
+        <label><input type="checkbox" value="Outro ponto de acabamento"> Outro ponto de acabamento</label>
+      </div>
+    </div>
+    <div class="field" style="margin-top:12px"><label>Observação complementar</label><textarea id="retrabalhoNota" placeholder="Opcional: detalhe onde foi identificado o problema."></textarea></div>
+  </div>
+  <div class="modal-footer"><button class="btn secondary" onclick="dlgRetrabalhoLavagem.close()">Cancelar</button><button class="btn warn" onclick="confirmarRetrabalhoLavagem()">↩ Enviar para retrabalho</button></div>
+</dialog>
+
 <dialog id="dlgNovoLavagem"><div class="modal-head"><h3>Veículo Novo • Lavagem</h3><button class="closex" onclick="dlgNovoLavagem.close()">×</button></div><div class="modal-body"><div class="form-grid"><div class="field"><label>Data *</label><input type="date" id="nlData"></div><div class="field"><label>Veículo / modelo</label><input id="nlModelo" placeholder="Ex.: CRETA ULTIMATE"></div><div class="field"><label>Identificação / chassi</label><input id="nlIdentificacao" placeholder="Opcional"></div><div class="field"><label>Lavador</label><select id="nlLavador"></select></div><div class="field full"><label>Observação</label><textarea id="nlObs" placeholder="Ex.: preparação para entrega, showroom, estoque..."></textarea></div></div><div class="notice" style="margin-top:10px">O sistema cria automaticamente <strong>VEÍCULO NOVO 01, 02...</strong>, permitindo iniciar, finalizar e contabilizar mesmo sem placa.</div></div><div class="modal-footer"><button class="btn secondary" onclick="dlgNovoLavagem.close()">Cancelar</button><button class="btn purple" onclick="salvarVeiculoNovoLavagem()">Adicionar à lavagem</button></div></dialog>
 
 
@@ -337,6 +383,19 @@ const STAGE_META={
  'Pronto para entrega':{icon:'✅',cls:'sc-delivery'},'Concluído':{icon:'🏁',cls:'sc-done'}
 };
 const CONSULTOR_MAP={kelly:{label:'Kelly',cls:'consultor-kelly',row:'consultor-row-kelly'},tais:{label:'Tais',cls:'consultor-tais',row:'consultor-row-tais'},carla:{label:'Carla',cls:'consultor-carla',row:'consultor-row-carla'},jessica:{label:'Jessica',cls:'consultor-jessica',row:'consultor-row-jessica'},luciane:{label:'Luciane',cls:'consultor-luciane',row:'consultor-row-luciane'}};
+const WASH_BOXES={
+  'Box 1':['ZUSLIMAR ROSAY MOTA PALMA','JHONATAN GOMES DE JESUS FURTADO'],
+  'Box 2':['JAELSON SILVA SOUSA','MAYCON DOUGLAS DE SOUZA SANTOS']
+};
+function washBoxFor(name=''){
+  const n=norm(name);
+  for(const [box,names] of Object.entries(WASH_BOXES)){
+    if(names.some(x=>norm(x)===n||n.includes(norm(x).split(' ')[0])))return box;
+  }
+  return '';
+}
+function washTeamPeople(){return activePeople('LAVADOR')}
+
 
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 function uid(){return (globalThis.crypto&&crypto.randomUUID)?crypto.randomUUID():'id-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2)}
@@ -457,7 +516,7 @@ function normalizeData(){
  });
  catalogo=catalogo.filter(o=>!isCorruptedImportedCatalog(o));
  equipe=equipe.map(x=>Array.isArray(x)?{id:uid(),name:x[0],role:x[1],active:true,pin:'0000'}:{id:x.id||uid(),name:String(x.name||''),role:String(x.role||''),active:x.active!==false,pin:String(x.pin||'0000')});
- veiculos.forEach(v=>{v.services=Array.isArray(v.services)?v.services:[];v.stageLog=Array.isArray(v.stageLog)?v.stageLog:[];v.etapa=v.etapa||'Aguardando chegada';v.prioridadeTecnica=!!v.prioridadeTecnica;v.prioridadeLavagem=!!v.prioridadeLavagem;v.tipoVeiculo=v.tipoVeiculo||'CLIENTE';v.lavador=v.lavador||'';v.washLabel=v.washLabel||'';v.identificacao=v.identificacao||'';v.stageLog.forEach(l=>{l.id=l.id||uid();if(l.stage==='Em lavagem')l.responsible=l.responsible||v.lavador||v.responsavel||''});v.services.forEach(s=>{s.id=s.id||uid();s.events=Array.isArray(s.events)?s.events:[];s.standardMin=Number(s.standardMin||0);s.area=s.area||'TÉCNICA';s.status=serviceState(s)})});
+ veiculos.forEach(v=>{v.services=Array.isArray(v.services)?v.services:[];v.stageLog=Array.isArray(v.stageLog)?v.stageLog:[];v.etapa=v.etapa||'Aguardando chegada';v.prioridadeTecnica=!!v.prioridadeTecnica;v.prioridadeLavagem=!!v.prioridadeLavagem;v.tipoVeiculo=v.tipoVeiculo||'CLIENTE';v.lavador=v.lavador||'';v.washBox=v.washBox||washBoxFor(v.lavador);v.washReworks=Array.isArray(v.washReworks)?v.washReworks:[];v.washReworkPending=!!v.washReworkPending;v.washReworkReasonsPending=Array.isArray(v.washReworkReasonsPending)?v.washReworkReasonsPending:[];v.washReworkNotePending=v.washReworkNotePending||'';v.washLabel=v.washLabel||'';v.identificacao=v.identificacao||'';v.stageLog.forEach(l=>{l.id=l.id||uid();if(l.stage==='Em lavagem')l.responsible=l.responsible||v.lavador||v.responsavel||''});v.services.forEach(s=>{s.id=s.id||uid();s.events=Array.isArray(s.events)?s.events:[];s.standardMin=Number(s.standardMin||0);s.area=s.area||'TÉCNICA';s.status=serviceState(s)})});
  catalogo=catalogo.map(o=>({id:o.id||uid(),code:cleanCode(o.code),description:o.description||'',area:o.area||'TÉCNICA',standardMin:Number(o.standardMin||0)}));
 }
 normalizeData();
@@ -519,7 +578,7 @@ function getOpenStage(v){return [...(v.stageLog||[])].reverse().find(x=>x.stage=
 function stageElapsed(v){const logs=(v.stageLog||[]).filter(x=>x.stage===v.etapa);return logs.reduce((sum,l)=>sum+((l.endAt?new Date(l.endAt):new Date())-new Date(l.startAt)),0)}
 function stageElapsedLog(l){return Math.max(0,new Date(l.endAt)-new Date(l.startAt))}
 function startCurrentStage(id){if(!requireAccess(canManageFlow()))return;const v=getVehicle(id);if(!v||v.etapa==='Concluído')return;if(getOpenStage(v)){toast('Esta etapa já está em andamento');return}v.stageLog.push({id:uid(),stage:v.etapa,startAt:new Date().toISOString(),endAt:null,startedBy:currentUser?.name||''});persist();notificarEtapaConsultora(v,'ETAPA','Seu cliente '+clientePrimeiroNome(v.cliente)+' • '+v.placa+' iniciou '+v.etapa+'.');toast(v.placa+': etapa iniciada')}
-function completeCurrentStage(id){if(!requireAccess(canManageFlow()))return;const v=getVehicle(id);if(!v)return;const open=getOpenStage(v);if(!open){toast('Inicie a etapa antes de concluir');return}open.endAt=new Date().toISOString();open.completedBy=currentUser?.name||'';const i=ETAPAS.indexOf(v.etapa);v.etapa=ETAPAS[Math.min(i+1,ETAPAS.length-1)]||v.etapa;if(v.etapa==='Em linha técnica')v.prioridadeTecnica=false;if(v.etapa==='Em lavagem')v.prioridadeLavagem=false;persist();notificarEtapaConsultora(v,'ETAPA','Seu cliente '+clientePrimeiroNome(v.cliente)+' • '+v.placa+' avançou para '+v.etapa+'.');toast(v.placa+': etapa concluída')}
+function completeCurrentStage(id){if(!requireAccess(canManageFlow()))return;const v=getVehicle(id);if(!v)return;const open=getOpenStage(v);if(!open){toast('Inicie a etapa antes de concluir');return}open.endAt=new Date().toISOString();open.completedBy=currentUser?.name||'';const i=ETAPAS.indexOf(v.etapa);v.etapa=ETAPAS[Math.min(i+1,ETAPAS.length-1)]||v.etapa;if(v.etapa==='Em linha técnica')v.prioridadeTecnica=false;if(v.etapa==='Em lavagem')v.prioridadeLavagem=false;v.washReworkPending=false;v.washReworkReasonsPending=[];v.washReworkNotePending='';persist();notificarEtapaConsultora(v,'ETAPA','Seu cliente '+clientePrimeiroNome(v.cliente)+' • '+v.placa+' avançou para '+v.etapa+'.');toast(v.placa+': etapa concluída')}
 function getAnyOpenStage(v){return [...(v.stageLog||[])].reverse().find(x=>!x.endAt&&!x.voidedAt)}
 function moveToStage(v,target,autoStart=false,action=''){
   const now=new Date().toISOString();
@@ -562,9 +621,59 @@ function washDisplay(v){return v.tipoVeiculo==='NOVO'?(v.washLabel||'VEÍCULO NO
 function washEntriesCompleted(){const out=[];veiculos.forEach(v=>washLogs(v).filter(l=>l.endAt).forEach(l=>out.push({v,log:l,duration:washDuration(l),date:localDateFromDT(l.endAt)})));return out}
 function washEntriesForMonth(month){return washEntriesCompleted().filter(x=>(x.date||'').slice(0,7)===month)}
 function washEntriesForDate(date){return washEntriesCompleted().filter(x=>x.date===date)}
-function atribuirLavador(id,name){const v=getVehicle(id);if(!requireAccess(isAdmin()||isChefe()||isControle()||(isLavador()&&name===currentUser?.name&&(!v?.lavador||v.lavador===currentUser?.name))))return;if(!v)return;v.lavador=name;const open=activeWash(v);if(open)open.responsible=name;persist(false);renderLavagem();renderFilas();renderDashboard()}
-function iniciarLavagem(id){const v=getVehicle(id);if(!requireAccess(canOperateWash(v)))return;if(!v)return;if(activeWash(v)){toast(`${washDisplay(v)} já está em lavagem`);return}if(!v.lavador){toast('Selecione o lavador antes de iniciar');return}const old=getOpenStage(v);if(old)old.endAt=new Date().toISOString();v.etapa='Em lavagem';v.prioridadeLavagem=false;v.stageLog.push({id:uid(),stage:'Em lavagem',startAt:new Date().toISOString(),endAt:null,responsible:v.lavador,startedBy:currentUser?.name||''});persist();toast(`${washDisplay(v)}: lavagem iniciada`)}
+function atribuirLavador(id,name){
+  const v=getVehicle(id);
+  if(!v)return;
+  const allowed=isAdmin()||isChefe()||isControle()||isLavador();
+  if(!requireAccess(allowed,'Somente a equipe de lavagem ou liderança pode definir o responsável.'))return;
+  const person=washTeamPeople().find(p=>p.name===name);
+  if(name&&!person){toast('Selecione somente um colaborador da equipe de lavagem.');renderLavagem();return}
+  v.lavador=name;
+  v.washBox=washBoxFor(name);
+  const open=activeWash(v);
+  if(open){open.responsible=name;open.box=v.washBox}
+  persist(false);renderLavagem();renderFilas();renderDashboard();
+}
+function iniciarLavagem(id){
+  const v=getVehicle(id);
+  if(!requireAccess(canOperateWash(v)))return;
+  if(!v)return;
+  if(activeWash(v)){toast(washDisplay(v)+' já está em lavagem');return}
+  if(!v.lavador){toast('Selecione o lavador antes de iniciar');return}
+  v.washBox=washBoxFor(v.lavador);
+  const old=getAnyOpenStage(v);if(old&&!old.endAt)old.endAt=new Date().toISOString();
+  v.etapa='Em lavagem';v.prioridadeLavagem=false;
+  v.stageLog.push({
+    id:uid(),stage:'Em lavagem',startAt:new Date().toISOString(),endAt:null,
+    responsible:v.lavador,box:v.washBox,startedBy:currentUser?.name||'',
+    isRework:!!v.washReworkPending,reworkReasons:v.washReworkReasonsPending||[],reworkNote:v.washReworkNotePending||''
+  });
+  persist();toast(washDisplay(v)+': lavagem iniciada • '+(v.washBox||'sem box'));
+}
 function finalizarLavagem(id){const v=getVehicle(id);if(!requireAccess(canOperateWash(v)))return;if(!v)return;const log=activeWash(v);if(!log){toast('Inicie a lavagem antes de finalizar');return}log.endAt=new Date().toISOString();log.completedBy=currentUser?.name||'';log.responsible=log.responsible||v.lavador||'';const dur=washDuration(log);if(v.tipoVeiculo==='NOVO'){v.etapa='Concluído';v.completedAt=new Date().toISOString()}else{v.etapa='Pronto para entrega';moveToStage(v,'Pronto para entrega',true,'Lavagem finalizada')}v.prioridadeLavagem=false;persist();notificarEtapaConsultora(v,'ETAPA',v.tipoVeiculo==='NOVO'?'Veículo novo finalizado.':'Seu cliente '+clientePrimeiroNome(v.cliente)+' • '+v.placa+' está pronto para entrega.');toast(washDisplay(v)+' finalizado • '+fmtMin(dur))}
+function abrirRetrabalhoLavagem(id){
+  const v=getVehicle(id);if(!v)return;
+  if(!requireAccess(canOperateWash(v)||canManageFlow(),'Somente a equipe de lavagem ou liderança pode registrar retrabalho.'))return;
+  const last=latestWash(v);
+  if(!last?.endAt){toast('Finalize a lavagem antes de registrar retrabalho.');return}
+  $('#retrabalhoLavagemId').value=id;$('#retrabalhoNota').value='';$('#retrabalhoMotivos input').forEach(x=>x.checked=false);
+  $('#retrabalhoLavagemResumo').innerHTML='<strong>'+esc(washDisplay(v))+'</strong> • '+esc(clientePrimeiroNome(v.cliente))+'<div class="muted smalltxt">Última lavagem: '+fmtDT(last.endAt)+' • '+esc(last.responsible||v.lavador||'—')+' • '+esc(last.box||washBoxFor(last.responsible||v.lavador)||'Sem box')+'</div>';
+  dlgRetrabalhoLavagem.showModal();
+}
+function confirmarRetrabalhoLavagem(){
+  const id=$('#retrabalhoLavagemId').value,v=getVehicle(id);if(!v)return;
+  const reasons=$('#retrabalhoMotivos input:checked').map(x=>x.value),note=$('#retrabalhoNota').value.trim();
+  if(!reasons.length){toast('Selecione pelo menos um motivo do retrabalho.');return}
+  const last=latestWash(v),now=new Date().toISOString();
+  if(last){last.reworkRequestedAt=now;last.reworkRequestedBy=currentUser?.name||'';last.reworkReasons=reasons;last.reworkNote=note}
+  v.washReworks=Array.isArray(v.washReworks)?v.washReworks:[];
+  v.washReworks.push({id:uid(),at:now,by:currentUser?.name||'',reasons,note,previousWashLogId:last?.id||'',previousBox:last?.box||v.washBox||''});
+  v.washReworkPending=true;v.washReworkReasonsPending=reasons;v.washReworkNotePending=note;
+  moveToStage(v,'Aguardando lavagem',true,'Retrabalho lavagem');v.prioridadeLavagem=true;
+  persist();dlgRetrabalhoLavagem.close();renderLavagem();renderFilas();renderOperacao();
+  notificarEtapaConsultora(v,'LAVAGEM','Seu cliente '+clientePrimeiroNome(v.cliente)+' • '+v.placa+' retornou para retrabalho de lavagem.');
+  toast(v.placa+': retrabalho enviado para o box');
+}
 function reabrirLavagem(id){if(!requireAccess(canManageFlow()))return;const v=getVehicle(id);if(!v)return;if(activeWash(v))return;v.etapa='Aguardando lavagem';v.prioridadeLavagem=true;persist();toast(`${washDisplay(v)} retornou à fila de lavagem`)}
 function excluirApontamentoLavagem(id){
   const v=getVehicle(id);
@@ -597,7 +706,49 @@ function nextNewWashLabel(date){return `VEÍCULO NOVO ${String(nextNewWashNumber
 function abrirVeiculoNovoLavagem(){const date=$('#lavData')?.value||selectedDate();$('#nlData').value=date;$('#nlModelo').value='';$('#nlIdentificacao').value='';$('#nlObs').value='';$('#nlLavador').innerHTML='<option value="">Selecionar</option>'+activePeople('LAVADOR').map(p=>`<option>${esc(p.name)}</option>`).join('');dlgNovoLavagem.showModal()}
 function salvarVeiculoNovoLavagem(){if(!requireAccess(isAdmin()||isChefe()||isControle()||isLavador()))return;const data=$('#nlData').value||selectedDate(),n=nextNewWashNumber(data),label=`VEÍCULO NOVO ${String(n).padStart(2,'0')}`,seq=String(n).padStart(2,'0'),internal=`VN${data.replace(/-/g,'')}${seq}`;veiculos.push({id:uid(),data,hora:'',placa:internal,cliente:'',modelo:$('#nlModelo').value.trim(),relato:$('#nlObs').value.trim(),consultor:'',telefone:'',os:'',etapa:'Aguardando lavagem',responsavel:'',prioridadeTecnica:false,prioridadeLavagem:true,services:[],stageLog:[],tipoVeiculo:'NOVO',washLabel:label,identificacao:$('#nlIdentificacao').value.trim(),lavador:$('#nlLavador').value});dlgNovoLavagem.close();$('#lavData').value=data;$('#lavMes').value=data.slice(0,7);persist();switchTab('lavagem');toast(`${label} incluído na lavagem`)}
 function setLavagemModo(mode){const diario=mode==='diario';$('#lavagemDiario').classList.toggle('hidden',!diario);$('#lavagemMensal').classList.toggle('hidden',diario);$('#lavModoDiario').classList.toggle('active',diario);$('#lavModoMensal').classList.toggle('active',!diario);renderLavagem()}
-function renderLavagem(){if(!$('#lavData'))return;const date=$('#lavData').value||selectedDate(),month=$('#lavMes').value||date.slice(0,7),base=veiculos.filter(v=>v.data===date&&(v.prioridadeLavagem||/lavagem/i.test(v.etapa)||washLogs(v).length||v.tipoVeiculo==='NOVO')).filter(v=>!isLavador()||!v.lavador||v.lavador===currentUser?.name).sort((a,b)=>(a.hora||'99:99').localeCompare(b.hora||'99:99')||washDisplay(a).localeCompare(washDisplay(b))),doneDate=washEntriesForDate(date),monthEntries=washEntriesForMonth(month);$('#lavQtdDia').textContent=base.length;$('#lavAtivosDia').textContent=base.filter(v=>!!activeWash(v)).length;$('#lavFinalDia').textContent=doneDate.length;$('#lavNovosDia').textContent=doneDate.filter(x=>x.v.tipoVeiculo==='NOVO').length;$('#lavMediaDia').textContent=doneDate.length?fmtMin(doneDate.reduce((n,x)=>n+x.duration,0)/doneDate.length):'0 min';$('#lavTotalMesCard').textContent=monthEntries.length;const lavadores=isLavador()?[equipe.find(p=>p.name===currentUser?.name)].filter(Boolean):activePeople('LAVADOR');$('#lavagemDiaBody').innerHTML=base.length?base.map(v=>{const active=activeWash(v),last=latestWash(v),done=!!last?.endAt&&!active,status=active?'Em lavagem':done?'Finalizado':'Aguardando',log=active||last,display=washDisplay(v),btnClass=v.tipoVeiculo==='NOVO'?'new':active?'running':done?'done':'',type=v.tipoVeiculo==='NOVO'?'Veículo Novo':'Cliente',info=v.tipoVeiculo==='NOVO'?[v.modelo,v.identificacao].filter(Boolean).join(' • '):[v.cliente,v.modelo].filter(Boolean).join(' • ');return `<tr class="${active?'service-running':done?'':'priority-row'}"><td><button class="plate-btn ${btnClass}" onclick="acaoBotaoPlacaLavagem('${v.id}')" ${done?'disabled':''}>${active?'■ ':done?'✓ ':'▶ '}${esc(display)}</button></td><td><span class="badge ${v.tipoVeiculo==='NOVO'?'purple':'blue'}">${type}</span></td><td>${esc(info||'—')}${v.relato?`<div class="muted smalltxt wrap">${esc(v.relato)}</div>`:''}</td><td><select onchange="atribuirLavador('${v.id}',this.value)" ${done?'disabled':''}><option value="">Selecionar</option>${lavadores.map(p=>`<option ${(v.lavador||log?.responsible)===p.name?'selected':''}>${esc(p.name)}</option>`).join('')}</select></td><td>${log?fmtDT(log.startAt):'—'}</td><td>${last?.endAt?fmtDT(last.endAt):'—'}</td><td><span class="timer big" ${active?`data-wash-vid="${v.id}"`:''}>${log?fmtClock(washDuration(log)):'00:00:00'}</span></td><td><span class="badge ${active?'green':done?'blue':'orange'} wash-status">${status}</span></td><td><div class="row-actions">${!active&&!done?`<button class="btn success small" onclick="iniciarLavagem('${v.id}')">▶ Iniciar</button>`:''}${active?`<button class="btn primary small" onclick="finalizarLavagem('${v.id}')">✓ Finalizar</button>`:''}${done?`<button class="btn ghost small" onclick="reabrirLavagem('${v.id}')">↻ Nova lavagem</button>`:''}${(active||done)?`<button class="btn danger small" onclick="excluirApontamentoLavagem('${v.id}')">Excluir apontamento</button>`:''}${v.tipoVeiculo==='NOVO'&&!active&&!last?`<button class="btn danger small" onclick="excluirVeiculo('${v.id}')">Excluir veículo</button>`:''}</div></td></tr>`}).join(''):'<tr><td colspan="9"><div class="empty">Nenhum veículo na etapa de lavagem nesta data. Use 💧 Aguard. lavagem no fluxo ou + Veículo Novo.</div></td></tr>';const days={};monthEntries.forEach(x=>(days[x.date]??=[]).push(x));const dayRows=Object.entries(days).sort((a,b)=>b[0].localeCompare(a[0]));$('#lavMensalTotal').textContent=monthEntries.length;$('#lavMensalClientes').textContent=monthEntries.filter(x=>x.v.tipoVeiculo!=='NOVO').length;$('#lavMensalNovos').textContent=monthEntries.filter(x=>x.v.tipoVeiculo==='NOVO').length;const totalMonth=monthEntries.reduce((n,x)=>n+x.duration,0);$('#lavMensalTempo').textContent=fmtMin(totalMonth);$('#lavMensalMedia').textContent=monthEntries.length?fmtMin(totalMonth/monthEntries.length):'0 min';$('#lavMensalDias').textContent=dayRows.length;$('#lavagemMesBody').innerHTML=dayRows.length?dayRows.map(([d,arr])=>{const t=arr.reduce((n,x)=>n+x.duration,0);return `<tr><td><strong>${fmtDate(d)}</strong></td><td>${arr.filter(x=>x.v.tipoVeiculo!=='NOVO').length}</td><td>${arr.filter(x=>x.v.tipoVeiculo==='NOVO').length}</td><td><strong>${arr.length}</strong></td><td>${fmtMin(t)}</td><td>${fmtMin(t/arr.length)}</td></tr>`}).join(''):'<tr><td colspan="6"><div class="empty">Nenhuma lavagem finalizada neste mês.</div></td></tr>'}
+function renderLavagem(){
+  if(!$('#lavData'))return;
+  const date=$('#lavData').value||selectedDate(),month=$('#lavMes').value||date.slice(0,7);
+  const base=veiculos.filter(v=>v.data===date&&(v.prioridadeLavagem||/lavagem/i.test(v.etapa)||washLogs(v).length||v.tipoVeiculo==='NOVO'))
+    .filter(v=>!isLavador()||!v.lavador||v.lavador===currentUser?.name)
+    .sort((a,b)=>(a.hora||'99:99').localeCompare(b.hora||'99:99')||washDisplay(a).localeCompare(washDisplay(b)));
+  const doneDate=washEntriesForDate(date),monthEntries=washEntriesForMonth(month);
+  $('#lavQtdDia').textContent=base.length;$('#lavAtivosDia').textContent=base.filter(v=>!!activeWash(v)).length;$('#lavFinalDia').textContent=doneDate.length;
+  $('#lavNovosDia').textContent=doneDate.filter(x=>x.v.tipoVeiculo==='NOVO').length;
+  $('#lavMediaDia').textContent=doneDate.length?fmtMin(doneDate.reduce((n,x)=>n+x.duration,0)/doneDate.length):'0 min';
+  $('#lavTotalMesCard').textContent=monthEntries.length;
+  if($('#lavRetrabalhoDia'))$('#lavRetrabalhoDia').textContent=base.reduce((n,v)=>n+(v.washReworks||[]).filter(r=>localDateFromDT(r.at)===date).length,0);
+  const lavadores=washTeamPeople();
+  const canAssign=isAdmin()||isChefe()||isControle()||isLavador();
+  $('#lavagemDiaBody').innerHTML=base.length?base.map(v=>{
+    const active=activeWash(v),last=latestWash(v),done=!!last?.endAt&&!active,status=active?'Em lavagem':done&&!v.washReworkPending?'Finalizado':v.washReworkPending?'Retrabalho':'Aguardando';
+    const log=active||last,display=washDisplay(v),btnClass=v.tipoVeiculo==='NOVO'?'new':active?'running':done?'done':'',type=v.tipoVeiculo==='NOVO'?'Veículo Novo':'Cliente';
+    const info=v.tipoVeiculo==='NOVO'?[v.modelo,v.identificacao].filter(Boolean).join(' • '):[v.cliente,v.modelo].filter(Boolean).join(' • ');
+    const box=v.washBox||washBoxFor(v.lavador||log?.responsible)||log?.box||'—';
+    return '<tr class="'+(active?'service-running':done&&!v.washReworkPending?'':'priority-row')+'">'+
+      '<td><button class="plate-btn '+btnClass+'" onclick="acaoBotaoPlacaLavagem(\''+v.id+'\')" '+(done&&!v.washReworkPending?'disabled':'')+'>'+(active?'■ ':done&&!v.washReworkPending?'✓ ':'▶ ')+esc(display)+'</button>'+(v.washReworkPending||log?.isRework?'<div style="margin-top:5px"><span class="rework-badge">↩ Retrabalho</span></div>':'')+'</td>'+
+      '<td><span class="badge '+(v.tipoVeiculo==='NOVO'?'purple':'blue')+'">'+type+'</span></td>'+
+      '<td>'+esc(info||'—')+(v.relato?'<div class="muted smalltxt wrap">'+esc(v.relato)+'</div>':'')+'</td>'+
+      '<td><select onchange="atribuirLavador(\''+v.id+'\',this.value)" '+((done&&!v.washReworkPending)||!canAssign?'disabled':'')+'><option value="">Selecionar equipe de lavagem</option>'+lavadores.map(p=>'<option '+((v.lavador||log?.responsible)===p.name?'selected':'')+'>'+esc(p.name)+'</option>').join('')+'</select></td>'+
+      '<td><strong>'+esc(box)+'</strong><div class="muted smalltxt">'+(box==='Box 1'?'Zuslimar / Jhonatan':box==='Box 2'?'Jaelson / Maycon':'')+'</div></td>'+
+      '<td>'+(log?fmtDT(log.startAt):'—')+'</td><td>'+(last?.endAt?fmtDT(last.endAt):'—')+'</td>'+
+      '<td><span class="timer big" '+(active?'data-wash-vid="'+v.id+'"':'')+'>'+(log?fmtClock(washDuration(log)):'00:00:00')+'</span></td>'+
+      '<td><span class="badge '+(active?'green':done&&!v.washReworkPending?'blue':'orange')+' wash-status">'+status+'</span></td>'+
+      '<td><div class="row-actions">'+
+        (!active&&(!done||v.washReworkPending)?'<button class="btn success small" onclick="iniciarLavagem(\''+v.id+'\')">▶ Iniciar</button>':'')+
+        (active?'<button class="btn primary small" onclick="finalizarLavagem(\''+v.id+'\')">✓ Finalizar</button>':'')+
+        (done&&!v.washReworkPending?'<button class="btn warn small" onclick="abrirRetrabalhoLavagem(\''+v.id+'\')">↩ Retrabalho</button>':'')+
+        (done&&!v.washReworkPending?'<button class="btn ghost small" onclick="reabrirLavagem(\''+v.id+'\')">↻ Nova lavagem</button>':'')+
+        ((active||done)?'<button class="btn danger small" onclick="excluirApontamentoLavagem(\''+v.id+'\')">Excluir apontamento</button>':'')+
+        (v.tipoVeiculo==='NOVO'&&!active&&!last?'<button class="btn danger small" onclick="excluirVeiculo(\''+v.id+'\')">Excluir veículo</button>':'')+
+      '</div></td></tr>';
+  }).join(''):'<tr><td colspan="10"><div class="empty">Nenhum veículo na etapa de lavagem nesta data. Use 💧 Aguard. lavagem no fluxo ou + Veículo Novo.</div></td></tr>';
+
+  const days={};monthEntries.forEach(x=>(days[x.date]??=[]).push(x));const dayRows=Object.entries(days).sort((a,b)=>b[0].localeCompare(a[0]));
+  $('#lavMensalTotal').textContent=monthEntries.length;$('#lavMensalClientes').textContent=monthEntries.filter(x=>x.v.tipoVeiculo!=='NOVO').length;$('#lavMensalNovos').textContent=monthEntries.filter(x=>x.v.tipoVeiculo==='NOVO').length;
+  const totalMonth=monthEntries.reduce((n,x)=>n+x.duration,0);$('#lavMensalTempo').textContent=fmtMin(totalMonth);$('#lavMensalMedia').textContent=monthEntries.length?fmtMin(totalMonth/monthEntries.length):'0 min';$('#lavMensalDias').textContent=dayRows.length;
+  $('#lavagemMesBody').innerHTML=dayRows.length?dayRows.map(([d,arr])=>{const t=arr.reduce((n,x)=>n+x.duration,0);return '<tr><td><strong>'+fmtDate(d)+'</strong></td><td>'+arr.filter(x=>x.v.tipoVeiculo!=='NOVO').length+'</td><td>'+arr.filter(x=>x.v.tipoVeiculo==='NOVO').length+'</td><td><strong>'+arr.length+'</strong></td><td>'+fmtMin(t)+'</td><td>'+fmtMin(t/arr.length)+'</td></tr>'}).join(''):'<tr><td colspan="6"><div class="empty">Nenhuma lavagem finalizada neste mês.</div></td></tr>';
+}
 
 
 function serviceState(s){const e=(s.events||[]).slice().sort((a,b)=>new Date(a.at)-new Date(b.at));if(!e.length)return 'Pendente';const t=e[e.length-1].type;return t==='complete'?'Concluído':t==='pause'?'Pausado':t==='paralyze'?'Paralisado':['start','resume','return'].includes(t)?'Em execução':'Pendente'}
@@ -667,17 +818,20 @@ function renderOperacao(){
 }
 function renderAgenda(){renderCarteiraConsultoras();const list=veiculos.filter(v=>v.tipoVeiculo!=='NOVO').sort((a,b)=>(b.data||'').localeCompare(a.data||'')||(a.hora||'99:99').localeCompare(b.hora||'99:99'));$('#agendaBody').innerHTML=list.length?list.map(v=>'<tr class="'+consultorRowClass(v.consultor)+'"><td><button class="plate-link" onclick="abrirDetalheVeiculo(\''+v.id+'\')" title="Ver detalhes e observação">'+esc(v.placa)+'</button></td><td><span class="vehicle-name">'+esc(v.cliente||'—')+'</span></td><td><div class="row-actions"><button class="btn secondary small" onclick="abrirDetalheVeiculo(\''+v.id+'\')">📝 Observação</button><button class="btn ghost small" onclick="editarVeiculo(\''+v.id+'\')">Editar</button><button class="btn danger small" onclick="excluirVeiculo(\''+v.id+'\')">Excluir</button></div></td></tr>').join(''):'<tr><td colspan="3"><div class="empty">Nenhum veículo cadastrado.</div></td></tr>'}
 function abrirLavagemVeiculo(id){
-  if(!requireAccess(canManageFlow()||isLavador()))return;
+  if(!requireAccess(!!currentUser))return;
   const v=getVehicle(id);if(!v)return;
   if(ETAPAS.indexOf(v.etapa)<=ETAPAS.indexOf('Em lavagem'))advanceJourney(v,'Em lavagem','Lavagem');
   v.prioridadeLavagem=false;
-  if($('#lavData'))$('#lavData').value=v.data||selectedDate();
-  if($('#lavMes'))$('#lavMes').value=(v.data||selectedDate()).slice(0,7);
   persist(false);
-  notificarEtapaConsultora(v,'LAVAGEM','Seu cliente '+clientePrimeiroNome(v.cliente)+' • '+v.placa+' entrou em lavagem.');
-  switchTab('lavagem');renderLavagem();toast(v.placa+': lavagem iniciada');
+  notificarEtapaConsultora(v,'LAVAGEM','Seu cliente '+clientePrimeiroNome(v.cliente)+' • '+v.placa+' entrou na etapa de lavagem.');
+  if(canAccessTab('lavagem')){
+    if($('#lavData'))$('#lavData').value=v.data||selectedDate();
+    if($('#lavMes'))$('#lavMes').value=(v.data||selectedDate()).slice(0,7);
+    switchTab('lavagem');renderLavagem();
+  }
+  toast(v.placa+': etapa Lavagem marcada');
 }
-function enviarParaLavagem(id){if(!requireAccess(canManageFlow()||isConsultor()))return;const v=getVehicle(id);if(!v)return;advanceJourney(v,'Aguardando lavagem','Aguardando lavagem');v.prioridadeLavagem=true;persist();notificarEtapaConsultora(v,'LAVAGEM','Seu cliente '+clientePrimeiroNome(v.cliente)+' • '+v.placa+' entrou em Aguardando lavagem.');toast(v.placa+': enviado para fila de lavagem')}
+function enviarParaLavagem(id){if(!requireAccess(!!currentUser))return;const v=getVehicle(id);if(!v)return;advanceJourney(v,'Aguardando lavagem','Aguardando lavagem');v.prioridadeLavagem=true;persist();notificarEtapaConsultora(v,'LAVAGEM','Seu cliente '+clientePrimeiroNome(v.cliente)+' • '+v.placa+' entrou em Aguardando lavagem.');toast(v.placa+': enviado para fila de lavagem')}
 function acionarTecnica(id){
   if(!requireAccess(canManageFlow()||isConsultor()))return;
   const v=getVehicle(id);if(!v)return;
@@ -691,7 +845,7 @@ function acionarTecnica(id){
 function togglePriority(id,type){if(!requireAccess(canManageFlow()))return;const v=getVehicle(id);if(!v)return;if(type==='tecnica'){v.prioridadeTecnica=!v.prioridadeTecnica;if(v.prioridadeTecnica&&!/linha técnica/i.test(v.etapa))v.etapa='Aguardando linha técnica';if(v.prioridadeTecnica)notificarEtapaConsultora(v,'TECNICA','Seu cliente '+clientePrimeiroNome(v.cliente)+' • '+v.placa+' foi sinalizado para a fila técnica.')}else{v.prioridadeLavagem=!v.prioridadeLavagem;if(v.prioridadeLavagem&&!/lavagem/i.test(v.etapa))v.etapa='Aguardando lavagem';if(v.prioridadeLavagem)notificarEtapaConsultora(v,'LAVAGEM','Seu cliente '+clientePrimeiroNome(v.cliente)+' • '+v.placa+' entrou em Aguardando lavagem.')}persist();const marked=type==='tecnica'?v.prioridadeTecnica:v.prioridadeLavagem;toast(v.placa+': prioridade '+(type==='tecnica'?'técnica':'lavagem')+' '+(marked?'marcada':'retirada'))}
 function prioritySort(list,type){const k=type==='tecnica'?'prioridadeTecnica':'prioridadeLavagem';return [...list].sort((a,b)=>(b[k]?1:0)-(a[k]?1:0)||(a.hora||'99:99').localeCompare(b.hora||'99:99'))}
 function renderFilas(){const base=agendaForDate(selectedDate());renderFilaBody('filaTecnicaBody',prioritySort(base.filter(v=>v.prioridadeTecnica||/linha técnica/i.test(v.etapa)),'tecnica'),'tecnica');renderFilaBody('filaLavagemBody',prioritySort(base.filter(v=>v.prioridadeLavagem||/lavagem/i.test(v.etapa)),'lavagem'),'lavagem')}
-function renderFilaBody(id,list,type){const people=activePeople(type==='tecnica'?'TÉCNICO':'LAVADOR');$('#'+id).innerHTML=list.length?list.map(v=>{const open=getOpenStage(v),assigned=type==='tecnica'?(v.services||[]).find(s=>s.technician)?.technician||v.responsavel:(v.lavador||v.responsavel),wash=activeWash(v),washLast=latestWash(v);return `<tr class="${(type==='tecnica'?v.prioridadeTecnica:v.prioridadeLavagem)?'priority-row':''}"><td>${type==='tecnica'?(v.prioridadeTecnica?'<span class="badge orange">⚡ Antecipar</span>':'<span class="badge gray">Normal</span>'):(v.prioridadeLavagem?'<span class="badge purple">💧 Antecipar</span>':'<span class="badge gray">Normal</span>')}</td><td><span class="plate">${esc(v.placa)}</span></td><td>${esc(v.cliente||'—')}<div class="muted smalltxt">${esc(v.modelo||'—')}</div></td><td>${stageBadge(v.etapa)}</td><td><select onchange="${type==='lavagem'?'atribuirLavador':'atribuirFila'}('${v.id}',this.value${type==='lavagem'?'':`, '${type}'`})" ${type==='lavagem'&&washLast?.endAt?'disabled':''}><option value="">Selecionar</option>${people.map(p=>`<option ${assigned===p.name?'selected':''}>${esc(p.name)}</option>`).join('')}</select></td><td>${type==='tecnica'?serviceSummary(v):`<span class="timer" ${wash?`data-wash-vid="${v.id}"`:''}>${wash||washLast?fmtClock(washDuration(wash||washLast)):'—'}</span>`}</td><td><div class="row-actions">${type==='tecnica'?`<button class="btn dark small" onclick="abrirServicos('${v.id}')">Serviços</button><button class="btn ghost small" onclick="togglePriority('${v.id}','tecnica')">Retirar prioridade</button>`:`<button class="btn purple small" onclick="switchTab('lavagem')">Abrir Lavagem</button>${!wash&&!washLast?.endAt?`<button class="btn success small" onclick="iniciarLavagem('${v.id}')">▶ Iniciar</button>`:''}${wash?`<button class="btn primary small" onclick="finalizarLavagem('${v.id}')">✓ Finalizar</button>`:''}`}</div></td></tr>`}).join(''):`<tr><td colspan="7"><div class="empty">Nenhum veículo nesta fila.</div></td></tr>`}
+function renderFilaBody(id,list,type){const people=type==='tecnica'?activePeople('TÉCNICO'):washTeamPeople();$('#'+id).innerHTML=list.length?list.map(v=>{const open=getOpenStage(v),assigned=type==='tecnica'?(v.services||[]).find(s=>s.technician)?.technician||v.responsavel:(v.lavador||v.responsavel),wash=activeWash(v),washLast=latestWash(v);return `<tr class="${(type==='tecnica'?v.prioridadeTecnica:v.prioridadeLavagem)?'priority-row':''}"><td>${type==='tecnica'?(v.prioridadeTecnica?'<span class="badge orange">⚡ Antecipar</span>':'<span class="badge gray">Normal</span>'):(v.prioridadeLavagem?'<span class="badge purple">💧 Antecipar</span>':'<span class="badge gray">Normal</span>')}</td><td><span class="plate">${esc(v.placa)}</span></td><td>${esc(v.cliente||'—')}<div class="muted smalltxt">${esc(v.modelo||'—')}</div></td><td>${stageBadge(v.etapa)}</td><td><select onchange="${type==='lavagem'?'atribuirLavador':'atribuirFila'}('${v.id}',this.value${type==='lavagem'?'':`, '${type}'`})" ${type==='lavagem'&&washLast?.endAt?'disabled':''}><option value="">Selecionar</option>${people.map(p=>`<option ${assigned===p.name?'selected':''}>${esc(p.name)}</option>`).join('')}</select></td><td>${type==='tecnica'?serviceSummary(v):`<span class="timer" ${wash?`data-wash-vid="${v.id}"`:''}>${wash||washLast?fmtClock(washDuration(wash||washLast)):'—'}</span>`}</td><td><div class="row-actions">${type==='tecnica'?`<button class="btn dark small" onclick="abrirServicos('${v.id}')">Serviços</button><button class="btn ghost small" onclick="togglePriority('${v.id}','tecnica')">Retirar prioridade</button>`:`<button class="btn purple small" onclick="switchTab('lavagem')">Abrir Lavagem</button>${!wash&&!washLast?.endAt?`<button class="btn success small" onclick="iniciarLavagem('${v.id}')">▶ Iniciar</button>`:''}${wash?`<button class="btn primary small" onclick="finalizarLavagem('${v.id}')">✓ Finalizar</button>`:''}`}</div></td></tr>`}).join(''):`<tr><td colspan="7"><div class="empty">Nenhum veículo nesta fila.</div></td></tr>`}
 function atribuirFila(id,name,type){if(!requireAccess(canManageFlow()))return;const v=getVehicle(id);if(!v)return;if(type==='lavagem')v.lavador=name;else v.responsavel=name;if(type==='tecnica'){const pending=(v.services||[]).find(s=>serviceState(s)!=='Concluído');if(pending&&!pending.technician)pending.technician=name}persist();toast(`${v.placa}: responsável atualizado`)}
 
 function abrirNovoVeiculo(){if(!requireAccess(canManageAgenda()))return;editVehicleId=null;$('#dlgVeiculoTitle').textContent='Incluir veículo';$('#vData').value=$('#agendaData').value||selectedDate();$('#vHora').value='';$('#vPlaca').value='';$('#vCliente').value='';$('#vModelo').value='';$('#vTelefone').value='';$('#vConsultor').value='';$('#vOS').value='';$('#vEtapa').value='Aguardando chegada';$('#vCodigos').value='';$('#vRelato').value='';dlgVeiculo.showModal()}
