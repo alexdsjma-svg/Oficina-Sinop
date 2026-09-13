@@ -227,6 +227,12 @@ function isCorruptedImportedVehicle(v={}){
   const badService=(v.services||[]).some(s=>cliente&&norm(s.code)===norm(cliente));
   return badPlate&&(repeated||badTime||badService);
 }
+function isCorruptedImportedCatalog(o={}){
+  const code=String(o.code||'').trim();
+  const desc=norm(o.description||'');
+  if(!desc.includes('importado da agenda'))return false;
+  return isGenerationText(code)||(code.includes(' ')&&code.length>16);
+}
 
 function consultorKey(name=''){const n=norm(name);for(const k of Object.keys(CONSULTOR_MAP))if(n.includes(k))return k;return ''}
 function consultorBadge(name=''){const k=consultorKey(name),m=CONSULTOR_MAP[k];return m?'<span class="consultor-badge '+m.cls+'">'+esc(m.label)+'</span>':(name?'<span class="consultor-badge consultor-default">'+esc(name)+'</span>':'<span class="muted smalltxt">Sem consultora</span>')}
@@ -277,6 +283,7 @@ let importRows=[],importHeaders=[],editVehicleId=null,editColabId=null,editOpera
 const dlgVeiculo=$('#dlgVeiculo'),dlgFila=$('#dlgFila'),dlgImportar=$('#dlgImportar'),dlgColaborador=$('#dlgColaborador'),dlgOperacao=$('#dlgOperacao'),dlgServicos=$('#dlgServicos'),dlgNovoLavagem=$('#dlgNovoLavagem'),dlgLogin=$('#dlgLogin'),dlgSugestaoGestao=$('#dlgSugestaoGestao');
 function normalizeData(){
  veiculos=veiculos.filter(v=>!isCorruptedImportedVehicle(v));
+ catalogo=catalogo.filter(o=>!isCorruptedImportedCatalog(o));
  equipe=equipe.map(x=>Array.isArray(x)?{id:uid(),name:x[0],role:x[1],active:true,pin:'0000'}:{id:x.id||uid(),name:String(x.name||''),role:String(x.role||''),active:x.active!==false,pin:String(x.pin||'0000')});
  veiculos.forEach(v=>{v.services=Array.isArray(v.services)?v.services:[];v.stageLog=Array.isArray(v.stageLog)?v.stageLog:[];v.etapa=v.etapa||'Aguardando chegada';v.prioridadeTecnica=!!v.prioridadeTecnica;v.prioridadeLavagem=!!v.prioridadeLavagem;v.tipoVeiculo=v.tipoVeiculo||'CLIENTE';v.lavador=v.lavador||'';v.washLabel=v.washLabel||'';v.identificacao=v.identificacao||'';v.stageLog.forEach(l=>{l.id=l.id||uid();if(l.stage==='Em lavagem')l.responsible=l.responsible||v.lavador||v.responsavel||''});v.services.forEach(s=>{s.id=s.id||uid();s.events=Array.isArray(s.events)?s.events:[];s.standardMin=Number(s.standardMin||0);s.area=s.area||'TÉCNICA';s.status=serviceState(s)})});
  catalogo=catalogo.map(o=>({id:o.id||uid(),code:cleanCode(o.code),description:o.description||'',area:o.area||'TÉCNICA',standardMin:Number(o.standardMin||0)}));
