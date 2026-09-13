@@ -1,10 +1,10 @@
 {
   "id": "./",
-  "name": "Oficina Sinop V9 Premium",
-  "short_name": "Oficina Sinop",
-  "description": "Gestão visual da oficina com jornada do cliente, lavagem por box, retrabalho, indicadores e design V9 Premium.",
+  "name": "AJC Oficina",
+  "short_name": "AJC Oficina",
+  "description": "Acompanhamento da Jornada do Cliente na Oficina Sinop, com operação, lavagem, tempos, indicadores e gestão.",
   "lang": "pt-BR",
-  "start_url": "./index.html",
+  "start_url": "./index.html?v=9.1",
   "scope": "./",
   "display": "standalone",
   "display_override": [
@@ -13,8 +13,8 @@
     "minimal-ui"
   ],
   "orientation": "any",
-  "background_color": "#eaf1fb",
-  "theme_color": "#0c1c3b",
+  "background_color": "#081a47",
+  "theme_color": "#081a47",
   "categories": [
     "business",
     "productivity"
