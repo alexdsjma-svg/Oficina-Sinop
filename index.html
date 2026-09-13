@@ -489,13 +489,138 @@ async function exportarPowerPoint(){renderPresentation();const month=$('#presMes
 
 const synonyms={placa:['placa','plate','veiculoplaca'],cliente:['cliente','nomecliente','proprietario','nome'],modelo:['veiculo','modelo','carro','modeloveiculo','descricaoveiculo'],hora:['hora','horario','horarioagendamento','agendamento','horaagenda'],relato:['relato','observacao','observacoes','solicitacao','solicitacoes','queixa','motivo','comentario','comentarios','descricao'],consultor:['consultor','consultora','consultortecnico','consultoratecnica','responsavel'],telefone:['telefone','celular','fone','whatsapp','contato'],os:['os','ordemdeservico','ordemservico','numeroos'],data:['data','dataagendamento','dia'],codigos:['codigo','codigos','codigoservico','codigosdeservico','codigodeoperacao','codigosdeoperacao','operacao','operacoes','op','servicos']};
 function guessHeader(field,headers){const syn=synonyms[field]||[];return headers.find(h=>syn.includes(norm(h)))||headers.find(h=>syn.some(s=>norm(h).includes(s)))||''}
-function lerArquivoAgenda(){const file=$('#agendaFile').files[0];if(!file){toast('Selecione uma planilha');return}const ext=file.name.split('.').pop().toLowerCase(),reader=new FileReader();reader.onload=e=>{try{if(['csv','txt'].includes(ext))parseCSV(String(e.target.result));else{if(typeof XLSX==='undefined'){toast('Para XLSX conecte o aparelho à internet ou use CSV.');return}const wb=XLSX.read(e.target.result,{type:'array',cellDates:true}),ws=wb.Sheets[wb.SheetNames[0]];importRows=XLSX.utils.sheet_to_json(ws,{defval:'',raw:false});prepareImport()}}catch(err){console.error(err);toast('Não foi possível ler a planilha')}};['csv','txt'].includes(ext)?reader.readAsText(file,'UTF-8'):reader.readAsArrayBuffer(file)}
-function parseCSV(text){const lines=text.replace(/^\uFEFF/,'').split(/\r?\n/).filter(x=>x.trim());if(!lines.length){toast('Arquivo vazio');return}const delimiter=(lines[0].match(/;/g)||[]).length>=(lines[0].match(/,/g)||[]).length?';':',';const parse=line=>{let out=[],cur='',q=false;for(let i=0;i<line.length;i++){const c=line[i];if(c==='"'){if(q&&line[i+1]==='"'){cur+='"';i++}else q=!q}else if(c===delimiter&&!q){out.push(cur.trim());cur=''}else cur+=c}out.push(cur.trim());return out};const h=parse(lines[0]);importRows=lines.slice(1).map(l=>{const a=parse(l),o={};h.forEach((k,i)=>o[k]=a[i]??'');return o});prepareImport()}
-function prepareImport(){if(!importRows.length){toast('Nenhuma linha encontrada');return}importHeaders=[...new Set(importRows.flatMap(r=>Object.keys(r)))];const fields=[['placa','Placa *'],['cliente','Cliente'],['modelo','Veículo / Modelo'],['hora','Horário'],['relato','Relato / Observação'],['codigos','Códigos de serviço / operação'],['consultor','Consultor'],['telefone','Telefone'],['os','OS'],['data','Data']];$('#mappingFields').innerHTML=fields.map(([f,l])=>`<div class="field"><label>${l}</label><select id="map_${f}"><option value="">Não importar</option>${importHeaders.map(h=>`<option value="${esc(h)}" ${guessHeader(f,importHeaders)===h?'selected':''}>${esc(h)}</option>`).join('')}</select></div>`).join('');const prev=importRows.slice(0,6);$('#importPreview').innerHTML=`<table><thead><tr>${importHeaders.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${prev.map(r=>`<tr>${importHeaders.map(h=>`<td>${esc(r[h])}</td>`).join('')}</tr>`).join('')}</tbody></table>`;dlgImportar.showModal()}
+
+function fixedAgendaHeader(row=[]){
+  return norm(row[0]).includes('cliente')&&
+         norm(row[1]).includes('placa')&&
+         norm(row[3]).includes('modelo')&&
+         norm(row[4]).includes('consultor')&&
+         norm(row[5]).includes('observ');
+}
+
+function rowsFromFixedAgendaMatrix(matrix=[]){
+  const rows=(matrix||[]).filter(r=>Array.isArray(r)&&r.some(v=>String(v??'').trim()!==''));
+  if(!rows.length)return [];
+  const hasHeader=fixedAgendaHeader(rows[0]);
+  if(!hasHeader)return [];
+  return rows.slice(1).map(r=>({
+    'Cliente':String(r[0]??'').trim(),
+    'Placa':String(r[1]??'').trim(),
+    'Modelo':String(r[3]??'').trim(),
+    'Consultor Técnico':String(r[4]??'').trim(),
+    'Observações':String(r[5]??'').trim()
+  })).filter(r=>r.Cliente||r.Placa||r.Modelo||r['Consultor Técnico']||r['Observações']);
+}
+
+function lerArquivoAgenda(){
+  const file=$('#agendaFile').files[0];
+  if(!file){toast('Selecione uma planilha');return}
+  const ext=file.name.split('.').pop().toLowerCase(),reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      if(['csv','txt'].includes(ext)){
+        parseCSV(String(e.target.result));
+      }else{
+        if(typeof XLSX==='undefined'){toast('Para XLSX conecte o aparelho à internet ou use CSV.');return}
+        const wb=XLSX.read(e.target.result,{type:'array',cellDates:true}),ws=wb.Sheets[wb.SheetNames[0]];
+        const matrix=XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:false});
+        const fixed=rowsFromFixedAgendaMatrix(matrix);
+        if(fixed.length){
+          importRows=fixed;
+          prepareImport(true);
+          toast('Padrão reconhecido: Cliente • Placa • Modelo • Consultor Técnico • Observações');
+        }else{
+          importRows=XLSX.utils.sheet_to_json(ws,{defval:'',raw:false});
+          prepareImport(false);
+        }
+      }
+    }catch(err){console.error(err);toast('Não foi possível ler a planilha')}
+  };
+  ['csv','txt'].includes(ext)?reader.readAsText(file,'UTF-8'):reader.readAsArrayBuffer(file);
+}
+
+function parseCSV(text){
+  const lines=text.replace(/^\uFEFF/,'').split(/\r?\n/).filter(x=>x.trim());
+  if(!lines.length){toast('Arquivo vazio');return}
+  const delimiter=(lines[0].match(/;/g)||[]).length>=(lines[0].match(/,/g)||[]).length?';':',';
+  const parse=line=>{
+    let out=[],cur='',q=false;
+    for(let i=0;i<line.length;i++){
+      const ch=line[i];
+      if(ch==='"'){
+        if(q&&line[i+1]==='"'){cur+='"';i++}else q=!q;
+      }else if(ch===delimiter&&!q){out.push(cur.trim());cur=''}
+      else cur+=ch;
+    }
+    out.push(cur.trim());return out;
+  };
+  const matrix=lines.map(parse),fixed=rowsFromFixedAgendaMatrix(matrix);
+  if(fixed.length){
+    importRows=fixed;
+    prepareImport(true);
+    toast('Padrão reconhecido: Cliente • Placa • Modelo • Consultor Técnico • Observações');
+    return;
+  }
+  const h=matrix[0];
+  importRows=matrix.slice(1).map(a=>{const o={};h.forEach((k,i)=>o[k]=a[i]??'');return o});
+  prepareImport(false);
+}
+
+function prepareImport(fixedMode=false){
+  if(!importRows.length){toast('Nenhuma linha encontrada');return}
+  importHeaders=[...new Set(importRows.flatMap(r=>Object.keys(r)))];
+  const fields=[['placa','Placa *'],['cliente','Cliente'],['modelo','Veículo / Modelo'],['hora','Horário'],['relato','Relato / Observação'],['codigos','Códigos de serviço / operação'],['consultor','Consultor'],['telefone','Telefone'],['os','OS'],['data','Data']];
+  const fixedMap={placa:'Placa',cliente:'Cliente',modelo:'Modelo',relato:'Observações',consultor:'Consultor Técnico',hora:'',codigos:'',telefone:'',os:'',data:''};
+  $('#mappingFields').innerHTML=fields.map(([f,l])=>{
+    const selected=fixedMode?(fixedMap[f]||''):guessHeader(f,importHeaders);
+    return '<div class="field"><label>'+l+'</label><select id="map_'+f+'"><option value="">Não importar</option>'+importHeaders.map(h=>'<option value="'+esc(h)+'" '+(selected===h?'selected':'')+'>'+esc(h)+'</option>').join('')+'</select></div>';
+  }).join('');
+  const prev=importRows.slice(0,6);
+  $('#importPreview').innerHTML='<table><thead><tr>'+importHeaders.map(h=>'<th>'+esc(h)+'</th>').join('')+'</tr></thead><tbody>'+prev.map(r=>'<tr>'+importHeaders.map(h=>'<td>'+esc(r[h])+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+  dlgImportar.showModal();
+}
+
 function parseImportedDate(v,fallback){if(!v)return fallback;const s=String(v).trim();let m=s.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})$/);if(m){let y=m[3].length===2?'20'+m[3]:m[3];return `${y}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`}m=s.match(/^(\d{4})[\/\-.](\d{1,2})[\/\-.](\d{1,2})/);if(m)return `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;const d=new Date(s);return isNaN(d)?fallback:localISO(d)}
 function parseImportedTime(v){if(!v)return '';const s=String(v).trim();let m=s.match(/(\d{1,2}):(\d{2})/);if(m)return `${m[1].padStart(2,'0')}:${m[2]}`;m=s.match(/^(\d{1,2})[hH](\d{0,2})/);if(m)return `${m[1].padStart(2,'0')}:${(m[2]||'00').padStart(2,'0')}`;return s.slice(0,5)}
-function confirmarImportacao(){if(!requireAccess(isAdmin()||isChefe()||isControle()||isAgendamento()))return;const map={};['placa','cliente','modelo','hora','relato','codigos','consultor','telefone','os','data'].forEach(f=>map[f]=$(`#map_${f}`).value);if(!map.placa){toast('Selecione a coluna da placa');return}const fallback=$('#agendaData').value||tomorrow();let added=0,updated=0,codes=0,ignored=0;for(const r of importRows){const placa=cleanPlate(r[map.placa]);if(!placa){ignored++;continue}const data=parseImportedDate(map.data?r[map.data]:'',fallback),incoming={data,hora:parseImportedTime(map.hora?r[map.hora]:''),placa,cliente:map.cliente?String(r[map.cliente]||'').trim():'',modelo:map.modelo?String(r[map.modelo]||'').trim():'',relato:map.relato?String(r[map.relato]||'').trim():'',consultor:map.consultor?String(r[map.consultor]||'').trim():'',telefone:map.telefone?String(r[map.telefone]||'').trim():'',os:map.os?String(r[map.os]||'').trim():''};let v=veiculos.find(x=>x.data===data&&cleanPlate(x.placa)===placa);if(v){Object.keys(incoming).forEach(k=>{if(incoming[k])v[k]=incoming[k]});updated++}else{v={id:uid(),...incoming,etapa:'Aguardando chegada',responsavel:'',prioridadeTecnica:false,prioridadeLavagem:false,services:[],stageLog:[],tipoVeiculo:'CLIENTE',lavador:''};veiculos.push(v);added++}parseCodes(map.codigos?r[map.codigos]:'').forEach(c=>{if(!v.services.some(s=>norm(s.code)===norm(c))){ensureService(v,c);codes++}})}dlgImportar.close();$('#opData').value=fallback;$('#dashData').value=fallback;$('#lavData').value=fallback;$('#lavMes').value=fallback.slice(0,7);$('#dashMes').value=fallback.slice(0,7);persist();switchTab('operacao');toast(`Agenda: ${added} novos, ${updated} atualizados, ${codes} serviços${ignored?`, ${ignored} ignorados`:''}`)}
-function baixarModeloCSV(){const data='Data;Horario;Placa;Cliente;Veiculo;Relato;CodigosServicos;Consultor;Telefone;OS\n'+`${fmtDate(tomorrow())};08:00;ABC1D23;CLIENTE EXEMPLO;CRETA;Revisão e verificar ruído;COD001|COD002;CONSULTORA;66999999999;`;const blob=new Blob(["\ufeff"+data],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='modelo_agenda_oficina_flow_v3.csv';a.click();URL.revokeObjectURL(a.href)}
+
+function confirmarImportacao(){
+  if(!requireAccess(isAdmin()||isChefe()||isControle()||isAgendamento()))return;
+  const map={};
+  ['placa','cliente','modelo','hora','relato','codigos','consultor','telefone','os','data'].forEach(f=>map[f]=$('#map_'+f).value);
+  if(!map.placa){toast('Selecione a coluna da placa');return}
+  const fallback=$('#agendaData').value||tomorrow();
+  let added=0,updated=0,codes=0,ignored=0;
+  for(const r of importRows){
+    const placa=cleanPlate(r[map.placa]);
+    if(!placa){ignored++;continue}
+    const data=parseImportedDate(map.data?r[map.data]:'',fallback);
+    const incoming={
+      data,
+      hora:parseImportedTime(map.hora?r[map.hora]:''),
+      placa,
+      cliente:map.cliente?String(r[map.cliente]||'').trim():'',
+      modelo:map.modelo?String(r[map.modelo]||'').trim():'',
+      relato:map.relato?String(r[map.relato]||'').trim():'',
+      consultor:map.consultor?String(r[map.consultor]||'').trim():'',
+      telefone:map.telefone?String(r[map.telefone]||'').trim():'',
+      os:map.os?String(r[map.os]||'').trim():''
+    };
+    let v=veiculos.find(x=>x.data===data&&cleanPlate(x.placa)===placa);
+    if(v){Object.keys(incoming).forEach(k=>{if(incoming[k])v[k]=incoming[k]});updated++}
+    else{v={id:uid(),...incoming,etapa:'Aguardando chegada',responsavel:'',prioridadeTecnica:false,prioridadeLavagem:false,services:[],stageLog:[],tipoVeiculo:'CLIENTE',lavador:''};veiculos.push(v);added++}
+    parseCodes(map.codigos?r[map.codigos]:'').forEach(code=>{if(!v.services.some(s=>norm(s.code)===norm(code))){ensureService(v,code);codes++}});
+  }
+  dlgImportar.close();
+  $('#opData').value=fallback;$('#dashData').value=fallback;$('#lavData').value=fallback;$('#lavMes').value=fallback.slice(0,7);$('#dashMes').value=fallback.slice(0,7);
+  persist();switchTab('operacao');
+  toast(`Agenda: ${added} novos, ${updated} atualizados${ignored?', '+ignored+' ignorados':''}`);
+}
+
+function baixarModeloCSV(){
+  const data='Cliente;Placa;;Modelo;Consultor Técnico;Observações\nCLIENTE EXEMPLO;ABC1D23;;CRETA;Kelly;Revisão e verificar ruído';
+  const blob=new Blob(["\ufeff"+data],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download='modelo_agenda_oficina_sinop_v7.csv';a.click();URL.revokeObjectURL(a.href);
+}
 
 function fillSelects(){const cfv=$('#opConsultor')?.value||'';const et=$('#opEtapa'),cur=et.value;et.innerHTML='<option value="">Todas</option>'+ETAPAS.map(x=>`<option>${esc(x)}</option>`).join('');et.value=cur;if($('#opConsultor'))$('#opConsultor').value=cfv;$('#vEtapa').innerHTML=ETAPAS.map(x=>`<option>${esc(x)}</option>`).join('');const plates=[...veiculos].sort((a,b)=>(b.data||'').localeCompare(a.data||'')).map(v=>`<option value="${esc(v.placa)}">${esc(v.placa)} — ${esc(v.cliente||v.modelo||'')}</option>`).join('');const tp=$('#tPlaca'),tpv=tp.value;tp.innerHTML='<option value="">Sem placa</option>'+plates;if([...tp.options].some(o=>o.value===tpv))tp.value=tpv;const tr=$('#tResponsavel'),trv=tr.value;tr.innerHTML='<option value="">Selecionar</option>'+activePeople().map(p=>`<option>${esc(p.name)}</option>`).join('');if([...tr.options].some(o=>o.value===trv))tr.value=trv;const ar=getAreas(),ta=$('#tArea'),fav=$('#fArea').value,tav=ta.value;ta.innerHTML='<option value="">Selecionar</option>'+ar.map(a=>`<option>${esc(a)}</option>`).join('');if([...ta.options].some(o=>o.value===tav))ta.value=tav;$('#fArea').innerHTML='<option value="">Todas</option>'+ar.map(a=>`<option>${esc(a)}</option>`).join('');$('#fArea').value=fav;if($('#sugArea')){const sv=$('#sugArea').value;$('#sugArea').innerHTML=ar.map(a=>`<option>${esc(a)}</option>`).join('');if([...$('#sugArea').options].some(o=>o.value===sv))$('#sugArea').value=sv;else if(currentUser?.role&&[...$('#sugArea').options].some(o=>o.value===currentUser.role))$('#sugArea').value=currentUser.role}}
 function criarSugestao(){if(!currentUser)return;const title=$('#sugTitulo').value.trim(),description=$('#sugDescricao').value.trim();if(!title||!description){toast('Informe o título e a descrição da melhoria');return}sugestoes.push({id:uid(),author:currentUser.name,role:currentUser.role,area:$('#sugArea').value||currentUser.role,title,description,benefit:$('#sugBeneficio').value.trim(),status:'Nova',managementResponse:'',createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()});$('#sugTitulo').value='';$('#sugDescricao').value='';$('#sugBeneficio').value='';persist();toast('Sugestão de melhoria registrada')}
