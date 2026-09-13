@@ -1,5 +1,5 @@
-const CACHE = 'oficina-sinop-v6-2026-09-13';
-const CORE = ['./','./index.html','./manifest.json','./icon.svg'];
+const CACHE = 'oficina-sinop-v6-cloud-2026-09-13';
+const CORE = ['./','./index.html','./manifest.json','./icon.svg','./supabase-config.js','./cloud.js'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(CORE)).then(() => self.skipWaiting()));
 });
