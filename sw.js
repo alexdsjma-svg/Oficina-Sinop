@@ -1,5 +1,5 @@
-const CACHE = 'ajc-oficina-v9-4-sync-2026-09-13';
-const CORE = ['./','./index.html','./manifest.json','./ajc-oficina-icon-v3.svg','./supabase-config.js','./cloud.js'];
+const CACHE = 'ajc-oficina-v10-neon-2026-09-13';
+const CORE = ['./','./index.html','./manifest.json','./ajc-icon-v10.svg','./ajc-banner-v10.svg','./ajc-splash-v10.svg','./supabase-config.js','./cloud.js'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(CORE)).then(() => self.skipWaiting()));
 });
