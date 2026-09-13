@@ -8,7 +8,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg">
 <link rel="apple-touch-icon" href="icon.svg">
-<title>Oficina Sinop V6</title>
+<title>Oficina Sinop • V9 Premium</title>
 <style>
 :root{--bg:#f3f6fa;--card:#fff;--ink:#0f172a;--muted:#64748b;--line:#dce3ec;--nav:#0f172a;--blue:#2563eb;--blue2:#dbeafe;--green:#16a34a;--green2:#dcfce7;--orange:#d97706;--orange2:#ffedd5;--red:#dc2626;--red2:#fee2e2;--purple:#7c3aed;--purple2:#ede9fe;--shadow:0 4px 14px rgba(15,23,42,.07)}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}
@@ -163,6 +163,169 @@ body{background:radial-gradient(circle at 10% 0,#dbeafe 0,#f7fbff 30%,#eef2ff 70
 .rework-options input{margin-top:2px;accent-color:#ea580c}
 @media(max-width:700px){.wash-box-board,.rework-options{grid-template-columns:1fr}}
 
+/* ===== V9 Premium / Strong Redesign ===== */
+:root{
+  --v9-navy:#0a1733;
+  --v9-blue:#2d6df6;
+  --v9-cyan:#16b8d8;
+  --v9-green:#18b56b;
+  --v9-orange:#f49a1d;
+  --v9-purple:#8a56ff;
+  --v9-red:#eb5a5a;
+  --v9-glass:rgba(255,255,255,.74);
+  --v9-border:rgba(196,211,232,.82);
+}
+body{
+  background:
+    radial-gradient(circle at 0% 0%, rgba(58,123,255,.16), transparent 24%),
+    radial-gradient(circle at 100% 0%, rgba(138,86,255,.14), transparent 22%),
+    radial-gradient(circle at 50% 100%, rgba(24,181,107,.10), transparent 28%),
+    linear-gradient(180deg,#edf3fb 0%,#e7eef8 42%,#eef4fb 100%);
+}
+header{
+  background:
+   radial-gradient(circle at 0% 0%, rgba(77,128,255,.28), transparent 18%),
+   linear-gradient(135deg,#081228 0%, #0c1c3b 42%, #18305f 100%);
+}
+.header-wrap{padding:14px 20px}
+.brand{gap:14px}
+.logo{width:46px;height:46px;font-size:18px}
+.brand h1{font-size:29px;font-weight:1000}
+.brand small{letter-spacing:.02em}
+.user-chip{background:rgba(255,255,255,.10);backdrop-filter:blur(10px)}
+main{padding:18px 18px 36px;max-width:1720px}
+.tabs{
+  top:82px;
+  padding:12px;
+  gap:12px;
+  border-radius:24px;
+  background:linear-gradient(180deg,rgba(255,255,255,.84),rgba(255,255,255,.72));
+  border:1px solid rgba(210,223,241,.92);
+  box-shadow:0 18px 40px rgba(19,39,78,.09);
+}
+.tab{
+  min-height:46px;
+  padding:12px 16px;
+  border-radius:15px;
+  background:linear-gradient(180deg,#ffffff,#f5f8fd);
+  box-shadow:0 8px 20px rgba(26,52,104,.06), inset 0 1px 0 rgba(255,255,255,.8);
+}
+.tab.active{transform:translateY(-2px) scale(1.01)}
+.section,.stat,.perm-card,dialog,.reception-card,.wash-box-card{
+  background:linear-gradient(180deg,rgba(255,255,255,.90),rgba(255,255,255,.78));
+  border:1px solid var(--v9-border);
+  box-shadow:0 18px 44px rgba(18,41,83,.08);
+}
+.section{border-radius:22px}
+.section-head{
+  position:relative;
+  padding:15px 18px;
+  background:linear-gradient(180deg,rgba(255,255,255,.82),rgba(245,249,255,.86));
+}
+.section-head::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:5px;
+  background:linear-gradient(180deg,var(--v9-blue),var(--v9-purple));
+  border-radius:0 8px 8px 0;
+}
+#operacao .section:nth-of-type(1) .section-head::before{background:linear-gradient(180deg,#2d6df6,#16b8d8)}
+#agenda .section:nth-of-type(1) .section-head::before{background:linear-gradient(180deg,#2d6df6,#4a86ff)}
+#filas .section:nth-of-type(1) .section-head::before{background:linear-gradient(180deg,#6b7280,#94a3b8)}
+#lavagem .section:nth-of-type(1) .section-head::before{background:linear-gradient(180deg,#8a56ff,#b989ff)}
+#painel .section:nth-of-type(1) .section-head::before{background:linear-gradient(180deg,#0f172a,#334155)}
+.section-head h2{font-size:19px;font-weight:1000;letter-spacing:-.02em}
+.section-head p{font-size:12px}
+.toolbar{gap:10px}
+.stats{gap:14px}
+.stat{
+  padding:15px 16px;
+  border-radius:20px;
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+.stat:hover,.reception-card:hover,.wash-box-card:hover,.section:hover{box-shadow:0 22px 46px rgba(18,41,83,.12)}
+.stat:hover{transform:translateY(-2px)}
+#operacao .stats .stat:nth-child(1){background:linear-gradient(135deg,rgba(45,109,246,.12),rgba(255,255,255,.88))}
+#operacao .stats .stat:nth-child(2){background:linear-gradient(135deg,rgba(24,181,107,.12),rgba(255,255,255,.88))}
+#operacao .stats .stat:nth-child(3){background:linear-gradient(135deg,rgba(22,184,216,.12),rgba(255,255,255,.88))}
+#operacao .stats .stat:nth-child(4){background:linear-gradient(135deg,rgba(244,154,29,.13),rgba(255,255,255,.88))}
+#operacao .stats .stat:nth-child(5){background:linear-gradient(135deg,rgba(235,90,90,.12),rgba(255,255,255,.88))}
+#operacao .stats .stat:nth-child(6){background:linear-gradient(135deg,rgba(138,86,255,.12),rgba(255,255,255,.88))}
+#lavagem .stats .stat:nth-child(1),#lavagem .stats .stat:nth-child(2){background:linear-gradient(135deg,rgba(138,86,255,.12),rgba(255,255,255,.88))}
+#lavagem .stats .stat:nth-child(3),#lavagem .stats .stat:nth-child(4){background:linear-gradient(135deg,rgba(22,184,216,.12),rgba(255,255,255,.88))}
+#lavagem .stats .stat:nth-child(5),#lavagem .stats .stat:nth-child(6){background:linear-gradient(135deg,rgba(24,181,107,.12),rgba(255,255,255,.88))}
+.stat .label{font-size:10px;letter-spacing:.07em}
+.stat .n{font-size:30px}
+.reception-grid{gap:14px}
+.reception-card,.wash-box-card{
+  border-radius:20px;
+  padding:16px;
+  position:relative;
+  overflow:hidden;
+}
+.reception-card::after,.wash-box-card::after{
+  content:"";position:absolute;right:-28px;bottom:-28px;width:100px;height:100px;border-radius:50%;
+  background:radial-gradient(circle, rgba(45,109,246,.12), rgba(45,109,246,0));
+}
+.stage-board{gap:16px;margin:18px 0 20px}
+.stage-card{
+  min-height:144px;
+  border-radius:22px;
+  box-shadow:0 18px 34px rgba(18,41,83,.18);
+  transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+.stage-card:hover{transform:translateY(-3px);filter:saturate(1.04)}
+.stage-card.active{outline:3px solid rgba(255,255,255,.70);box-shadow:0 24px 40px rgba(18,41,83,.24)}
+.stage-card .stage-label{font-size:12px;font-weight:900}
+.stage-card .stage-count{font-size:38px}
+.stage-card .stage-sub{font-size:12px}
+.field input,.field select,.field textarea{
+  border-radius:14px;
+  min-height:44px;
+  background:linear-gradient(180deg,#ffffff,#f9fbfe);
+}
+.btn{border-radius:14px;font-size:12px;font-weight:900}
+.btn.small{border-radius:12px}
+.btn:hover{box-shadow:0 14px 26px rgba(25,48,96,.14)}
+.notice,.empty,.preview,.filebox{border-radius:16px}
+.table-wrap{
+  border-top:1px solid #e4ecf5;
+  border-radius:0 0 22px 22px;
+  background:linear-gradient(180deg,rgba(255,255,255,.52),rgba(248,251,255,.76));
+}
+.data-table th{top:0}
+.data-table tbody tr{transition:background .15s ease, transform .15s ease}
+.data-table tbody tr:hover{background:#edf5ff}
+.row-actions{gap:6px}
+.plate-btn{padding:8px 11px;border-radius:14px}
+.wash-mode{
+  background:rgba(236,242,251,.75);
+  border:1px solid #d6e0ee;
+  padding:6px;
+  border-radius:16px;
+}
+.wash-mode button{border-radius:12px}
+.footer-note{margin-top:22px;font-size:11px;color:#8192ac}
+#painel .stats .stat,#painel .section{backdrop-filter:blur(10px)}
+#painel .stats .stat:nth-child(1){background:linear-gradient(135deg,rgba(45,109,246,.13),rgba(255,255,255,.88))}
+#painel .stats .stat:nth-child(2){background:linear-gradient(135deg,rgba(24,181,107,.13),rgba(255,255,255,.88))}
+#painel .stats .stat:nth-child(3){background:linear-gradient(135deg,rgba(22,184,216,.13),rgba(255,255,255,.88))}
+#painel .stats .stat:nth-child(4){background:linear-gradient(135deg,rgba(244,154,29,.13),rgba(255,255,255,.88))}
+#painel .stats .stat:nth-child(5){background:linear-gradient(135deg,rgba(235,90,90,.13),rgba(255,255,255,.88))}
+#painel .stats .stat:nth-child(6){background:linear-gradient(135deg,rgba(138,86,255,.13),rgba(255,255,255,.88))}
+.tabs,.top-actions{flex-wrap:nowrap}
+.top-actions{overflow-x:auto;max-width:100%}
+.top-actions::-webkit-scrollbar,.tabs::-webkit-scrollbar{height:8px}
+@media (max-width:980px){
+  .tabs{top:76px}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stage-board{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:640px){
+  .brand h1{font-size:22px}
+  .tabs{padding:10px;gap:10px}
+  .tab{padding:10px 14px}
+  .section-head h2{font-size:17px}
+}
+
 </style>
 </head>
 <body>
@@ -257,7 +420,7 @@ body{background:radial-gradient(circle at 10% 0,#dbeafe 0,#f7fbff 30%,#eef2ff 70
 <div class="section"><div class="section-head"><div><h2>Auditoria de alterações</h2><p>Registro local de inclusões, edições e exclusões, identificado pelo usuário conectado.</p></div><button class="btn danger small" onclick="limparAuditoria()">Limpar histórico</button></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Data / hora</th><th>Usuário</th><th>Função</th><th>Alterações</th></tr></thead><tbody id="auditBody"></tbody></table></div></div>
 </section>
 <section id="instalar" class="panel"><div class="section"><div class="section-head"><div><h2>Instalar como aplicativo</h2><p>Publique a pasta em um endereço HTTPS para instalar em tablets e celulares.</p></div></div><div class="section-body"><div class="notice"><strong>Android/tablet:</strong> abra o endereço no Chrome ou Edge → menu → Instalar app / Adicionar à tela inicial.<br><strong>iPhone/iPad:</strong> abra no Safari → Compartilhar → Adicionar à Tela de Início.<br><strong>Importante:</strong> esta versão usa autenticação e sincronização central pelo Supabase. O navegador mantém uma cópia local de contingência.</div></div></div></section>
-<div class="footer-note">Oficina Sinop • V8.0 Lavagem por Box • login por usuário • SLA por etapa • sincronização Supabase</div>
+<div class="footer-note">Oficina Sinop • V9 Premium • login por usuário • SLA por etapa • sincronização Supabase</div>
 </main>
 
 
