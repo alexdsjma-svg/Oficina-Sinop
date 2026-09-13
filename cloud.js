@@ -1,6 +1,5 @@
 (function(){
   const cfg=window.OFICINA_SUPABASE||{};
-  const api=window.supabase;
   const cloud={client:null,ready:false,applying:false,syncTimer:null,cache:new Map(),profiles:[],invites:[],channel:null};
   const workspace=cfg.workspace||'oficina-sinop';
 
@@ -150,7 +149,8 @@
     const password=document.querySelector('#loginPassword')?.value||'';
     if(!email||!password){notice('Informe e-mail e senha.');return}
     try{
-      const {data,error}=await cloud.client.auth.signInWithPassword({email,password});
+      const client=ensureClient();
+      const {data,error}=await client.auth.signInWithPassword({email,password});
       if(error)throw error;
       await loadProfile(data.user);
       if(loginDialog()?.open)loginDialog().close();
@@ -171,7 +171,8 @@
     try{
       const options={data:{name},emailRedirectTo:location.origin+location.pathname};
       if(adminMode)options.data.bootstrap_code=bootstrap;
-      const {data,error}=await cloud.client.auth.signUp({email,password,options});
+      const client=ensureClient();
+      const {data,error}=await client.auth.signUp({email,password,options});
       if(error)throw error;
       if(data.session&&data.user){
         await loadProfile(data.user);
@@ -187,7 +188,7 @@
   }
 
   async function logout(){
-    try{await cloud.client.auth.signOut()}catch(e){}
+    try{const client=ensureClient();await client.auth.signOut()}catch(e){}
     cloud.ready=false;cloud._userId=null;setCurrent(null);
     if(cloud.channel){try{cloud.client.removeChannel(cloud.channel)}catch(e){} cloud.channel=null;}
     if(typeof window.applyAccessUI==='function')window.applyAccessUI();
@@ -196,7 +197,8 @@
 
   async function restore(){
     try{
-      const {data:{session}}=await cloud.client.auth.getSession();
+      const client=ensureClient();
+      const {data:{session}}=await client.auth.getSession();
       if(session?.user){
         await loadProfile(session.user);
         if(loginDialog()?.open)loginDialog().close();
@@ -245,15 +247,30 @@
     await refreshDirectory();
   }
 
-  function init(){
-    if(!api||!cfg.url||!cfg.publishableKey){
-      console.error('Supabase não configurado');
-      notice('Falha ao carregar a conexão online. Atualize a página.');
-      return;
+  function ensureClient(){
+    if(cloud.client)return cloud.client;
+    const api=window.supabase;
+    if(!api||typeof api.createClient!=='function'){
+      throw new Error('Biblioteca do Supabase não foi carregada. Atualize a página.');
+    }
+    if(!cfg.url||!cfg.publishableKey){
+      throw new Error('Configuração online do Oficina Sinop não foi carregada.');
     }
     cloud.client=api.createClient(cfg.url,cfg.publishableKey,{
       auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
     });
+    return cloud.client;
+  }
+
+  function init(){
+    try{
+      ensureClient();
+      cloud.connectionError=null;
+    }catch(e){
+      cloud.connectionError=e;
+      console.error('Supabase init',e);
+      notice(e.message||'Falha ao carregar a conexão online.');
+    }
     window.addEventListener('online',()=>{if(cloud.ready)syncNow(false).catch(console.error)});
   }
 
