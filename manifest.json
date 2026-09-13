@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "Oficina Sinop V7",
+  "name": "Oficina Sinop V9 Premium",
   "short_name": "Oficina Sinop",
-  "description": "Gestão visual de oficina, SLA por etapa, check-in, consultoras e sincronização online.",
+  "description": "Gestão visual da oficina com jornada do cliente, lavagem por box, retrabalho, indicadores e design V9 Premium.",
   "lang": "pt-BR",
   "start_url": "./index.html",
   "scope": "./",
@@ -13,8 +13,8 @@
     "minimal-ui"
   ],
   "orientation": "any",
-  "background_color": "#f3f6fa",
-  "theme_color": "#0f172a",
+  "background_color": "#eaf1fb",
+  "theme_color": "#0c1c3b",
   "categories": [
     "business",
     "productivity"
