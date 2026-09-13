@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 430">
+<defs>
+ <linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#03102d"/><stop offset=".55" stop-color="#072e78"/><stop offset="1" stop-color="#071a55"/></linearGradient>
+ <linearGradient id="n"><stop stop-color="#12f0ff"/><stop offset=".55" stop-color="#1e78ff"/><stop offset="1" stop-color="#8d3cff"/></linearGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="10" result="x"/><feMerge><feMergeNode in="x"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="1800" height="430" rx="32" fill="url(#b)"/>
+<path d="M0 345 H1800" stroke="#0e73ff" stroke-width="5" opacity=".8"/>
+<g transform="translate(75,50)">
+ <rect width="330" height="330" rx="75" fill="#071744" stroke="url(#n)" stroke-width="8" filter="url(#glow)"/>
+ <path d="M58 120 L165 55 272 120 V275 H58Z" fill="none" stroke="#1feaff" stroke-width="16"/>
+ <path d="M165 40v55M141 52a34 34 0 1 0 48 0" fill="none" stroke="#1feaff" stroke-width="14" stroke-linecap="round"/>
+ <text x="165" y="205" text-anchor="middle" font-family="Arial,sans-serif" font-size="88" font-weight="900" fill="white">AJC</text>
+ <path d="M92 264 Q116 223 147 219 H205 Q235 222 260 264" fill="none" stroke="#19efff" stroke-width="10"/>
+ <path d="M91 272 H250 L268 296 H75Z" fill="#0a62ff" stroke="#20eaff" stroke-width="6"/>
+</g>
+<text x="465" y="205" font-family="Arial,sans-serif" font-size="110" font-weight="900" fill="white">AJC Oficina</text>
+<text x="470" y="282" font-family="Arial,sans-serif" font-size="45" font-weight="500" fill="#c8d7ff">Acompanhamento da Jornada do Cliente</text>
+<path d="M1120 235 C1265 120 1375 250 1530 145 C1610 90 1680 92 1780 135" fill="none" stroke="#14dcff" stroke-width="9" stroke-linecap="round" filter="url(#glow)"/>
+<circle cx="1275" cy="194" r="14" fill="#3affd0"/><circle cx="1540" cy="138" r="14" fill="#3affd0"/>
+<path d="M1225 120c0-42 34-76 76-76s76 34 76 76c0 58-76 130-76 130s-76-72-76-130z" fill="#13eaff" opacity=".95"/>
+<circle cx="1301" cy="120" r="31" fill="#082963"/>
+<g transform="translate(1510,230)" opacity=".9">
+ <path d="M20 90 L75 25 H195 L260 90 H295 Q315 90 315 110 V168 H-5 V110 Q-5 90 20 90Z" fill="#075af5" stroke="#12dfff" stroke-width="6"/>
+ <path d="M90 38 H183 L225 90 H45Z" fill="#0c2d73"/>
+ <path d="M20 120h52M245 120h52" stroke="white" stroke-width="10" stroke-linecap="round"/>
+</g>
+</svg>
