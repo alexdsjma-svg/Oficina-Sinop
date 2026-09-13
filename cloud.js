@@ -5,6 +5,7 @@
   const workspace=cfg.workspace||'oficina-sinop';
 
   function notice(msg){try{window.toast?window.toast(msg):console.log(msg)}catch(e){console.log(msg)}}
+  function loginDialog(){return document.querySelector('#dlgLogin')}
   function key(t,id){return `${t}|${id}`}
   function state(){return window.__oficinaCloudGetState?window.__oficinaCloudGetState():{team:[],vehicles:[],treatments:[],catalog:[],suggestions:[],closures:[],presentation:[]}}
   function current(){return window.__oficinaGetCurrentUser?window.__oficinaGetCurrentUser():null}
@@ -152,7 +153,7 @@
       const {data,error}=await cloud.client.auth.signInWithPassword({email,password});
       if(error)throw error;
       await loadProfile(data.user);
-      if(window.dlgLogin?.open)window.dlgLogin.close();
+      if(loginDialog()?.open)loginDialog().close();
       notice(`Acesso liberado: ${current()?.name||''}`);
     }catch(e){
       console.error('login',e);
@@ -174,7 +175,7 @@
       if(error)throw error;
       if(data.session&&data.user){
         await loadProfile(data.user);
-        if(window.dlgLogin?.open)window.dlgLogin.close();
+        if(loginDialog()?.open)loginDialog().close();
         notice('Conta criada e conectada.');
       }else{
         notice('Conta criada. Confirme o e-mail recebido e depois entre.');
@@ -190,7 +191,7 @@
     cloud.ready=false;cloud._userId=null;setCurrent(null);
     if(cloud.channel){try{cloud.client.removeChannel(cloud.channel)}catch(e){} cloud.channel=null;}
     if(typeof window.applyAccessUI==='function')window.applyAccessUI();
-    if(window.dlgLogin&&!window.dlgLogin.open)window.dlgLogin.showModal();
+    if(loginDialog()&&!loginDialog().open)loginDialog().showModal();
   }
 
   async function restore(){
@@ -198,13 +199,13 @@
       const {data:{session}}=await cloud.client.auth.getSession();
       if(session?.user){
         await loadProfile(session.user);
-        if(window.dlgLogin?.open)window.dlgLogin.close();
+        if(loginDialog()?.open)loginDialog().close();
         return;
       }
     }catch(e){console.error('restore',e)}
     setCurrent(null);
     if(typeof window.applyAccessUI==='function')window.applyAccessUI();
-    if(window.dlgLogin&&!window.dlgLogin.open)window.dlgLogin.showModal();
+    if(loginDialog()&&!loginDialog().open)loginDialog().showModal();
   }
 
   function subscribeRealtime(){
