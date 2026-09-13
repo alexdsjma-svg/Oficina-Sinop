@@ -4,7 +4,7 @@
   "short_name": "AJC Oficina",
   "description": "Acompanhamento da Jornada do Cliente",
   "lang": "pt-BR",
-  "start_url": "./index.html?v=10.1",
+  "start_url": "./index.html?v=10.2",
   "scope": "./",
   "display": "standalone",
   "display_override": [
@@ -21,7 +21,7 @@
   ],
   "icons": [
     {
-      "src": "ajc-icon-v10.svg?v=10.1",
+      "src": "ajc-icon-v10.svg?v=10.2",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
