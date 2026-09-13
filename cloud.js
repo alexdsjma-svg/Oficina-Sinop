@@ -2,7 +2,7 @@
   const cfg=window.OFICINA_SUPABASE||{};
   const cloud={
     ready:false,applying:false,syncTimer:null,pollTimer:null,
-    cache:new Map(),profiles:[],invites:[],session:null,_userId:null
+    cache:new Map(),profiles:[],invites:[],notifications:[],session:null,_userId:null
   };
   const workspace=cfg.workspace||'oficina-sinop';
   const SESSION_KEY='oficinaSupabaseSessionV1';
@@ -244,6 +244,75 @@
     }),500);
   }
 
+  async function refreshNotifications(){
+    if(!cloud.ready)return;
+    try{
+      const username=String(current()?.username||'').trim().toLowerCase();
+      if(!username){cloud.notifications=[];if(typeof window.renderNotifications==='function')window.renderNotifications();return}
+      const data=(await restRequest(
+        'notifications?select=id,recipient_username,vehicle_id,plate,kind,title,message,read_at,created_at&recipient_username=eq.'+enc(username)+'&order=created_at.desc&limit=50'
+      ))||[];
+      const oldIds=new Set(cloud.notifications.map(n=>n.id));
+      cloud.notifications=data;
+      if(typeof window.renderNotifications==='function')window.renderNotifications();
+      const fresh=data.filter(n=>!n.read_at&&!oldIds.has(n.id));
+      if(fresh.length&&typeof Notification!=='undefined'&&Notification.permission==='granted'){
+        fresh.slice(0,3).forEach(n=>{try{new Notification(n.title,{body:n.message,tag:n.id})}catch(e){}});
+      }
+    }catch(e){console.warn('notifications',e)}
+  }
+
+  async function notifyConsultant(vehicle,kind,message){
+    if(!cloud.ready||!vehicle)return;
+    try{
+      const username=window.consultorKey?window.consultorKey(vehicle.consultor):String(vehicle.consultor||'').trim().toLowerCase();
+      if(!username)return;
+      const title=(kind==='CHEGADA'?'Cliente chegou':kind==='LAVAGEM'?'Lavagem':'Atualização do veículo')+' • '+String(vehicle.placa||'');
+      await restRequest('notifications',{
+        method:'POST',
+        body:{
+          recipient_username:username,
+          vehicle_id:String(vehicle.id||''),
+          plate:String(vehicle.placa||''),
+          kind:String(kind||'INFO'),
+          title,
+          message:String(message||''),
+          created_by:cloud._userId
+        },
+        prefer:'return=minimal'
+      });
+      if(username===String(current()?.username||'').toLowerCase())await refreshNotifications();
+    }catch(e){console.warn('notifyConsultant',e)}
+  }
+
+  async function markNotificationRead(id){
+    try{
+      await restRequest('notifications?id=eq.'+enc(id),{
+        method:'PATCH',body:{read_at:new Date().toISOString()},prefer:'return=minimal'
+      });
+      await refreshNotifications();
+    }catch(e){console.warn(e)}
+  }
+
+  async function markAllNotificationsRead(){
+    try{
+      const username=String(current()?.username||'').trim().toLowerCase();
+      if(!username)return;
+      await restRequest('notifications?recipient_username=eq.'+enc(username)+'&read_at=is.null',{
+        method:'PATCH',body:{read_at:new Date().toISOString()},prefer:'return=minimal'
+      });
+      await refreshNotifications();
+    }catch(e){console.warn(e)}
+  }
+
+  async function enableBrowserNotifications(){
+    if(typeof Notification==='undefined'){notice('Este navegador não oferece notificações locais.');return}
+    try{
+      const result=await Notification.requestPermission();
+      notice(result==='granted'?'Notificações do navegador ativadas.':'Permissão de notificação não concedida.');
+    }catch(e){notice('Não foi possível ativar notificações neste navegador.')}
+  }
+
   async function loadProfile(user){
     const p=await fetchProfile(user.id);
     if(!p?.active)throw new Error('Seu acesso ainda não foi liberado pelo administrador.');
@@ -253,6 +322,7 @@
     if(typeof window.applyAccessUI==='function')window.applyAccessUI();
     await loadAll();
     await refreshDirectory();
+    await refreshNotifications();
     startPolling();
     const first=[...document.querySelectorAll('.tab')].find(b=>!b.classList.contains('hidden'));
     if(first&&!document.querySelector('.tab.active:not(.hidden)')&&typeof window.switchTab==='function'){
@@ -316,7 +386,7 @@
     }catch(e){console.warn('logout',e)}
     stopPolling();
     saveSession(null);
-    cloud.ready=false;cloud._userId=null;setCurrent(null);
+    cloud.ready=false;cloud._userId=null;cloud.notifications=[];setCurrent(null);if(typeof window.renderNotifications==='function')window.renderNotifications();
     if(typeof window.applyAccessUI==='function')window.applyAccessUI();
     if(dialog()&&!dialog().open)dialog().showModal();
   }
@@ -347,6 +417,7 @@
     cloud.pollTimer=setInterval(()=>{
       if(cloud.ready&&!cloud.applying){
         loadAll().catch(e=>console.warn('poll',e));
+        refreshNotifications().catch(e=>console.warn('notif poll',e));
       }
     },12000);
   }
@@ -429,6 +500,11 @@
   cloud.queueSync=queueSync;
   cloud.syncNow=syncNow;
   cloud.refreshDirectory=refreshDirectory;
+  cloud.refreshNotifications=refreshNotifications;
+  cloud.notifyConsultant=notifyConsultant;
+  cloud.markNotificationRead=markNotificationRead;
+  cloud.markAllNotificationsRead=markAllNotificationsRead;
+  cloud.enableBrowserNotifications=enableBrowserNotifications;
   cloud.createUser=createUser;
   cloud.resetPassword=resetPassword;
   cloud.setProfileActive=setProfileActive;
