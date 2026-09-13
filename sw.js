@@ -1,4 +1,4 @@
-const CACHE = 'ajc-oficina-v10-1-face-delete-2026-09-13';
+const CACHE = 'ajc-oficina-v10-2-face-2026-09-13';
 const CORE = ['./','./index.html','./manifest.json','./ajc-icon-v10.svg','./ajc-banner-v10.svg','./ajc-splash-v10.svg','./supabase-config.js','./cloud.js'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(CORE)).then(() => self.skipWaiting()));
