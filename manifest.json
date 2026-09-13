@@ -2,9 +2,9 @@
   "id": "./",
   "name": "AJC Oficina",
   "short_name": "AJC Oficina",
-  "description": "Acompanhamento da Jornada do Cliente na Oficina Sinop, com operação, lavagem, tempos, indicadores e gestão.",
+  "description": "Acompanhamento da Jornada do Cliente com operação, tempos, lavagem, qualidade e gestão.",
   "lang": "pt-BR",
-  "start_url": "./index.html?v=9.3",
+  "start_url": "./index.html?v=10",
   "scope": "./",
   "display": "standalone",
   "display_override": [
@@ -13,18 +13,18 @@
     "minimal-ui"
   ],
   "orientation": "any",
-  "background_color": "#081a47",
-  "theme_color": "#081a47",
+  "background_color": "#020d2a",
+  "theme_color": "#061b45",
   "categories": [
     "business",
     "productivity"
   ],
   "icons": [
     {
-      "src": "ajc-oficina-icon-v3.svg?v=3",
+      "src": "ajc-icon-v10.svg?v=10",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }
