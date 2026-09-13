@@ -1,6 +1,5 @@
-// Este arquivo será preenchido automaticamente após conectar/criar o projeto Supabase.
 window.OFICINA_SUPABASE = {
-  url: "",
-  anonKey: "",
+  url: "https://xzrzwuwvrcxsffyarkpa.supabase.co",
+  publishableKey: "sb_publishable_DvNfTFu24PkmYwhbBhHakw_8DwYA4c7",
   workspace: "oficina-sinop"
 };
