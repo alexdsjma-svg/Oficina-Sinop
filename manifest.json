@@ -2,9 +2,9 @@
   "id": "./",
   "name": "AJC Oficina",
   "short_name": "AJC Oficina",
-  "description": "Acompanhamento da Jornada do Cliente",
+  "description": "Acompanhamento da Jornada do Cliente na oficina.",
   "lang": "pt-BR",
-  "start_url": "./index.html?v=10.2",
+  "start_url": "./index.html?v=11",
   "scope": "./",
   "display": "standalone",
   "display_override": [
@@ -21,10 +21,10 @@
   ],
   "icons": [
     {
-      "src": "ajc-icon-v10.svg?v=10.2",
+      "src": "ajc-icon-v11.svg?v=11",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }
