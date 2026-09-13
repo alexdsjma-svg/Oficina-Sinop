@@ -524,10 +524,10 @@ function getAnyOpenStage(v){return [...(v.stageLog||[])].reverse().find(x=>!x.en
 function moveToStage(v,target,autoStart=false,action=''){
   const now=new Date().toISOString();
   const currentOpen=getAnyOpenStage(v);
-  if(v.etapa!==target){
-    if(currentOpen){currentOpen.endAt=now;currentOpen.completedBy=currentUser?.name||'';currentOpen.transitionAction=action||target}
-    v.etapa=target;
+  if(currentOpen&&currentOpen.stage!==target){
+    currentOpen.endAt=now;currentOpen.completedBy=currentUser?.name||'';currentOpen.transitionAction=action||target;
   }
+  if(v.etapa!==target)v.etapa=target;
   if(autoStart&&target!=='Concluído'&&!getOpenStage(v)){
     v.stageLog.push({id:uid(),stage:target,startAt:now,endAt:null,startedBy:currentUser?.name||'',auto:true,action:action||target});
   }
@@ -649,8 +649,8 @@ function renderOperacao(){
     const adminTime=isAdmin()?'<td class="admin-time-col"><span class="timer" data-stage-vid="'+v.id+'">'+fmtClock(stageElapsedNow(v))+'</span></td>':'<td class="admin-time-col hidden"></td>';
     const slaHtml=isAdmin()?slaBadge(v):'';
     const flowButtons=v.etapa==='Concluído'?'':(
-      '<button class="btn dark small" onclick="abrirServicos(\''+v.id+'\')">Serviços</button>'+
       '<button class="btn warn small" onclick="acionarTecnica(\''+v.id+'\')">⚡ Técnica</button>'+
+      '<button class="btn dark small" onclick="abrirServicos(\''+v.id+'\')">Serviços</button>'+
       '<button class="btn small btn-wait-wash" onclick="enviarParaLavagem(\''+v.id+'\')">⏳ Aguard. lavagem</button>'+
       '<button class="btn purple small" onclick="abrirLavagemVeiculo(\''+v.id+'\')">💧 Lavagem</button>'+
       (v.etapa==='Pronto para entrega'?'<button class="btn success small" onclick="concluirAtendimento(\''+v.id+'\')">✅ Entregue</button>':'')
