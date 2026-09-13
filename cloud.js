@@ -188,6 +188,7 @@
 
   async function loadAll(){
     const local=state();
+    if(typeof window.setSyncStatus==='function')window.setSyncStatus('Nuvem: atualizando…','busy');
     const data=(await restRequest(
       `entities?select=entity_type,entity_id,payload,updated_at&workspace=eq.${enc(workspace)}`
     ))||[];
@@ -232,6 +233,11 @@
       if(missing.length&&typeof window.isAdmin==='function'&&window.isAdmin())await syncNow(true);
     }finally{
       cloud.applying=false;
+      cloud.lastSyncAt=new Date().toISOString();
+      if(typeof window.setSyncStatus==='function'){
+        const d=new Date(cloud.lastSyncAt);
+        window.setSyncStatus('Nuvem: '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),'ok');
+      }
     }
   }
 
@@ -319,6 +325,7 @@
     cloud._userId=user.id;
     setCurrent({id:user.id,name:p.name,username:p.username||'',role:p.role,email:user.email,mustChangePassword:!!p.must_change_password});
     cloud.ready=true;
+    if(typeof window.setSyncStatus==='function')window.setSyncStatus('Nuvem: conectando…','busy');
     if(typeof window.applyAccessUI==='function')window.applyAccessUI();
     await loadAll();
     await refreshDirectory();
@@ -386,7 +393,7 @@
     }catch(e){console.warn('logout',e)}
     stopPolling();
     saveSession(null);
-    cloud.ready=false;cloud._userId=null;cloud.notifications=[];setCurrent(null);if(typeof window.renderNotifications==='function')window.renderNotifications();
+    cloud.ready=false;cloud._userId=null;cloud.notifications=[];setCurrent(null);if(typeof window.setSyncStatus==='function')window.setSyncStatus('Nuvem: desconectado','error');if(typeof window.renderNotifications==='function')window.renderNotifications();
     if(typeof window.applyAccessUI==='function')window.applyAccessUI();
     if(dialog()&&!dialog().open)dialog().showModal();
   }
@@ -489,7 +496,9 @@
       console.error('Supabase config',e);
       notice(e.message);
     }
-    window.addEventListener('online',()=>{if(cloud.ready)syncNow(false).catch(console.error)});
+    window.addEventListener('online',()=>{if(cloud.ready)loadAll().catch(console.error)});
+    window.addEventListener('focus',()=>{if(cloud.ready&&!cloud.applying)loadAll().catch(console.error)});
+    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&cloud.ready&&!cloud.applying)loadAll().catch(console.error)});
   }
 
   cloud.init=init;
@@ -499,6 +508,7 @@
   cloud.restore=restore;
   cloud.queueSync=queueSync;
   cloud.syncNow=syncNow;
+  cloud.pullNow=loadAll;
   cloud.refreshDirectory=refreshDirectory;
   cloud.refreshNotifications=refreshNotifications;
   cloud.notifyConsultant=notifyConsultant;
