@@ -8,7 +8,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/svg+xml" href="ajc-oficina-icon-v3.svg?v=3">
 <link rel="apple-touch-icon" href="ajc-oficina-icon-v3.svg?v=3">
-<title>AJC Oficina • Jornada do Cliente</title>
+<title>AJC Oficina • V10 Neon Journey</title>
 <style>
 :root{--bg:#f3f6fa;--card:#fff;--ink:#0f172a;--muted:#64748b;--line:#dce3ec;--nav:#0f172a;--blue:#2563eb;--blue2:#dbeafe;--green:#16a34a;--green2:#dcfce7;--orange:#d97706;--orange2:#ffedd5;--red:#dc2626;--red2:#fee2e2;--purple:#7c3aed;--purple2:#ede9fe;--shadow:0 4px 14px rgba(15,23,42,.07)}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}
@@ -334,10 +334,101 @@ main{padding:18px 18px 36px;max-width:1720px}
 .sync-status.ok{color:#b9f8cf;background:rgba(22,163,74,.14)}
 .sync-status.busy{color:#ffe3a8;background:rgba(217,119,6,.14)}
 .sync-status.error{color:#ffc5c5;background:rgba(220,38,38,.14)}
+
+/* ===== V10 AJC Neon Journey ===== */
+body{
+  background:
+    radial-gradient(circle at 10% 0%,rgba(17,114,255,.22),transparent 24%),
+    radial-gradient(circle at 90% 0%,rgba(110,42,255,.18),transparent 24%),
+    linear-gradient(180deg,#071733 0%,#0b2550 34%,#e8eef8 72%,#edf3fb 100%)!important;
+  min-height:100vh;
+}
+header{
+  background:linear-gradient(135deg,#03102d,#06245d)!important;
+  border-bottom:1px solid rgba(45,220,255,.24);
+  box-shadow:0 12px 34px rgba(0,13,49,.34)!important;
+}
+.header-wrap{max-width:1720px;min-height:118px;padding:10px 18px!important;align-items:center}
+.brand.brand-v10{
+  flex:1 1 560px;
+  min-width:340px;
+  max-width:780px;
+  height:105px;
+  background:url('ajc-banner-v10.svg?v=10') left center/contain no-repeat;
+}
+.brand.brand-v10>*{display:none!important}
+.top-actions{
+  flex:1 1 500px;
+  justify-content:flex-end;
+  align-items:center;
+}
+main{max-width:1720px!important;padding-top:14px!important}
+.tabs{
+  background:rgba(5,22,57,.88)!important;
+  border:1px solid rgba(58,202,255,.20)!important;
+  box-shadow:0 14px 36px rgba(0,17,52,.22)!important;
+}
+.tab{
+  background:linear-gradient(180deg,#ffffff,#edf4ff)!important;
+  border-color:#cbd9ef!important;
+  color:#203653!important;
+}
+.tab.active{
+  background:linear-gradient(135deg,#0a69ff,#5a39ff)!important;
+  color:white!important;
+  box-shadow:0 12px 25px rgba(27,102,255,.30)!important;
+}
+.section,.stat,.gestao-card,.consultora-card,.wash-box-card{
+  background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(245,249,255,.92))!important;
+  border:1px solid rgba(195,213,239,.95)!important;
+  box-shadow:0 14px 34px rgba(7,31,74,.10)!important;
+}
+.section-head{
+  background:linear-gradient(180deg,rgba(250,253,255,.98),rgba(239,246,255,.96))!important;
+}
+.section-head::before{
+  background:linear-gradient(180deg,#12dfff,#6445ff)!important;
+}
+.data-table th{
+  background:linear-gradient(180deg,#f8fbff,#eaf2fb)!important;
+}
+.data-table tbody tr:hover{background:#edf6ff!important}
+.selection-tools{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.selection-count{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:94px;padding:8px 11px;border-radius:999px;
+  background:#e8f1ff;color:#1d4ed8;border:1px solid #bfd4ff;
+  font-size:10px;font-weight:900;
+}
+.agenda-select-cell{width:42px;text-align:center}
+.agenda-checkbox{width:18px;height:18px;accent-color:#2563eb;cursor:pointer}
+.agenda-row-selected{background:#e8f3ff!important;box-shadow:inset 4px 0 0 #2563eb}
+#appSplash{
+  position:fixed;inset:0;z-index:99999;
+  background:#020d2a;
+  display:flex;align-items:center;justify-content:center;
+  transition:opacity .55s ease,visibility .55s ease;
+}
+#appSplash img{
+  width:100%;height:100%;object-fit:cover;
+}
+#appSplash.hide{opacity:0;visibility:hidden;pointer-events:none}
+@media(max-width:980px){
+  .header-wrap{min-height:auto}
+  .brand.brand-v10{flex-basis:100%;max-width:none;width:100%;height:92px;background-position:center}
+  .top-actions{justify-content:flex-start}
+}
+@media(max-width:640px){
+  .brand.brand-v10{height:76px;min-width:0}
+  header{position:sticky}
+  .tabs{top:96px!important}
+  .selection-tools{justify-content:flex-start}
+}
+
 </style>
 </head>
-<body>
-<header><div class="header-wrap"><div class="brand"><div class="logo logo-ajc"><img src="ajc-oficina-icon-v3.svg?v=3" alt="AJC Oficina"></div><div><h1>AJC Oficina</h1><small>Acompanhamento da Jornada do Cliente • Oficina Sinop</small></div></div><div class="top-actions"><div class="user-chip" id="userChip"><span>👤</span><div><strong id="currentUserName">Não conectado</strong><div id="currentUserRole">—</div></div></div><button class="btn-light notif-btn" id="notifBtn" onclick="abrirNotificacoes()" title="Notificações">🔔<span id="notifCount" class="notif-count hidden">0</span></button><button class="btn-light" id="syncNowBtn" onclick="sincronizarAgora()" title="Atualizar dados da nuvem">🔄 Sincronizar</button><div id="syncStatus" class="sync-status">Nuvem: aguardando</div><button class="btn-light" id="installBtn" hidden>Instalar App</button><button class="btn-blue" id="topImportBtn" onclick="switchTab('agenda')">Importar agenda</button><button class="btn-blue" id="topVehicleBtn" onclick="abrirNovoVeiculo()">+ Veículo</button><button class="btn-blue" id="topCheckinBtn" onclick="abrirCheckinRapido()">🚗 Receber cliente</button><button class="btn-light" id="logoutBtn" onclick="logoutUser()">Sair</button></div></div></header>
+<body><div id="appSplash"><img src="ajc-splash-v10.svg?v=10" alt="AJC Oficina"></div>
+<header><div class="header-wrap"><div class="brand brand-v10" aria-label="AJC Oficina - Acompanhamento da Jornada do Cliente"></div><div class="top-actions"><div class="user-chip" id="userChip"><span>👤</span><div><strong id="currentUserName">Não conectado</strong><div id="currentUserRole">—</div></div></div><button class="btn-light notif-btn" id="notifBtn" onclick="abrirNotificacoes()" title="Notificações">🔔<span id="notifCount" class="notif-count hidden">0</span></button><button class="btn-light" id="syncNowBtn" onclick="sincronizarAgora()" title="Atualizar dados da nuvem">🔄 Sincronizar</button><div id="syncStatus" class="sync-status">Nuvem: aguardando</div><button class="btn-light" id="installBtn" hidden>Instalar App</button><button class="btn-blue" id="topImportBtn" onclick="switchTab('agenda')">Importar agenda</button><button class="btn-blue" id="topVehicleBtn" onclick="abrirNovoVeiculo()">+ Veículo</button><button class="btn-blue" id="topCheckinBtn" onclick="abrirCheckinRapido()">🚗 Receber cliente</button><button class="btn-light" id="logoutBtn" onclick="logoutUser()">Sair</button></div></div></header>
 <main>
 <nav class="tabs">
 <button class="tab active" data-tab="operacao">Operação</button><button class="tab" data-tab="agenda">Agenda</button><button class="tab" data-tab="filas">Filas</button><button class="tab" data-tab="lavagem">Lavagem</button><button class="tab" data-tab="servicos">Códigos / Tempos</button><button class="tab" data-tab="tratativas">Tratativas</button><button class="tab" data-tab="equipe">Equipe</button><button class="tab" data-tab="painel">Dashboard</button><button class="tab" data-tab="sugestoes">Sugestões de Melhoria</button><button class="tab" data-tab="apresentacao">Apresentação</button><button class="tab" data-tab="acessos">Acessos / Auditoria</button><button class="tab" data-tab="instalar">Instalar</button>
@@ -355,7 +446,7 @@ main{padding:18px 18px 36px;max-width:1720px}
 
 <section id="agenda" class="panel">
 <div class="section"><div class="section-head"><div><h2>Importar agenda automaticamente</h2><p>Selecione a data e o arquivo. O sistema lê a sequência padrão e envia os veículos diretamente ao painel principal.</p></div></div><div class="section-body"><div class="toolbar"><div class="field"><label>Data da agenda</label><input type="date" id="agendaData"></div><div class="field grow"><label>Planilha</label><input type="file" id="agendaFile" accept=".xlsx,.xls,.csv,.txt"></div><button class="btn primary" onclick="lerArquivoAgenda()">Importar automaticamente</button><button class="btn secondary" onclick="baixarModeloCSV()">Baixar modelo CSV</button></div><div class="notice" style="margin-top:10px"><strong>Leitura fixa:</strong> Cliente | Placa | <em>coluna ignorada</em> | Modelo | Consultor Técnico | Observações. Linhas anteriores ao cabeçalho, inclusive <strong>Data de Geração</strong>, são ignoradas. Observações entram como relato e os veículos são enviados para <strong>Aguardando chegada</strong>.</div><div class="consultor-legend"><span class="consultor-badge consultor-kelly">Kelly</span><span class="consultor-badge consultor-tais">Tais</span><span class="consultor-badge consultor-carla">Carla</span><span class="consultor-badge consultor-jessica">Jessica</span><span class="consultor-badge consultor-luciane">Luciane</span></div><div style="margin-top:14px"><strong style="font-size:13px">Carteira da agenda por consultora</strong><div class="muted smalltxt" style="margin-top:3px">Cada cliente importado aparece automaticamente abaixo da consultora informada na planilha.</div><div id="consultoraBoard" class="consultora-board"></div></div></div></div>
-<div class="section"><div class="section-head"><div><h2>Veículos cadastrados</h2><p>Visualização enxuta da agenda. Clique na placa para abrir Modelo, Consultora e Observações.</p></div><button class="btn primary small" onclick="abrirNovoVeiculo()">+ Incluir manualmente</button></div><div class="table-wrap"><table class="data-table agenda-minimal"><thead><tr><th>Placa</th><th>Cliente</th><th>Ações</th></tr></thead><tbody id="agendaBody"></tbody></table></div></div>
+<div class="section"><div class="section-head"><div><h2>Veículos cadastrados</h2><p>Selecione registros para facilitar ações em lote. Clique na placa para abrir a observação.</p></div><div class="selection-tools"><span id="agendaSelectionCount" class="selection-count">0 selecionados</span><button class="btn secondary small" onclick="selecionarTodosAgenda()">☑ Selecionar todos</button><button class="btn ghost small" onclick="limparSelecaoAgenda()">✕ Limpar seleção</button><button class="btn primary small" onclick="abrirNovoVeiculo()">+ Incluir manualmente</button></div></div><div class="table-wrap"><table class="data-table agenda-minimal"><thead><tr><th class="agenda-select-cell"><input id="agendaSelectAll" class="agenda-checkbox" type="checkbox" onchange="toggleSelecionarTodosAgenda(this.checked)" title="Selecionar todos"></th><th>Placa</th><th>Cliente</th><th>Ações</th></tr></thead><tbody id="agendaBody"></tbody></table></div></div>
 </section>
 
 <section id="filas" class="panel">
@@ -428,7 +519,7 @@ main{padding:18px 18px 36px;max-width:1720px}
 <div class="section"><div class="section-head"><div><h2>Auditoria de alterações</h2><p>Registro local de inclusões, edições e exclusões, identificado pelo usuário conectado.</p></div><button class="btn danger small" onclick="limparAuditoria()">Limpar histórico</button></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Data / hora</th><th>Usuário</th><th>Função</th><th>Alterações</th></tr></thead><tbody id="auditBody"></tbody></table></div></div>
 </section>
 <section id="instalar" class="panel"><div class="section"><div class="section-head"><div><h2>Instalar como aplicativo</h2><p>Publique a pasta em um endereço HTTPS para instalar em tablets e celulares.</p></div></div><div class="section-body"><div class="notice"><strong>Android/tablet:</strong> abra o endereço no Chrome ou Edge → menu → Instalar app / Adicionar à tela inicial.<br><strong>iPhone/iPad:</strong> abra no Safari → Compartilhar → Adicionar à Tela de Início.<br><strong>Importante:</strong> esta versão usa autenticação e sincronização central pelo Supabase. O navegador mantém uma cópia local de contingência.</div></div></div></section>
-<div class="footer-note">AJC Oficina • V9 Premium • login por usuário • SLA por etapa • sincronização Supabase</div>
+<div class="footer-note">AJC Oficina • V10 Neon Journey • login por usuário • SLA por etapa • sincronização Supabase</div>
 </main>
 
 
@@ -987,7 +1078,34 @@ function renderOperacao(){
   }).join(''):'<tr><td colspan="6"><div class="empty">Nenhum veículo para '+fmtDate(data)+'.</div></td></tr>';
   applyAccessUI();
 }
-function renderAgenda(){renderCarteiraConsultoras();const list=veiculos.filter(v=>v.tipoVeiculo!=='NOVO').sort((a,b)=>(b.data||'').localeCompare(a.data||'')||(a.hora||'99:99').localeCompare(b.hora||'99:99'));$('#agendaBody').innerHTML=list.length?list.map(v=>'<tr class="'+consultorRowClass(v.consultor)+'"><td><button class="plate-link" onclick="abrirDetalheVeiculo(\''+v.id+'\')" title="Ver detalhes e observação">'+esc(v.placa)+'</button></td><td><span class="vehicle-name">'+esc(v.cliente||'—')+'</span></td><td><div class="row-actions"><button class="btn secondary small" onclick="abrirDetalheVeiculo(\''+v.id+'\')">📝 Observação</button><button class="btn ghost small" onclick="editarVeiculo(\''+v.id+'\')">Editar</button><button class="btn danger small" onclick="excluirVeiculo(\''+v.id+'\')">Excluir</button></div></td></tr>').join(''):'<tr><td colspan="3"><div class="empty">Nenhum veículo cadastrado.</div></td></tr>'}
+let agendaSelectedIds=new Set();
+function agendaListAtual(){return veiculos.filter(v=>v.tipoVeiculo!=='NOVO').sort((a,b)=>(b.data||'').localeCompare(a.data||'')||(a.hora||'99:99').localeCompare(b.hora||'99:99'))}
+function renderAgendaSelectionCount(){
+  for(const id of [...agendaSelectedIds])if(!veiculos.some(v=>v.id===id))agendaSelectedIds.delete(id);
+  const n=agendaSelectedIds.size,el=$('#agendaSelectionCount'),all=agendaListAtual();
+  if(el)el.textContent=n+' selecionado'+(n===1?'':'s');
+  const master=$('#agendaSelectAll');
+  if(master){master.checked=all.length>0&&all.every(v=>agendaSelectedIds.has(v.id));master.indeterminate=n>0&&!master.checked}
+}
+function toggleAgendaSelection(id,checked){checked?agendaSelectedIds.add(id):agendaSelectedIds.delete(id);renderAgenda()}
+function selecionarTodosAgenda(){agendaListAtual().forEach(v=>agendaSelectedIds.add(v.id));renderAgenda()}
+function limparSelecaoAgenda(){agendaSelectedIds.clear();renderAgenda()}
+function toggleSelecionarTodosAgenda(checked){if(checked)selecionarTodosAgenda();else limparSelecaoAgenda()}
+function renderAgenda(){
+  renderCarteiraConsultoras();
+  const list=agendaListAtual();
+  $('#agendaBody').innerHTML=list.length?list.map(v=>{
+    const sel=agendaSelectedIds.has(v.id);
+    return '<tr class="'+consultorRowClass(v.consultor)+(sel?' agenda-row-selected':'')+'">'+
+      '<td class="agenda-select-cell"><input class="agenda-checkbox" type="checkbox" '+(sel?'checked':'')+' onchange="toggleAgendaSelection(\''+v.id+'\',this.checked)" aria-label="Selecionar '+esc(v.placa)+'"></td>'+
+      '<td><button class="plate-link" onclick="abrirDetalheVeiculo(\''+v.id+'\')" title="Ver observação">'+esc(v.placa)+'</button></td>'+
+      '<td><span class="vehicle-name">'+esc(clientePrimeiroNome(v.cliente))+'</span></td>'+
+      '<td><div class="row-actions"><button class="btn secondary small" onclick="abrirDetalheVeiculo(\''+v.id+'\')">📝 Observação</button><button class="btn ghost small" onclick="editarVeiculo(\''+v.id+'\')">Editar</button><button class="btn danger small" onclick="excluirVeiculo(\''+v.id+'\')">Excluir</button></div></td>'+
+    '</tr>';
+  }).join(''):'<tr><td colspan="4"><div class="empty">Nenhum veículo cadastrado.</div></td></tr>';
+  renderAgendaSelectionCount();
+}
+
 function abrirLavagemVeiculo(id){
   if(!requireAccess(!!currentUser))return;
   const v=getVehicle(id);if(!v)return;
@@ -1385,7 +1503,10 @@ async function sincronizarAgora(){
 function renderAll(){fillSelects();renderOperacao();renderAgenda();renderFilas();renderLavagem();renderCatalogo();renderTratativas();renderEquipe();renderDashboard();renderGestaoConsultores();renderSugestoes();renderAccess();renderPresentation();applyAccessUI()}
 function updateLiveTimers(){document.querySelectorAll('[data-stage-vid]').forEach(el=>{const v=getVehicle(el.dataset.stageVid);if(v&&getOpenStage(v))el.textContent=fmtClock(stageElapsed(v))});document.querySelectorAll('[data-wash-vid]').forEach(el=>{const v=getVehicle(el.dataset.washVid),l=v?activeWash(v):null;if(l)el.textContent=fmtClock(washDuration(l))});document.querySelectorAll('[data-service]').forEach(el=>{const [vid,sid,key]=el.dataset.service.split('|'),v=getVehicle(vid),s=v?.services.find(x=>x.id===sid);if(s){const d=serviceDurations(s);el.textContent=fmtClock(d[key]||0)}});document.querySelectorAll('[data-stage-log]').forEach(el=>{const [vid,lid]=el.dataset.stageLog.split('|'),v=getVehicle(vid),l=v?.stageLog?.find(x=>x.id===lid);if(l&&!l.endAt)el.textContent=fmtClock(new Date()-new Date(l.startAt))})}
 
-$('#opData').value=localStorage.getItem('oficinaFlowData')||tomorrow();$('#agendaData').value=$('#opData').value;$('#dashData').value=$('#opData').value;$('#lavData').value=$('#opData').value;$('#lavMes').value=$('#opData').value.slice(0,7);$('#dashMes').value=$('#opData').value.slice(0,7);$('#presMes').value=$('#opData').value.slice(0,7);$('#opData').addEventListener('change',e=>{localStorage.setItem('oficinaFlowData',e.target.value);$('#agendaData').value=e.target.value;$('#dashData').value=e.target.value;$('#lavData').value=e.target.value;$('#lavMes').value=e.target.value.slice(0,7);$('#dashMes').value=e.target.value.slice(0,7);$('#presMes').value=e.target.value.slice(0,7);renderAll()});$('#dashData').addEventListener('change',renderDashboard);$('#dashMes').addEventListener('change',renderDashboard);$('#presMes').addEventListener('change',renderPresentation);$('#lavData').addEventListener('change',e=>{$('#lavMes').value=e.target.value.slice(0,7);renderLavagem()});$('#lavMes').addEventListener('change',renderLavagem);$('#opBusca').addEventListener('input',renderOperacao);$('#opEtapa').addEventListener('change',renderOperacao);if($('#opConsultor'))$('#opConsultor').addEventListener('change',renderOperacao);$('#fStatus').addEventListener('change',renderTratativas);$('#fArea').addEventListener('change',renderTratativas);$('#fBusca').addEventListener('input',renderTratativas);$('#equipeBusca').addEventListener('input',renderEquipe);if($('#sugFiltro'))$('#sugFiltro').addEventListener('change',renderSugestoes);dlgLogin.addEventListener('cancel',e=>e.preventDefault());try{renderAll()}catch(e){console.error('render inicial',e)};oficinaCloud.init();restoreLogin();setInterval(updateLiveTimers,1000);setInterval(()=>{if(currentUser){renderOperacao();renderGestaoConsultores()}},60000);
+$('#opData').value=localStorage.getItem('oficinaFlowData')||tomorrow();$('#agendaData').value=$('#opData').value;$('#dashData').value=$('#opData').value;$('#lavData').value=$('#opData').value;$('#lavMes').value=$('#opData').value.slice(0,7);$('#dashMes').value=$('#opData').value.slice(0,7);$('#presMes').value=$('#opData').value.slice(0,7);$('#opData').addEventListener('change',e=>{localStorage.setItem('oficinaFlowData',e.target.value);$('#agendaData').value=e.target.value;$('#dashData').value=e.target.value;$('#lavData').value=e.target.value;$('#lavMes').value=e.target.value.slice(0,7);$('#dashMes').value=e.target.value.slice(0,7);$('#presMes').value=e.target.value.slice(0,7);renderAll()});$('#dashData').addEventListener('change',renderDashboard);$('#dashMes').addEventListener('change',renderDashboard);$('#presMes').addEventListener('change',renderPresentation);$('#lavData').addEventListener('change',e=>{$('#lavMes').value=e.target.value.slice(0,7);renderLavagem()});$('#lavMes').addEventListener('change',renderLavagem);$('#opBusca').addEventListener('input',renderOperacao);$('#opEtapa').addEventListener('change',renderOperacao);if($('#opConsultor'))$('#opConsultor').addEventListener('change',renderOperacao);$('#fStatus').addEventListener('change',renderTratativas);$('#fArea').addEventListener('change',renderTratativas);$('#fBusca').addEventListener('input',renderTratativas);$('#equipeBusca').addEventListener('input',renderEquipe);if($('#sugFiltro'))$('#sugFiltro').addEventListener('change',renderSugestoes);dlgLogin.addEventListener('cancel',e=>e.preventDefault());try{renderAll()}catch(e){console.error('render inicial',e)};oficinaCloud.init();restoreLogin();setInterval(updateLiveTimers,1000);
+function hideAppSplash(){const s=$('#appSplash');if(s)s.classList.add('hide')}
+window.addEventListener('load',()=>setTimeout(hideAppSplash,1400));
+setTimeout(hideAppSplash,2600);setInterval(()=>{if(currentUser){renderOperacao();renderGestaoConsultores()}},60000);
 let deferredPrompt;const installBtn=$('#installBtn');window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;installBtn.hidden=false});installBtn.addEventListener('click',async()=>{if(!deferredPrompt){switchTab('instalar');return}deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;installBtn.hidden=true});if('serviceWorker' in navigator&&location.protocol!=='file:')navigator.serviceWorker.register('./sw.js').catch(console.error);
 </script>
 </body>
