@@ -149,7 +149,7 @@
     const password=document.querySelector('#loginPassword')?.value||'';
     if(!email||!password){notice('Informe e-mail e senha.');return}
     try{
-      const client=ensureClient();
+      const client=await ensureClient();
       const {data,error}=await client.auth.signInWithPassword({email,password});
       if(error)throw error;
       await loadProfile(data.user);
@@ -171,7 +171,7 @@
     try{
       const options={data:{name},emailRedirectTo:location.origin+location.pathname};
       if(adminMode)options.data.bootstrap_code=bootstrap;
-      const client=ensureClient();
+      const client=await ensureClient();
       const {data,error}=await client.auth.signUp({email,password,options});
       if(error)throw error;
       if(data.session&&data.user){
@@ -188,7 +188,7 @@
   }
 
   async function logout(){
-    try{const client=ensureClient();await client.auth.signOut()}catch(e){}
+    try{const client=await ensureClient();await client.auth.signOut()}catch(e){}
     cloud.ready=false;cloud._userId=null;setCurrent(null);
     if(cloud.channel){try{cloud.client.removeChannel(cloud.channel)}catch(e){} cloud.channel=null;}
     if(typeof window.applyAccessUI==='function')window.applyAccessUI();
@@ -197,7 +197,7 @@
 
   async function restore(){
     try{
-      const client=ensureClient();
+      const client=await ensureClient();
       const {data:{session}}=await client.auth.getSession();
       if(session?.user){
         await loadProfile(session.user);
@@ -247,11 +247,55 @@
     await refreshDirectory();
   }
 
-  function ensureClient(){
+  let libraryPromise=null;
+
+  function loadScript(src){
+    return new Promise((resolve,reject)=>{
+      const existing=[...document.scripts].find(s=>s.src===src);
+      if(existing){
+        if(window.supabase?.createClient)return resolve();
+        existing.addEventListener('load',()=>resolve(),{once:true});
+        existing.addEventListener('error',()=>reject(new Error('Falha ao carregar '+src)),{once:true});
+        return;
+      }
+      const s=document.createElement('script');
+      s.src=src;
+      s.async=true;
+      s.crossOrigin='anonymous';
+      s.onload=()=>resolve();
+      s.onerror=()=>reject(new Error('Falha ao carregar '+src));
+      document.head.appendChild(s);
+    });
+  }
+
+  async function loadSupabaseLibrary(){
+    if(window.supabase?.createClient)return window.supabase;
+    if(libraryPromise)return libraryPromise;
+    libraryPromise=(async()=>{
+      const sources=[
+        'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',
+        'https://unpkg.com/@supabase/supabase-js@2'
+      ];
+      let lastError=null;
+      for(const src of sources){
+        try{
+          await loadScript(src);
+          if(window.supabase?.createClient)return window.supabase;
+        }catch(e){
+          lastError=e;
+          console.warn('Supabase CDN falhou:',src,e);
+        }
+      }
+      throw lastError||new Error('Não foi possível carregar a biblioteca do Supabase.');
+    })();
+    return libraryPromise;
+  }
+
+  async function ensureClient(){
     if(cloud.client)return cloud.client;
-    const api=window.supabase;
+    const api=await loadSupabaseLibrary();
     if(!api||typeof api.createClient!=='function'){
-      throw new Error('Biblioteca do Supabase não foi carregada. Atualize a página.');
+      throw new Error('Biblioteca do Supabase não foi carregada.');
     }
     if(!cfg.url||!cfg.publishableKey){
       throw new Error('Configuração online do Oficina Sinop não foi carregada.');
@@ -262,9 +306,9 @@
     return cloud.client;
   }
 
-  function init(){
+  async function init(){
     try{
-      ensureClient();
+      await ensureClient();
       cloud.connectionError=null;
     }catch(e){
       cloud.connectionError=e;
