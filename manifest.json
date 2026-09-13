@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "Oficina Sinop V6",
+  "name": "Oficina Sinop V7",
   "short_name": "Oficina Sinop",
-  "description": "Agenda, fluxo, serviços, tempos, lavagem, produtividade e gestão da Oficina Sinop.",
+  "description": "Gestão visual de oficina, SLA por etapa, check-in, consultoras e sincronização online.",
   "lang": "pt-BR",
   "start_url": "./index.html",
   "scope": "./",
