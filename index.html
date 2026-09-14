@@ -183,7 +183,7 @@ main{max-width:1720px!important;margin:0 auto!important;padding:10px 16px 34px!i
 @media(max-width:680px){.comp-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.comp-kpi .value{font-size:22px}}
 
 </style>
-<title>AJC Oficina • V18.2 • Layout V17.7 Oficial</title>
+<title>AJC Oficina • V18.4 • Tempo Real • Layout V17.7 Oficial</title>
 <style>
 :root{--bg:#f3f6fa;--card:#fff;--ink:#0f172a;--muted:#64748b;--line:#dce3ec;--nav:#0f172a;--blue:#2563eb;--blue2:#dbeafe;--green:#16a34a;--green2:#dcfce7;--orange:#d97706;--orange2:#ffedd5;--red:#dc2626;--red2:#fee2e2;--purple:#7c3aed;--purple2:#ede9fe;--shadow:0 4px 14px rgba(15,23,42,.07)}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}
@@ -1078,9 +1078,42 @@ main{max-width:1780px;padding:16px 16px 30px!important}.tabs{display:grid!import
 @media(max-width:980px){.auto-chart-grid{grid-template-columns:1fr}.catalog-import-tools{justify-content:flex-start}}
 </style>
 
+<style id="ajc-v184-mobile-css">
+html{touch-action:manipulation;-webkit-text-size-adjust:100%}
+body{overscroll-behavior-y:none;padding-bottom:env(safe-area-inset-bottom)}
+button,.btn,.tab,input,select,textarea{min-height:42px}
+button,.btn,.tab{-webkit-tap-highlight-color:transparent}
+#ajcRealtimeBadge{position:fixed;right:max(10px,env(safe-area-inset-right));bottom:max(10px,env(safe-area-inset-bottom));z-index:9999;display:flex;align-items:center;gap:7px;padding:8px 11px;border-radius:999px;background:rgba(3,18,43,.94);border:1px solid rgba(54,154,255,.45);box-shadow:0 8px 24px rgba(0,0,0,.18);color:#dcecff;font:800 11px/1.1 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;backdrop-filter:blur(10px)}
+#ajcRealtimeBadge .dot{width:8px;height:8px;border-radius:50%;background:#f59e0b;box-shadow:0 0 9px currentColor}
+#ajcRealtimeBadge[data-state="live"] .dot{background:#22c55e}
+#ajcRealtimeBadge[data-state="offline"] .dot{background:#ef4444}
+#ajcRealtimeBadge[data-state="sync"] .dot{background:#38bdf8}
+@media(max-width:1024px){
+.header-wrap{padding-left:max(10px,env(safe-area-inset-left))!important;padding-right:max(10px,env(safe-area-inset-right))!important}
+.header-search{width:100%!important;max-width:none!important;min-width:0!important}
+.top-actions{overflow-x:auto!important;flex-wrap:nowrap!important;max-width:100%!important;padding-bottom:2px!important;scrollbar-width:none}
+.top-actions::-webkit-scrollbar,.tabs::-webkit-scrollbar{display:none}.top-actions>*{flex:0 0 auto}
+.tabs{display:flex!important;overflow-x:auto!important;flex-wrap:nowrap!important;padding:8px 6px!important}
+.tab{flex:0 0 auto!important;min-width:120px!important;padding:10px 12px!important}
+.table-wrap{overflow:auto!important;-webkit-overflow-scrolling:touch}
+dialog{width:min(96vw,900px)!important;max-height:92dvh!important;margin:auto!important}
+.modal-body{max-height:75dvh!important;overflow:auto!important;-webkit-overflow-scrolling:touch}
+.form-grid{grid-template-columns:1fr 1fr!important}
+}
+@media(max-width:680px){
+main{padding-left:8px!important;padding-right:8px!important}
+.header-wrap{display:grid!important;grid-template-columns:1fr!important;gap:8px!important}
+.header-search{order:3!important}.top-actions{order:2!important;width:100%!important}
+.form-grid{grid-template-columns:1fr!important}.stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.central-kpis{grid-template-columns:1fr!important}.toolbar{flex-direction:column!important}.toolbar,.toolbar .field{width:100%!important}
+#ajcRealtimeBadge{right:8px;bottom:max(8px,env(safe-area-inset-bottom));font-size:10px;padding:7px 9px}
+}
+@media(display-mode:standalone){header{padding-top:env(safe-area-inset-top)}}
+</style>
 </head>
-<body><div id="appSplash"><img class="splash-v14" src="./ajc-banner-v17-7.png" alt="AJC Oficina"></div><script id="v177SplashSafety">(function(){function hide(){var s=document.getElementById('appSplash');if(s){s.classList.add('hide');setTimeout(function(){if(s&&s.parentNode)s.parentNode.removeChild(s)},700)}}window.addEventListener('DOMContentLoaded',function(){setTimeout(hide,1100)});window.addEventListener('load',function(){setTimeout(hide,700)});setTimeout(hide,2600)})();</script>
-<header><div class="header-wrap"><div class="brand-shell"><a class="mini-brand" href="#" onclick="switchTab('central');return false;"><img class="mini-brand-icon" src="./ajc-icon-192.png" alt="AJC Oficina"><div class="mini-brand-text"><strong>AJC <span>Oficina</span></strong><small>V18.2 • Layout V17.7</small></div></a><div class="header-search"><span class="search-icon">⌕</span><input id="globalQuickSearch" type="search" placeholder="Buscar cliente, veículo, placa ou OS..."><button class="btn-blue" type="button" onclick="executarBuscaGlobal()">Buscar</button></div></div><div class="top-actions"><button class="btn-light notif-btn" id="notifBtn" onclick="abrirNotificacoes()" title="Notificações">🔔<span id="notifCount" class="notif-count hidden">0</span></button><div class="user-chip" id="userChip"><span>👤</span><div><strong id="currentUserName">Não conectado</strong><div id="currentUserRole">—</div></div></div><button class="btn-light" id="syncNowBtn" onclick="sincronizarAgora()" title="Atualizar dados da nuvem">⟳ Sincronizar</button><div id="syncStatus" class="sync-status">Nuvem: aguardando</div><button class="btn-light" id="installBtn" hidden>Instalar App</button><button class="btn-blue action-compact" id="topImportBtn" onclick="switchTab('agenda')">Agenda</button><button class="btn-blue action-compact" id="topVehicleBtn" onclick="abrirNovoVeiculo()">+ Veículo</button><button class="btn-blue action-compact" id="topCheckinBtn" onclick="abrirCheckinRapido()">Receber cliente</button><button class="btn-light action-compact" id="logoutBtn" onclick="logoutUser()">Sair</button></div></div><div class="ajc-hero-banner-v177"><img src="./ajc-banner-v17-7.png" alt="AJC Oficina — Acompanhamento da Jornada do Cliente"></div></header>
+<body>
+<div id="ajcRealtimeBadge" data-state="sync" aria-live="polite"><span class="dot"></span><span class="txt">Tempo real: preparando</span></div><div id="appSplash"><img class="splash-v14" src="./ajc-banner-v17-7.png" alt="AJC Oficina"></div><script id="v177SplashSafety">(function(){function hide(){var s=document.getElementById('appSplash');if(s){s.classList.add('hide');setTimeout(function(){if(s&&s.parentNode)s.parentNode.removeChild(s)},700)}}window.addEventListener('DOMContentLoaded',function(){setTimeout(hide,1100)});window.addEventListener('load',function(){setTimeout(hide,700)});setTimeout(hide,2600)})();</script>
+<header><div class="header-wrap"><div class="brand-shell"><a class="mini-brand" href="#" onclick="switchTab('central');return false;"><img class="mini-brand-icon" src="./ajc-icon-192.png" alt="AJC Oficina"><div class="mini-brand-text"><strong>AJC <span>Oficina</span></strong><small>V18.4 • Tempo Real • Layout V17.7</small></div></a><div class="header-search"><span class="search-icon">⌕</span><input id="globalQuickSearch" type="search" placeholder="Buscar cliente, veículo, placa ou OS..."><button class="btn-blue" type="button" onclick="executarBuscaGlobal()">Buscar</button></div></div><div class="top-actions"><button class="btn-light notif-btn" id="notifBtn" onclick="abrirNotificacoes()" title="Notificações">🔔<span id="notifCount" class="notif-count hidden">0</span></button><div class="user-chip" id="userChip"><span>👤</span><div><strong id="currentUserName">Não conectado</strong><div id="currentUserRole">—</div></div></div><button class="btn-light" id="syncNowBtn" onclick="sincronizarAgora()" title="Atualizar dados da nuvem">⟳ Sincronizar</button><div id="syncStatus" class="sync-status">Nuvem: aguardando</div><button class="btn-light" id="installBtn" hidden>Instalar App</button><button class="btn-blue action-compact" id="topImportBtn" onclick="switchTab('agenda')">Agenda</button><button class="btn-blue action-compact" id="topVehicleBtn" onclick="abrirNovoVeiculo()">+ Veículo</button><button class="btn-blue action-compact" id="topCheckinBtn" onclick="abrirCheckinRapido()">Receber cliente</button><button class="btn-light action-compact" id="logoutBtn" onclick="logoutUser()">Sair</button></div></div><div class="ajc-hero-banner-v177"><img src="./ajc-banner-v17-7.png" alt="AJC Oficina — Acompanhamento da Jornada do Cliente"></div></header>
 <main>
 <nav class="tabs">
 <button class="tab active v15-tab" data-tab="central">Central</button><button class="tab" data-tab="operacao">Controle de quadro</button><button class="tab" data-tab="agenda">Agenda</button><button class="tab" data-tab="filas">Filas</button><button class="tab" data-tab="lavagem">Lavagem</button><button class="tab" data-tab="servicos">Códigos / Tempos</button><button class="tab" data-tab="complementares">Serviços Complementares</button><button class="tab" data-tab="tratativas">Tratativas</button><button class="tab" data-tab="equipe">Equipe</button><button class="tab" data-tab="painel">Dashboard</button><button class="tab" data-tab="sugestoes">Sugestões de Melhoria</button><button class="tab" data-tab="apresentacao">Apresentação</button><button class="tab" data-tab="acessos">Acessos / Auditoria</button><button class="tab" data-tab="instalar">Instalar</button>
@@ -1216,7 +1249,7 @@ main{max-width:1780px;padding:16px 16px 30px!important}.tabs{display:grid!import
 <div class="section"><div class="section-head"><div><h2>Auditoria de alterações</h2><p>Registro local de inclusões, edições e exclusões, identificado pelo usuário conectado.</p></div><button class="btn danger small" onclick="limparAuditoria()">Limpar histórico</button></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Data / hora</th><th>Usuário</th><th>Função</th><th>Alterações</th></tr></thead><tbody id="auditBody"></tbody></table></div></div>
 </section>
 <section id="instalar" class="panel"><div class="section"><div class="section-head"><div><h2>Instalar como aplicativo</h2><p>Instale o AJC Oficina pela versão HTTPS oficial para usar no celular, tablet ou computador, com atalho próprio, tela cheia e notificações.</p></div></div><div class="section-body"><div class="install-grid"><div class="install-cta"><div class="install-badge">AJC Oficina • App instalável</div><h3>Instalar neste dispositivo</h3><p>Ao instalar, o sistema abre como aplicativo, ganha acesso rápido na tela inicial e melhora a experiência para a equipe em tablets, computadores e celulares.</p><div class="install-actions"><button class="btn primary" id="installActionBtn" onclick="solicitarInstalacaoApp()">💻 Instalar no computador</button><button class="btn secondary" onclick="oficinaCloud.enableBrowserNotifications()">🔔 Ativar notificações</button><button class="btn ghost" onclick="sincronizarAgora()">🔄 Sincronizar antes de instalar</button></div><div id="installStatusBox" class="install-status">Status: verificando se este dispositivo já pode instalar o app…</div></div><div class="install-benefits"><h3>O que melhora ao instalar?</h3><ul><li><strong>Acesso rápido:</strong> ícone próprio na tela inicial do celular, tablet ou desktop.</li><li><strong>Visual de app:</strong> abre em tela cheia, sem aparência de aba do navegador.</li><li><strong>Uso diário:</strong> facilita operação na recepção, oficina, lavagem e gestão.</li><li><strong>Notificações:</strong> o usuário é avisado quando houver marcação ou atualização relevante.</li><li><strong>Sincronização:</strong> continua conectado ao Supabase e mantendo contingência local.</li></ul></div></div><div class="install-steps"><div class="install-step"><h3>Android / Tablet Android</h3><ol><li>Abra o endereço publicado no Chrome ou Edge.</li><li>Toque em <strong>Instalar app</strong> ou <strong>Adicionar à tela inicial</strong>.</li><li>Confirme a instalação e permita notificações.</li></ol></div><div class="install-step"><h3>iPhone / iPad</h3><ol><li>Abra o sistema no Safari.</li><li>Toque em <strong>Compartilhar</strong> → <strong>Adicionar à Tela de Início</strong>.</li><li>Depois, volte ao app e ative as notificações do navegador quando disponível.</li></ol></div><div class="install-step"><h3>💻 Notebook / Desktop</h3><ol><li>Abra a versão HTTPS oficial no <strong>Chrome ou Microsoft Edge</strong>.</li><li>Clique em <strong>Instalar no computador</strong>. Quando aparecer a confirmação, clique em <strong>Instalar</strong>.</li><li>O AJC Oficina ficará no Menu Iniciar/Área de Trabalho e abrirá em janela própria.</li></ol></div></div><div class="notice" style="margin-top:14px"><strong>Importante:</strong> as notificações por marcação de usuário dependem do acesso ao aplicativo e da permissão de notificação do navegador. Quando o app estiver instalado, a experiência fica mais próxima de um software completo.</div></div></div></section>
-<div class="footer-note">AJC Oficina • V16 Neon • Acesso Direto • jornada conectada • sincronização Supabase</div>
+<div class="footer-note">AJC Oficina • V18.4 • Mobile/Tablet • Tempo Real • Layout V17.7 • Supabase</div>
 </main>
 
 
@@ -1332,6 +1365,7 @@ main{max-width:1780px;padding:16px 16px 30px!important}.tabs{display:grid!import
 
 <div class="toast" id="toast"></div>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@4.0.1/dist/pptxgen.bundle.js"></script>
 <script>
 window.OFICINA_SUPABASE = {
@@ -2744,7 +2778,40 @@ function imprimirApresentacao(){renderPresentation();const w=window.open('','_bl
     }
   });
 })();
-</script></body></html>`);w.document.close();setTimeout(()=>w.print(),300)}
+</script><script id="ajc-v184-realtime">
+(function(){
+'use strict';
+let client=null,channel=null,token='',pullTimer=null,notifTimer=null,reconnectTimer=null;
+const cfg=window.OFICINA_SUPABASE||{},workspace=cfg.workspace||'oficina-sinop';
+const badge=()=>document.getElementById('ajcRealtimeBadge');
+function status(state,text){const el=badge();if(!el)return;el.dataset.state=state;const t=el.querySelector('.txt');if(t)t.textContent=text}
+function online(){return navigator.onLine!==false}
+function debouncedPull(){clearTimeout(pullTimer);pullTimer=setTimeout(async()=>{try{status('sync','Tempo real: atualizando…');await window.oficinaCloud?.pullNow?.();status('live','Tempo real: conectado')}catch(e){console.warn('realtime pull',e);status(online()?'sync':'offline',online()?'Tempo real: reconectando':'Offline • sincroniza ao voltar')}},180)}
+function debouncedNotifications(){clearTimeout(notifTimer);notifTimer=setTimeout(async()=>{try{await window.oficinaCloud?.refreshNotifications?.()}catch(e){console.warn('realtime notif',e)}},120)}
+async function disconnect(){try{if(client&&channel)await client.removeChannel(channel)}catch(e){}channel=null;client=null;token=''}
+async function connect(){
+ if(!online()){status('offline','Offline • sincroniza ao voltar');return}
+ const cloud=window.oficinaCloud,nextToken=cloud?.session?.access_token||'';
+ if(!cloud?.ready||!nextToken||!cfg.url||!cfg.publishableKey||!window.supabase?.createClient){status('sync','Tempo real: aguardando login');return}
+ if(channel&&token===nextToken)return;
+ await disconnect();token=nextToken;
+ try{
+  client=window.supabase.createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false},realtime:{params:{eventsPerSecond:20}}});
+  client.realtime.setAuth(token);
+  channel=client.channel('ajc-oficina-live-'+workspace)
+   .on('postgres_changes',{event:'*',schema:'public',table:'entities',filter:'workspace=eq.'+workspace},debouncedPull)
+   .on('postgres_changes',{event:'*',schema:'public',table:'notifications'},debouncedNotifications)
+   .subscribe(s=>{if(s==='SUBSCRIBED')status('live','Tempo real: conectado');else if(s==='CHANNEL_ERROR'||s==='TIMED_OUT'||s==='CLOSED')status(online()?'sync':'offline',online()?'Tempo real: reconectando':'Offline • sincroniza ao voltar')});
+ }catch(e){console.warn('realtime connect',e);status('sync','Tempo real: reconectando')}
+}
+function schedule(){clearInterval(reconnectTimer);reconnectTimer=setInterval(connect,2500);connect()}
+window.addEventListener('online',()=>{status('sync','Tempo real: reconectando');connect()});
+window.addEventListener('offline',()=>status('offline','Offline • sincroniza ao voltar'));
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')connect()});
+window.addEventListener('load',schedule);setTimeout(schedule,1200);window.ajcRealtime={connect,disconnect,status};
+})();
+</script>
+</body></html>`);w.document.close();setTimeout(()=>w.print(),300)}
 function pptxTitle(slide,title,sub){slide.background={color:'FFFFFF'};slide.addShape(pptx.ShapeType.rect,{x:0,y:0,w:13.333,h:.08,fill:{color:'2563EB'},line:{color:'2563EB'}});slide.addText(title,{x:.55,y:.32,w:8.8,h:.45,fontFace:'Arial',fontSize:24,bold:true,color:'0F172A',margin:0});slide.addText(sub,{x:.55,y:.84,w:8.8,h:.25,fontFace:'Arial',fontSize:9,color:'64748B',margin:0})}
 function pptxFooter(slide,n,total){slide.addText('Oficina Sinop • Fechamento Mensal',{x:.55,y:7.16,w:4.2,h:.18,fontSize:7,color:'94A3B8',margin:0});slide.addText(`${n}/${total}`,{x:12.15,y:7.16,w:.6,h:.18,fontSize:7,color:'94A3B8',align:'right',margin:0})}
 function pptxKpis(slide,kpis,y=1.35){const cols=3,w=3.85,h=1.08,g=.18;for(let i=0;i<kpis.length;i++){const row=Math.floor(i/cols),col=i%cols,x=.55+col*(w+g),yy=y+row*(h+.16),k=kpis[i];slide.addShape(pptx.ShapeType.roundRect,{x, y:yy,w,h,rectRadius:.06,fill:{color:'F8FAFC'},line:{color:'E2E8F0',width:1}});slide.addText(String(k.label),{x:x+.14,y:yy+.12,w:w-.28,h:.18,fontSize:7,bold:true,color:'64748B',margin:0});slide.addText(String(k.value),{x:x+.14,y:yy+.37,w:w-.28,h:.36,fontSize:20,bold:true,color:'0F172A',margin:0});if(k.sub)slide.addText(String(k.sub),{x:x+.14,y:yy+.82,w:w-.28,h:.14,fontSize:7,color:'94A3B8',margin:0})}}
@@ -3959,7 +4026,7 @@ main{max-width:none!important;width:100%!important;margin:0!important;padding:0 
     Object.entries(map).forEach(([k,v])=>{const el=document.querySelector('.tab[data-tab="'+k+'"]');if(el)el.textContent=v});
   }
   function setupHeader(){
-    const small=$('.mini-brand-text small');if(small)small.textContent='V18.2 • Layout V17.7';
+    const small=$('.mini-brand-text small');if(small)small.textContent='V18.4 • Tempo Real • Layout V17.7';
   }
   function setupCentral(){
     const hero=$('#central .central-hero');
