@@ -1,4 +1,4 @@
-const CACHE='ajc-oficina-v18-4-mobile-realtime-1';
+const CACHE='ajc-oficina-v18-5-mobile-realtime-1';
 const CORE=['./','./index.html','./manifest.webmanifest','./ajc-icon-192.png','./ajc-icon-512.png','./ajc-banner-v17-7.png','./ajc-install-art-v17-7.png'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
