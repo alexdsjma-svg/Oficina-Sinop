@@ -1,10 +1,10 @@
 {
-  "id": "./?app=ajc-oficina-v18-7",
-  "name": "AJC Oficina V18.7 — Home V17.7 restaurada",
+  "id": "./?app=ajc-oficina-v18-8",
+  "name": "AJC Oficina V18.8 — Layout V17.7",
   "short_name": "AJC Oficina",
   "description": "AJC Oficina V18.7 com Home V17.7 restaurada, instalação PWA e sincronização em tempo real.",
   "lang": "pt-BR",
-  "start_url": "./?v=18.7",
+  "start_url": "./?v=18.8",
   "scope": "./",
   "display": "standalone",
   "display_override": [
