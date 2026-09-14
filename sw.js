@@ -1,4 +1,4 @@
-const CACHE='ajc-oficina-v17-7-padrao-2026-09-14-02';
+const CACHE='ajc-oficina-v17-7-restauro-visual-04';
 const CORE=[
   './',
   './index.html',
