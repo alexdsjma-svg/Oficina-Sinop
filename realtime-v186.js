@@ -73,8 +73,8 @@ async function connect(){
 }
 function brand(){
   const small=document.querySelector(".mini-brand-text small");
-  if(small)small.textContent="V18.7 • Layout V17.7";
-  document.title="AJC Oficina • V18.7 • Layout V17.7 Oficial";
+  if(small)small.textContent="V18.7 • Home V17.7 restaurada";
+  document.title="AJC Oficina V18.7 — Home V17.7 restaurada";
 }
 function start(){
   brand();
