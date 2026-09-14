@@ -1,6 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const VERSION="18.7";
+const VERSION="18.8";
 let sb=null, channel=null, activeToken="", retryTimer=null, pullTimer=null, notifTimer=null;
 
 function badge(){
