@@ -1,10 +1,10 @@
 {
-  "id": "./?app=ajc-oficina-v18-4-mobile-realtime",
-  "name": "AJC Oficina V18.4 — Tempo Real",
+  "id": "./?app=ajc-oficina-v18-5-mobile-realtime",
+  "name": "AJC Oficina V18.5 — Tempo Real",
   "short_name": "AJC Oficina",
   "description": "Jornada do Cliente com sincronização Supabase em tempo real.",
   "lang": "pt-BR",
-  "start_url": "./?v=18.4&app=mobile",
+  "start_url": "./?v=18.5&app=mobile",
   "scope": "./",
   "display": "standalone",
   "display_override": [
