@@ -1,10 +1,10 @@
 {
-  "id": "./?app=ajc-oficina-v18",
-  "name": "AJC Oficina V18.0 — Layout V17.7",
+  "id": "./?app=ajc-oficina-v18-2",
+  "name": "AJC Oficina V18.2 — Layout V17.7",
   "short_name": "AJC Oficina",
   "description": "Acompanhamento da Jornada do Cliente e gestão da oficina.",
   "lang": "pt-BR",
-  "start_url": "./?v=18.0&fresh=1",
+  "start_url": "./?v=18.2&layout=17.7&fresh=1",
   "scope": "./",
   "display": "standalone",
   "display_override": [
