@@ -1,4 +1,4 @@
-const CACHE='ajc-oficina-v17-7-restauro-visual-04';
+const CACHE='ajc-oficina-v17-7-pwa-github-05';
 const CORE=[
   './',
   './index.html',
