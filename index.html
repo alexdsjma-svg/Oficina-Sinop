@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#041230">
 <meta name="description" content="AJC Oficina - Acompanhamento da Jornada do Cliente na Oficina Sinop">
+<meta name="ajc-build" content="18.0-layout-17.7-2026-09-14">
 <link rel="manifest" href="./manifest.webmanifest">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -25,7 +26,7 @@
   --v15-bad:#dc2626;
 }
 .v15-tab{position:relative;overflow:hidden}
-.v15-tab:after{content:"V16";font-size:8px;margin-left:6px;background:#16c7ff;color:#02142f;border-radius:999px;padding:2px 5px;font-weight:950;vertical-align:2px}
+.v15-tab:after{content:"V18.0";font-size:8px;margin-left:6px;background:#16c7ff;color:#02142f;border-radius:999px;padding:2px 5px;font-weight:950;vertical-align:2px}
 .central-shell{display:grid;gap:12px}
 .central-hero{position:relative;overflow:hidden;border-radius:18px;padding:20px;border:1px solid rgba(84,177,255,.22);background:radial-gradient(circle at 88% 20%,rgba(22,199,255,.24),transparent 32%),linear-gradient(135deg,var(--v15-navy2),var(--v15-navy));color:#fff;box-shadow:0 18px 50px rgba(2,13,42,.16)}
 .central-hero:before{content:"";position:absolute;inset:auto -80px -120px auto;width:300px;height:300px;border:1px solid rgba(255,255,255,.12);border-radius:50%}
@@ -182,7 +183,7 @@ main{max-width:1720px!important;margin:0 auto!important;padding:10px 16px 34px!i
 @media(max-width:680px){.comp-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.comp-kpi .value{font-size:22px}}
 
 </style>
-<title>AJC Oficina • V17.7 • PWA Instalável</title>
+<title>AJC Oficina • V18.0 • Layout V17.7 Oficial</title>
 <style>
 :root{--bg:#f3f6fa;--card:#fff;--ink:#0f172a;--muted:#64748b;--line:#dce3ec;--nav:#0f172a;--blue:#2563eb;--blue2:#dbeafe;--green:#16a34a;--green2:#dcfce7;--orange:#d97706;--orange2:#ffedd5;--red:#dc2626;--red2:#fee2e2;--purple:#7c3aed;--purple2:#ede9fe;--shadow:0 4px 14px rgba(15,23,42,.07)}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}
@@ -1079,7 +1080,7 @@ main{max-width:1780px;padding:16px 16px 30px!important}.tabs{display:grid!import
 
 </head>
 <body><div id="appSplash"><img class="splash-v14" src="./ajc-banner-v17-7.png" alt="AJC Oficina"></div><script id="v177SplashSafety">(function(){function hide(){var s=document.getElementById('appSplash');if(s){s.classList.add('hide');setTimeout(function(){if(s&&s.parentNode)s.parentNode.removeChild(s)},700)}}window.addEventListener('DOMContentLoaded',function(){setTimeout(hide,1100)});window.addEventListener('load',function(){setTimeout(hide,700)});setTimeout(hide,2600)})();</script>
-<header><div class="header-wrap"><div class="brand-shell"><a class="mini-brand" href="#" onclick="switchTab('central');return false;"><img class="mini-brand-icon" src="./ajc-icon-192.png" alt="AJC Oficina"><div class="mini-brand-text"><strong>AJC <span>Oficina</span></strong><small>V17.7 • Jornada do Cliente</small></div></a><div class="header-search"><span class="search-icon">⌕</span><input id="globalQuickSearch" type="search" placeholder="Buscar cliente, veículo, placa ou OS..."><button class="btn-blue" type="button" onclick="executarBuscaGlobal()">Buscar</button></div></div><div class="top-actions"><button class="btn-light notif-btn" id="notifBtn" onclick="abrirNotificacoes()" title="Notificações">🔔<span id="notifCount" class="notif-count hidden">0</span></button><div class="user-chip" id="userChip"><span>👤</span><div><strong id="currentUserName">Não conectado</strong><div id="currentUserRole">—</div></div></div><button class="btn-light" id="syncNowBtn" onclick="sincronizarAgora()" title="Atualizar dados da nuvem">⟳ Sincronizar</button><div id="syncStatus" class="sync-status">Nuvem: aguardando</div><button class="btn-light" id="installBtn" hidden>Instalar App</button><button class="btn-blue action-compact" id="topImportBtn" onclick="switchTab('agenda')">Agenda</button><button class="btn-blue action-compact" id="topVehicleBtn" onclick="abrirNovoVeiculo()">+ Veículo</button><button class="btn-blue action-compact" id="topCheckinBtn" onclick="abrirCheckinRapido()">Receber cliente</button><button class="btn-light action-compact" id="logoutBtn" onclick="logoutUser()">Sair</button></div></div><div class="ajc-hero-banner-v177"><img src="./ajc-banner-v17-7.png" alt="AJC Oficina — Acompanhamento da Jornada do Cliente"></div></header>
+<header><div class="header-wrap"><div class="brand-shell"><a class="mini-brand" href="#" onclick="switchTab('central');return false;"><img class="mini-brand-icon" src="./ajc-icon-192.png" alt="AJC Oficina"><div class="mini-brand-text"><strong>AJC <span>Oficina</span></strong><small>V18.0 • Layout V17.7</small></div></a><div class="header-search"><span class="search-icon">⌕</span><input id="globalQuickSearch" type="search" placeholder="Buscar cliente, veículo, placa ou OS..."><button class="btn-blue" type="button" onclick="executarBuscaGlobal()">Buscar</button></div></div><div class="top-actions"><button class="btn-light notif-btn" id="notifBtn" onclick="abrirNotificacoes()" title="Notificações">🔔<span id="notifCount" class="notif-count hidden">0</span></button><div class="user-chip" id="userChip"><span>👤</span><div><strong id="currentUserName">Não conectado</strong><div id="currentUserRole">—</div></div></div><button class="btn-light" id="syncNowBtn" onclick="sincronizarAgora()" title="Atualizar dados da nuvem">⟳ Sincronizar</button><div id="syncStatus" class="sync-status">Nuvem: aguardando</div><button class="btn-light" id="installBtn" hidden>Instalar App</button><button class="btn-blue action-compact" id="topImportBtn" onclick="switchTab('agenda')">Agenda</button><button class="btn-blue action-compact" id="topVehicleBtn" onclick="abrirNovoVeiculo()">+ Veículo</button><button class="btn-blue action-compact" id="topCheckinBtn" onclick="abrirCheckinRapido()">Receber cliente</button><button class="btn-light action-compact" id="logoutBtn" onclick="logoutUser()">Sair</button></div></div><div class="ajc-hero-banner-v177"><img src="./ajc-banner-v17-7.png" alt="AJC Oficina — Acompanhamento da Jornada do Cliente"></div></header>
 <main>
 <nav class="tabs">
 <button class="tab active v15-tab" data-tab="central">Central</button><button class="tab" data-tab="operacao">Controle de quadro</button><button class="tab" data-tab="agenda">Agenda</button><button class="tab" data-tab="filas">Filas</button><button class="tab" data-tab="lavagem">Lavagem</button><button class="tab" data-tab="servicos">Códigos / Tempos</button><button class="tab" data-tab="complementares">Serviços Complementares</button><button class="tab" data-tab="tratativas">Tratativas</button><button class="tab" data-tab="equipe">Equipe</button><button class="tab" data-tab="painel">Dashboard</button><button class="tab" data-tab="sugestoes">Sugestões de Melhoria</button><button class="tab" data-tab="apresentacao">Apresentação</button><button class="tab" data-tab="acessos">Acessos / Auditoria</button><button class="tab" data-tab="instalar">Instalar</button>
@@ -1090,7 +1091,7 @@ main{max-width:1780px;padding:16px 16px 30px!important}.tabs{display:grid!import
   <div class="central-hero">
     <div class="central-hero-top">
       <div>
-        <div class="central-eyebrow">AJC Oficina • V17.7</div>
+        <div class="central-eyebrow">AJC Oficina • V18.0</div>
         <h2>Central de comando</h2>
         <p>Qualidade, prazos, gargalos e liberações em uma única visão para ADM e Controle de Quadro.</p>
       </div>
@@ -2249,7 +2250,7 @@ function isStandaloneApp(){return window.matchMedia('(display-mode: standalone)'
 function isPublishedPwa(){try{return location.protocol==='https:'&&(location.hostname==='alexdsjma-svg.github.io'||location.href.startsWith(AJC_PWA_URL))}catch(e){return false}}
 async function ensurePwaReady(){
   if(!isPublishedPwa()||!('serviceWorker' in navigator))return false;
-  const reg=await navigator.serviceWorker.register('./sw.js',{scope:'./',updateViaCache:'none'});
+  const reg=await navigator.serviceWorker.register('./sw.js?v=18.0.2',{scope:'./',updateViaCache:'none'});
   try{await reg.update()}catch(e){}
   await navigator.serviceWorker.ready;
   return true;
@@ -2730,7 +2731,20 @@ function renderOverlaySlide(){if(!presSlides.length)return;presSlideIndex=(presS
 function mudarSlideApresentacao(dir){presSlideIndex+=dir;renderOverlaySlide()}
 function sairModoApresentacao(){$('#presOverlay').classList.remove('show');if(document.fullscreenElement)document.exitFullscreen?.().catch(()=>{})}
 window.addEventListener('keydown',e=>{if(!$('#presOverlay')?.classList.contains('show'))return;if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();mudarSlideApresentacao(1)}else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();mudarSlideApresentacao(-1)}else if(e.key==='Escape')sairModoApresentacao()});
-function imprimirApresentacao(){renderPresentation();const w=window.open('','_blank');if(!w){toast('Libere pop-ups para imprimir');return}w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Fechamento mensal</title><style>body{font-family:Arial,sans-serif;margin:0;background:#fff;color:#0f172a}.presentation-slide-card{width:297mm;height:167mm;box-sizing:border-box;padding:12mm 14mm;position:relative;page-break-after:always;overflow:hidden}.presentation-slide-card:before{content:"";position:absolute;left:0;top:0;right:0;height:3mm;background:#2563eb}.presentation-slide-card h3{font-size:24pt;margin:0 0 2mm}.slide-sub{color:#64748b;font-size:10pt;margin-bottom:5mm}.pres-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:3mm}.pres-kpi,.pres-mini,.pres-team-card{border:1px solid #ddd;border-radius:3mm;padding:3mm;background:#f8fafc}.pres-kpi .v{font-size:20pt;font-weight:700}.pres-kpi .l,.pres-team-card strong{font-size:8pt;font-weight:700;color:#475569}.pres-kpi .s{font-size:8pt;color:#94a3b8}.pres-grid2{display:grid;grid-template-columns:1fr 1fr;gap:4mm}.pres-team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2.5mm}.pres-team-card div{font-size:8pt;line-height:1.4}.pres-table{width:100%;border-collapse:collapse;font-size:7.5pt}.pres-table th{background:#f1f5f9;text-align:left;padding:1.5mm}.pres-table td{padding:1.5mm;border-bottom:1px solid #eee}.pres-callout{padding:3mm;border:1px solid #bfdbfe;background:#eff6ff;border-radius:3mm;font-size:9pt}.pres-attention{background:#fff7ed;border-color:#fed7aa}.pres-footer{position:absolute;left:14mm;right:14mm;bottom:5mm;display:flex;justify-content:space-between;color:#94a3b8;font-size:7pt}@page{size:landscape;margin:0}@media print{body{print-color-adjust:exact;-webkit-print-color-adjust:exact}}</style></head><body>${presSlides.join('')}</body></html>`);w.document.close();setTimeout(()=>w.print(),300)}
+function imprimirApresentacao(){renderPresentation();const w=window.open('','_blank');if(!w){toast('Libere pop-ups para imprimir');return}w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Fechamento mensal</title><style>body{font-family:Arial,sans-serif;margin:0;background:#fff;color:#0f172a}.presentation-slide-card{width:297mm;height:167mm;box-sizing:border-box;padding:12mm 14mm;position:relative;page-break-after:always;overflow:hidden}.presentation-slide-card:before{content:"";position:absolute;left:0;top:0;right:0;height:3mm;background:#2563eb}.presentation-slide-card h3{font-size:24pt;margin:0 0 2mm}.slide-sub{color:#64748b;font-size:10pt;margin-bottom:5mm}.pres-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:3mm}.pres-kpi,.pres-mini,.pres-team-card{border:1px solid #ddd;border-radius:3mm;padding:3mm;background:#f8fafc}.pres-kpi .v{font-size:20pt;font-weight:700}.pres-kpi .l,.pres-team-card strong{font-size:8pt;font-weight:700;color:#475569}.pres-kpi .s{font-size:8pt;color:#94a3b8}.pres-grid2{display:grid;grid-template-columns:1fr 1fr;gap:4mm}.pres-team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2.5mm}.pres-team-card div{font-size:8pt;line-height:1.4}.pres-table{width:100%;border-collapse:collapse;font-size:7.5pt}.pres-table th{background:#f1f5f9;text-align:left;padding:1.5mm}.pres-table td{padding:1.5mm;border-bottom:1px solid #eee}.pres-callout{padding:3mm;border:1px solid #bfdbfe;background:#eff6ff;border-radius:3mm;font-size:9pt}.pres-attention{background:#fff7ed;border-color:#fed7aa}.pres-footer{position:absolute;left:14mm;right:14mm;bottom:5mm;display:flex;justify-content:space-between;color:#94a3b8;font-size:7pt}@page{size:landscape;margin:0}@media print{body{print-color-adjust:exact;-webkit-print-color-adjust:exact}}</style></head><body>${presSlides.join('')}<script id="ajc-v18-worker-refresh">
+(function(){
+  if(!('serviceWorker' in navigator)) return;
+  navigator.serviceWorker.addEventListener('message',function(e){
+    if(e.data && e.data.type==='AJC_VERSION' && e.data.version==='18.0'){
+      try{
+        if(sessionStorage.getItem('ajc-v18-worker-refresh')) return;
+        sessionStorage.setItem('ajc-v18-worker-refresh','1');
+        location.replace('./?v=18.0&fresh='+Date.now());
+      }catch(_){}
+    }
+  });
+})();
+</script></body></html>`);w.document.close();setTimeout(()=>w.print(),300)}
 function pptxTitle(slide,title,sub){slide.background={color:'FFFFFF'};slide.addShape(pptx.ShapeType.rect,{x:0,y:0,w:13.333,h:.08,fill:{color:'2563EB'},line:{color:'2563EB'}});slide.addText(title,{x:.55,y:.32,w:8.8,h:.45,fontFace:'Arial',fontSize:24,bold:true,color:'0F172A',margin:0});slide.addText(sub,{x:.55,y:.84,w:8.8,h:.25,fontFace:'Arial',fontSize:9,color:'64748B',margin:0})}
 function pptxFooter(slide,n,total){slide.addText('Oficina Sinop • Fechamento Mensal',{x:.55,y:7.16,w:4.2,h:.18,fontSize:7,color:'94A3B8',margin:0});slide.addText(`${n}/${total}`,{x:12.15,y:7.16,w:.6,h:.18,fontSize:7,color:'94A3B8',align:'right',margin:0})}
 function pptxKpis(slide,kpis,y=1.35){const cols=3,w=3.85,h=1.08,g=.18;for(let i=0;i<kpis.length;i++){const row=Math.floor(i/cols),col=i%cols,x=.55+col*(w+g),yy=y+row*(h+.16),k=kpis[i];slide.addShape(pptx.ShapeType.roundRect,{x, y:yy,w,h,rectRadius:.06,fill:{color:'F8FAFC'},line:{color:'E2E8F0',width:1}});slide.addText(String(k.label),{x:x+.14,y:yy+.12,w:w-.28,h:.18,fontSize:7,bold:true,color:'64748B',margin:0});slide.addText(String(k.value),{x:x+.14,y:yy+.37,w:w-.28,h:.36,fontSize:20,bold:true,color:'0F172A',margin:0});if(k.sub)slide.addText(String(k.sub),{x:x+.14,y:yy+.82,w:w-.28,h:.14,fontSize:7,color:'94A3B8',margin:0})}}
@@ -3945,7 +3959,7 @@ main{max-width:none!important;width:100%!important;margin:0!important;padding:0 
     Object.entries(map).forEach(([k,v])=>{const el=document.querySelector('.tab[data-tab="'+k+'"]');if(el)el.textContent=v});
   }
   function setupHeader(){
-    const small=$('.mini-brand-text small');if(small)small.textContent='V17.7';
+    const small=$('.mini-brand-text small');if(small)small.textContent='V18.0 • Layout V17.7';
   }
   function setupCentral(){
     const hero=$('#central .central-hero');
