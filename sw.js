@@ -1,5 +1,5 @@
-const CACHE='ajc-oficina-v18-5-mobile-realtime-1';
-const CORE=['./','./index.html','./manifest.webmanifest','./ajc-icon-192.png','./ajc-icon-512.png','./ajc-banner-v17-7.png','./ajc-install-art-v17-7.png'];
+const CACHE='ajc-oficina-v18-6-layout-v17-7-1';
+const CORE=['./','./index.html','./manifest.webmanifest','./ajc-icon-192.png','./ajc-icon-512.png','./ajc-banner-v17-7.png','./ajc-install-art-v17-7.png','./mobile-v186.css','./realtime-v186.js'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',e=>{
@@ -9,4 +9,3 @@ self.addEventListener('fetch',e=>{
  }
  if(url.origin===self.location.origin)e.respondWith(caches.match(req).then(cached=>cached||fetch(req).then(res=>{if(res&&res.ok){const cp=res.clone();caches.open(CACHE).then(c=>c.put(req,cp))}return res})));
 });
-self.addEventListener('notificationclick',e=>{e.notification.close();const target=e.notification?.data?.url||'./';e.waitUntil(clients.matchAll({type:'window',includeUncontrolled:true}).then(list=>{for(const c of list){if('focus'in c){c.navigate?.(target);return c.focus()}}return clients.openWindow(target)}))});
