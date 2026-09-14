@@ -1,0 +1,38 @@
+/* AJC Oficina V18.8 — correções visuais finais */
+.ajc-hero-banner-v177{
+  display:block!important;width:100%!important;max-width:1720px!important;margin:0 auto!important;
+  padding:4px 16px 12px!important;background:transparent!important
+}
+.ajc-hero-banner-v177 svg{
+  display:block!important;width:100%!important;height:auto!important;max-height:360px!important;
+  aspect-ratio:2508/627!important;border-radius:20px!important;
+  border:1px solid rgba(32,202,255,.48)!important;box-shadow:0 16px 42px rgba(0,16,54,.34)!important
+}
+/* garante que os blocos experimentais da Home anterior nunca apareçam */
+#v177HomeGrid,#v177Footer,.v177-home-grid,.v177-page-footer{display:none!important}
+
+/* Importação de planilha em Códigos / Tempos */
+.ajc-code-import{
+  margin:0 0 14px;padding:14px 16px;border:1px solid rgba(62,150,239,.42);border-radius:14px;
+  background:linear-gradient(180deg,#0b2b58,#082347);color:#eef7ff;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap
+}
+.ajc-code-import-copy strong{display:block;font-size:14px;margin-bottom:3px}
+.ajc-code-import-copy span{font-size:10px;color:#9db7d8}
+.ajc-code-import-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ajc-import-btn{
+  min-height:40px;padding:0 15px;border:1px solid #39c7ff;border-radius:10px;
+  background:linear-gradient(135deg,#168dff,#18b7ff);color:white;font-weight:850;font-size:11px;cursor:pointer
+}
+.ajc-template-btn{
+  min-height:40px;padding:0 13px;border:1px solid rgba(116,170,235,.42);border-radius:10px;
+  background:#092148;color:#dcecff;font-weight:800;font-size:10px;cursor:pointer
+}
+.ajc-import-status{width:100%;font-size:10px;color:#8fb2dc;margin-top:2px}
+.ajc-import-status.ok{color:#70e6a8}.ajc-import-status.err{color:#ff8d9b}
+@media(max-width:700px){
+ .ajc-hero-banner-v177{padding:2px 8px 10px!important}
+ .ajc-hero-banner-v177 svg{border-radius:13px!important}
+ .ajc-code-import{align-items:stretch}.ajc-code-import-actions{display:grid;grid-template-columns:1fr 1fr;width:100%}
+ .ajc-import-btn,.ajc-template-btn{width:100%}
+}
