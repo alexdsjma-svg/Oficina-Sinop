@@ -38,7 +38,7 @@ h1{font-size:26px;line-height:1.05;margin:0}.sub{margin-top:6px;color:#bcd2eb;fo
     <button class="btn secondary" id="open">Abrir AJC Oficina agora</button>
     <div class="status" id="status">Preparando a instalação...</div>
     <div class="steps"><h3>Como instalar</h3><ol id="steps"></ol></div>
-    <div class="version">AJC Oficina V18.7 • Layout V17.7 • Mobile/Tablet</div>
+    <div class="version">AJC Oficina V18.8 • Layout V17.7 • Mobile/Tablet</div>
   </section>
 </main>
 <script>
@@ -66,7 +66,7 @@ install.addEventListener('click',async()=>{
  if(deferredPrompt){deferredPrompt.prompt();const r=await deferredPrompt.userChoice;statusBox.textContent=r.outcome==='accepted'?'Instalação iniciada.':'Instalação cancelada; você pode tentar novamente.';statusBox.className=r.outcome==='accepted'?'status ok':'status warn';deferredPrompt=null;return;}
  statusBox.textContent=android?'No Chrome, toque no menu ⋮ e escolha “Instalar app” ou “Adicionar à tela inicial”.':'Use a opção “Instalar app” do navegador.';statusBox.className='status warn';
 });
-document.getElementById('open').onclick=()=>location.href='./?v=18.7';
+document.getElementById('open').onclick=()=>location.href='./?v=18.8';
 </script>
 </body>
 </html>
