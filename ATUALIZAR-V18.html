@@ -1,0 +1,6 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Atualizar AJC Oficina V18.0</title>
+<style>body{font-family:system-ui;margin:0;background:#061631;color:#fff;display:grid;place-items:center;min-height:100vh}.c{max-width:620px;padding:28px;border:1px solid #1d5794;border-radius:18px;background:#082650}button{padding:13px 18px;border:0;border-radius:10px;background:#16a8ff;color:#fff;font-weight:800;cursor:pointer}</style></head>
+<body><div class="c"><h1>Atualizar AJC Oficina</h1><p>Remove somente o cache e o Service Worker antigo. Os dados da operação não são apagados.</p><button onclick="resetar()">Atualizar para V18.0</button><p id="s"></p></div>
+<script>async function resetar(){const s=document.getElementById('s');s.textContent='Atualizando…';try{if('serviceWorker'in navigator){const rs=await navigator.serviceWorker.getRegistrations();await Promise.all(rs.map(r=>r.unregister()));}if('caches'in window){const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)));}s.textContent='Pronto. Abrindo a V18.0…';setTimeout(()=>location.replace('./?v=18.0&fresh='+Date.now()),500);}catch(e){s.textContent='Falha: '+e.message;}}</script></body></html>
