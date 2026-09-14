@@ -1,24 +1,6 @@
-const CACHE = 'ajc-oficina-v14-vector-2026-09-13';
-const CORE = ['./','./index.html','./manifest.json','./ajc-banner-v14.svg','./ajc-icon-v14.svg','./supabase-config.js','./cloud.js'];
-self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(CORE)).then(() => self.skipWaiting()));
-});
-self.addEventListener('activate', event => {
-  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
-});
-self.addEventListener('fetch', event => {
-  const req = event.request;
-  if (req.method !== 'GET') return;
-  if (req.mode === 'navigate') {
-    event.respondWith(fetch(req).then(res => {
-      const copy=res.clone(); caches.open(CACHE).then(cache=>cache.put('./index.html',copy)); return res;
-    }).catch(()=>caches.match('./index.html')));
-    return;
-  }
-  event.respondWith(caches.match(req).then(cached => cached || fetch(req).then(res => {
-    if (res && (res.ok || res.type === 'opaque')) {
-      const copy=res.clone(); caches.open(CACHE).then(cache=>cache.put(req,copy));
-    }
-    return res;
-  })));
-});
+const CACHE='ajc-oficina-pages-v177-1';
+const CORE=['./','./instalar.html','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png'];
+self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())));
+self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
+self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;if(e.request.mode==='navigate'){e.respondWith(fetch(e.request).then(r=>{const cp=r.clone();caches.open(CACHE).then(c=>c.put(e.request,cp));return r}).catch(()=>caches.match(e.request).then(x=>x||caches.match('./'))));return}e.respondWith(caches.match(e.request).then(x=>x||fetch(e.request)))});
+self.addEventListener('notificationclick',e=>{e.notification.close();e.waitUntil(clients.matchAll({type:'window',includeUncontrolled:true}).then(list=>list[0]?.focus()||clients.openWindow('./')))})

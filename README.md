@@ -1,3 +1,3 @@
 # Oficina Sinop
 
-Aplicativo PWA da Oficina Sinop.
+PWA oficial do AJC Oficina.

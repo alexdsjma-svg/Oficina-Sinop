@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#203654">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon.svg">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<title>Instalar AJC Oficina</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,Segoe UI,Arial;background:linear-gradient(180deg,#eaf1f8,#f7f9fc);color:#1d2e44;min-height:100vh;display:grid;place-items:center;padding:18px}
+.card{width:min(680px,100%);background:#fff;border:1px solid #dce6f1;border-radius:24px;overflow:hidden;box-shadow:0 24px 70px rgba(27,50,80,.14)}
+.head{padding:28px;background:linear-gradient(135deg,#102b50,#285f9c);color:#fff;display:flex;gap:16px;align-items:center}
+.logo{width:74px;height:74px;border-radius:20px;background:linear-gradient(135deg,#173c70,#35a8e9);display:grid;place-items:center;font-weight:950;font-size:24px}
+.head h1{margin:0;font-size:28px}.head p{margin:6px 0 0;color:#d6e4f1}.body{padding:26px}
+.install{width:100%;border:0;border-radius:16px;padding:18px;font-size:18px;font-weight:950;background:linear-gradient(135deg,#2186e6,#34b3ed);color:#fff;cursor:pointer}
+.install:disabled{opacity:.55}.open{width:100%;margin-top:10px;border:1px solid #cfdae7;border-radius:14px;padding:14px;font-weight:850;background:#fff;color:#294a69;cursor:pointer}
+.status{margin-top:16px;padding:13px 14px;border-radius:13px;background:#eef5fb;color:#45627f;font-size:13px;line-height:1.55}
+.help{margin-top:18px;border-top:1px solid #e6edf5;padding-top:16px;color:#61768e;font-size:13px;line-height:1.6}.ok{background:#e9f7ef;color:#327554}.warn{background:#fff4e5;color:#9a672a}
+</style>
+</head>
+<body>
+<div class="card"><div class="head"><div class="logo">AJC</div><div><h1>Instalar AJC Oficina</h1><p>Instalação simples no computador como aplicativo.</p></div></div>
+<div class="body">
+<button class="install" id="btn">Instalar AJC Oficina</button>
+<button class="open" onclick="location.href='./'">Abrir AJC Oficina</button>
+<div class="status" id="status">Preparando instalação…</div>
+<div class="help"><b>Windows:</b> use Microsoft Edge ou Google Chrome. Se o botão não aparecer, no Edge escolha <b>… → Aplicativos → Instalar este site como um aplicativo</b>.</div>
+</div></div>
+<script>
+let promptEvent=null;const btn=document.getElementById('btn'),st=document.getElementById('status');
+function standalone(){return matchMedia('(display-mode: standalone)').matches}
+if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js',{scope:'./'}).then(()=>{st.textContent='Preparado. Aguarde o navegador liberar o instalador.'}).catch(()=>{st.textContent='Não foi possível preparar automaticamente. Use o menu do navegador.';st.className='status warn'})}
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();promptEvent=e;st.textContent='Pronto para instalar. Clique no botão acima.';st.className='status ok'});
+addEventListener('appinstalled',()=>{btn.textContent='✅ Instalado';btn.disabled=true;st.textContent='Instalação concluída. Abra pelo Menu Iniciar ou área de trabalho.';st.className='status ok'});
+btn.onclick=async()=>{if(standalone()){btn.textContent='✅ Já instalado';btn.disabled=true;st.textContent='O AJC Oficina já está instalado.';st.className='status ok';return}
+if(promptEvent){promptEvent.prompt();const r=await promptEvent.userChoice;st.textContent=r.outcome==='accepted'?'Instalação iniciada.':'Instalação cancelada.';st.className='status '+(r.outcome==='accepted'?'ok':'warn');promptEvent=null;return}
+st.textContent='No Edge: clique em … → Aplicativos → Instalar este site como um aplicativo. No Chrome, use o ícone de instalação na barra de endereço.';st.className='status warn'};
+if(standalone()){btn.textContent='✅ Já instalado';btn.disabled=true;st.textContent='O AJC Oficina já está instalado.';st.className='status ok'}
+</script>
+</body></html>
