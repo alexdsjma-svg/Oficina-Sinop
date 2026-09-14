@@ -1,5 +1,14 @@
-const CACHE='ajc-oficina-v17-7-pwa-2026-09-14';
-const CORE=['./','./index.html','./manifest.json','./icon-192.png','./icon-512.png','./ajc-banner-v14.svg'];
+const CACHE='ajc-oficina-v17-7-padrao-2026-09-14-02';
+const CORE=[
+  './',
+  './index.html',
+  './manifest.webmanifest',
+  './ajc-icon-192.png',
+  './ajc-icon-512.png',
+  './ajc-banner-v17-7.png',
+  './ajc-install-art-v17-7.png',
+  './ajc-banner-v14.svg'
+];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));
 });
@@ -10,7 +19,7 @@ self.addEventListener('fetch',event=>{
   const req=event.request;
   if(req.method!=='GET') return;
   if(req.mode==='navigate'){
-    event.respondWith(fetch(req).then(res=>{
+    event.respondWith(fetch(req,{cache:'no-store'}).then(res=>{
       const copy=res.clone();
       caches.open(CACHE).then(cache=>cache.put('./index.html',copy));
       return res;
