@@ -1,8 +1,8 @@
 {
   "id": "./?app=ajc-oficina-v18-7",
-  "name": "AJC Oficina V18.7 — Layout V17.7",
+  "name": "AJC Oficina V18.7 — Home V17.7 restaurada",
   "short_name": "AJC Oficina",
-  "description": "Jornada do Cliente com sincronização Supabase em tempo real.",
+  "description": "AJC Oficina V18.7 com Home V17.7 restaurada, instalação PWA e sincronização em tempo real.",
   "lang": "pt-BR",
   "start_url": "./?v=18.7",
   "scope": "./",
