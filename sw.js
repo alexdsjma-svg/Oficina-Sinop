@@ -1,5 +1,5 @@
-const CACHE='ajc-oficina-v17-8-2026-09-14';
-const CORE=['./','./index.html','./manifest.json','./icon-192.png','./icon-512.png'];
+const CACHE='ajc-oficina-v17-7-pwa-2026-09-14';
+const CORE=['./','./index.html','./manifest.json','./icon-192.png','./icon-512.png','./ajc-banner-v14.svg'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));
 });

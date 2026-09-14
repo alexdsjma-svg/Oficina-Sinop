@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2508 627" role="img" aria-label="AJC Oficina - Acompanhamento da Jornada do Cliente">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#03102b"/>
+    <stop offset=".45" stop-color="#082a68"/>
+    <stop offset="1" stop-color="#0060dd"/>
+  </linearGradient>
+  <linearGradient id="cyan" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#78f8ff"/>
+    <stop offset=".52" stop-color="#16d9ff"/>
+    <stop offset="1" stop-color="#0877ff"/>
+  </linearGradient>
+  <linearGradient id="silver" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#fff"/>
+    <stop offset=".55" stop-color="#eef6ff"/>
+    <stop offset="1" stop-color="#b9d1ef"/>
+  </linearGradient>
+  <filter id="glow"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect x="0" y="0" width="2508" height="627" rx="42" fill="url(#bg)"/>
+<ellipse cx="2260" cy="90" rx="500" ry="290" fill="#0a7fff" opacity=".13"/>
+<ellipse cx="1850" cy="560" rx="900" ry="120" fill="#0a66ff" opacity=".17"/>
+
+<!-- left emblem -->
+<g transform="translate(85 74)" filter="url(#glow)">
+ <path d="M150 20 L315 105 L315 340 L150 430 L-15 340 L-15 105 Z" fill="#07183f" stroke="#19e9ff" stroke-width="18"/>
+ <path d="M35 190 C92 145 130 150 183 128 C232 109 254 73 275 35" fill="none" stroke="#47f5ff" stroke-width="10" stroke-linecap="round"/>
+ <circle cx="40" cy="188" r="17" fill="#fff" stroke="#13e9ff" stroke-width="9"/>
+ <circle cx="130" cy="150" r="17" fill="#fff" stroke="#13e9ff" stroke-width="9"/>
+ <circle cx="224" cy="102" r="17" fill="#fff" stroke="#13e9ff" stroke-width="9"/>
+ <path d="M240 5c0-27 22-49 49-49s49 22 49 49c0 42-49 92-49 92S240 47 240 5z" fill="#34ebff"/>
+ <circle cx="289" cy="5" r="18" fill="#082257"/>
+ <g transform="translate(38 205)">
+   <path d="M30 82 L78 25 Q88 12 106 12 H190 Q208 12 218 25 L266 82 H286 Q304 82 304 100 V150 H-8 V100 Q-8 82 10 82Z" fill="url(#silver)"/>
+   <path d="M90 34 H178 Q192 34 201 45 L232 82 H49 L79 45 Q86 34 90 34Z" fill="#061b49"/>
+   <path d="M20 111 H74 M222 111 H278" stroke="#061b49" stroke-width="12" stroke-linecap="round"/>
+   <circle cx="48" cy="146" r="17" fill="#03102b"/>
+   <circle cx="247" cy="146" r="17" fill="#03102b"/>
+ </g>
+</g>
+
+<rect x="485" y="154" width="4" height="285" rx="2" fill="#20dfff" opacity=".88" filter="url(#glow)"/>
+
+<!-- title -->
+<text x="555" y="305" font-family="Segoe UI,Arial,sans-serif" font-size="156" font-weight="900" fill="url(#silver)">AJC</text>
+<text x="936" y="305" font-family="Segoe UI,Arial,sans-serif" font-size="156" font-weight="900" fill="url(#cyan)">Oficina</text>
+<text x="560" y="408" font-family="Segoe UI,Arial,sans-serif" font-size="62" font-weight="500" fill="#eef5ff">Acompanhamento da Jornada do Cliente</text>
+
+<!-- road / journey -->
+<path d="M1470 512 C1650 440 1690 384 1800 337 C1914 288 2065 344 2202 262 C2295 205 2354 136 2475 110" fill="none" stroke="#1be9ff" stroke-width="8" opacity=".8" filter="url(#glow)"/>
+<path d="M1450 572 C1685 508 1780 466 1900 430 C2085 374 2208 400 2355 304 C2421 260 2460 220 2500 180" fill="none" stroke="#1278ff" stroke-width="17" opacity=".75"/>
+<path d="M1450 593 C1750 543 1940 520 2110 490 C2260 463 2380 414 2500 337" fill="none" stroke="#11cfff" stroke-width="6" opacity=".7"/>
+
+<!-- markers -->
+<g fill="#3df3ff" filter="url(#glow)">
+ <path d="M1708 267c0-24 19-43 43-43s43 19 43 43c0 36-43 78-43 78s-43-42-43-78z"/><circle cx="1751" cy="267" r="14" fill="#0a2d68"/>
+ <path d="M1930 319c0-24 19-43 43-43s43 19 43 43c0 36-43 78-43 78s-43-42-43-78z"/><circle cx="1973" cy="319" r="14" fill="#0a2d68"/>
+ <path d="M2170 231c0-27 22-49 49-49s49 22 49 49c0 41-49 90-49 90s-49-49-49-90z"/><circle cx="2219" cy="231" r="16" fill="#0a2d68"/>
+ <path d="M2350 121c0-40 32-72 72-72s72 32 72 72c0 59-72 130-72 130s-72-71-72-130z"/><circle cx="2422" cy="121" r="25" fill="#0a2d68"/>
+</g>
+
+<!-- car on journey -->
+<g transform="translate(1925 360)" filter="url(#glow)">
+ <path d="M30 86 L92 18 Q105 4 126 4 H248 Q269 4 282 18 L344 86 H375 Q397 86 397 108 V170 H-20 V108 Q-20 86 2 86Z" fill="#0958d8" stroke="#17dfff" stroke-width="6"/>
+ <path d="M117 25 H236 Q252 25 263 38 L305 86 H70 L112 38 Q122 25 117 25Z" fill="#071b46"/>
+ <path d="M5 122 H80 M296 122 H375" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
+ <path d="M50 162 H320" stroke="#ff244d" stroke-width="11" stroke-linecap="round"/>
+ <circle cx="65" cy="170" r="18" fill="#03102b"/><circle cx="315" cy="170" r="18" fill="#03102b"/>
+</g>
+</svg>

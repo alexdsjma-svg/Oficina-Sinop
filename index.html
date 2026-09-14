@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#041230">
 <meta name="description" content="AJC Oficina - Acompanhamento da Jornada do Cliente na Oficina Sinop">
+<link rel="manifest" href="./manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" sizes="192x192" href="./icon-192.png">
 <style>
@@ -77,7 +78,7 @@ header{background:linear-gradient(180deg,#081933,#0d2344)!important;border-botto
 .btn-light,.btn-blue,.btn.primary,.btn.secondary,.btn.dark,.btn.ghost{box-shadow:none!important}
 .tabs{gap:8px!important}.tab{box-shadow:none!important}.tab.active{box-shadow:0 10px 20px rgba(28,122,231,.22)!important}
 .section,.stat,.perm-card,.central-card,.presentation-slide-card,.consultora-card,.wash-box-card,.detail-card{background:#fff!important;border:1px solid #e6edf7!important;box-shadow:0 12px 28px rgba(18,38,63,.06)!important;color:#1a2a40!important}.section-head,.central-card-head{background:linear-gradient(180deg,#ffffff,#f8fbff)!important;border-bottom:1px solid #edf3fb!important}.section-head h2,.central-card-head h3,.modal-head h3,.ck-value,.ck-label{color:#16253b!important}.section-head p,.central-card-head p,.muted,.smalltxt,.field label,.sub,.footer-note,.empty{color:#5f738f!important}.field input,.field select,.field textarea{background:#fff!important;border:1px solid #d8e4f3!important;color:#16253b!important}.field input::placeholder,.field textarea::placeholder{color:#91a2bb!important}.field input:focus,.field select:focus,.field textarea:focus{border-color:#68aaf5!important;box-shadow:0 0 0 3px rgba(28,122,231,.12)!important}.data-table th{background:#f7faff!important;color:#57708f!important;border-bottom:1px solid #e6edf7!important}.data-table td{border-bottom:1px solid #edf3fb!important;color:#1e2e45!important}.data-table tbody tr:hover{background:#f8fbff!important}.notice,.empty{background:#f8fbff!important;border:1px solid #e2ecf8!important;color:#325277!important}.sync-status{background:rgba(255,255,255,.10)!important}
-.central-hero{background:linear-gradient(90deg,rgba(4,18,48,.94) 0%,rgba(4,18,48,.80) 38%,rgba(5,21,54,.28) 100%), url('ajc-banner-v16.png?v=16.1') center/cover no-repeat!important;border:1px solid rgba(94,138,206,.16)!important;box-shadow:0 20px 40px rgba(7,17,36,.14)!important}.central-hero::after{display:none}.central-hero h2{font-size:52px!important;text-shadow:none!important}.central-hero p{color:#dbe7f7!important}.central-eyebrow,.central-date-box,.central-role{box-shadow:none!important}.central-role{background:rgba(255,255,255,.08)!important}.central-kpi{background:#fff!important;border:1px solid #e6edf7!important;box-shadow:0 12px 28px rgba(18,38,63,.06)!important}.central-kpi .ck-label{color:#587190!important}.central-kpi .ck-value{color:#12243d!important}.central-kpi .ck-sub{color:#6a7f9b!important}
+.central-hero{background:linear-gradient(90deg,rgba(4,18,48,.94) 0%,rgba(4,18,48,.80) 38%,rgba(5,21,54,.28) 100%), url('ajc-banner-v14.svg?v=17.7') center/cover no-repeat!important;border:1px solid rgba(94,138,206,.16)!important;box-shadow:0 20px 40px rgba(7,17,36,.14)!important}.central-hero::after{display:none}.central-hero h2{font-size:52px!important;text-shadow:none!important}.central-hero p{color:#dbe7f7!important}.central-eyebrow,.central-date-box,.central-role{box-shadow:none!important}.central-role{background:rgba(255,255,255,.08)!important}.central-kpi{background:#fff!important;border:1px solid #e6edf7!important;box-shadow:0 12px 28px rgba(18,38,63,.06)!important}.central-kpi .ck-label{color:#587190!important}.central-kpi .ck-value{color:#12243d!important}.central-kpi .ck-sub{color:#6a7f9b!important}
 #operacao .section-head{position:sticky;top:0;z-index:4}
 .quick-flow-card{display:flex;flex-direction:column;gap:10px;min-width:320px}
 .quick-main-actions{display:flex;flex-wrap:wrap;gap:8px}
@@ -99,7 +100,7 @@ header{background:linear-gradient(180deg,#203654,#2a4467)!important}
 .header-search,.user-chip,.sync-status{box-shadow:none!important}
 .btn-light{background:#eef3f8!important;color:#25415f!important;border:1px solid #d8e3ef!important}.btn-blue,.btn.primary{background:linear-gradient(135deg,#4b7fc2,#6799d8)!important;color:#fff!important;border:1px solid #5e8ece!important}.btn.secondary{background:#edf4fb!important;color:#31516f!important;border:1px solid #d8e3ef!important}.btn.success{background:linear-gradient(135deg,#65a88a,#79b998)!important}.btn.warn{background:linear-gradient(135deg,#d5a46c,#e2b57f)!important;color:#fff!important}.btn.danger{background:linear-gradient(135deg,#c86b77,#d8848e)!important}.btn.ghost{background:#fff!important;color:#335274!important;border:1px solid #d8e3ef!important}
 .section,.stat,.perm-card,.central-card,.presentation-slide-card,.consultora-card,.wash-box-card,.detail-card,.central-kpi,.install-step,.install-benefits,.install-cta,.notif-item{background:var(--soft-surface)!important;border:1px solid var(--soft-line)!important;box-shadow:var(--soft-shadow)!important;color:var(--soft-text)!important}.section-head,.central-card-head{background:linear-gradient(180deg,#fff,#fbfdff)!important;border-bottom:1px solid #edf2f8!important}.section-head h2,.central-card-head h3,.modal-head h3,.ck-value,.ck-label,.field label,.data-table th,.data-table td,.vehicle-name{color:var(--soft-text)!important}.section-head p,.central-card-head p,.muted,.smalltxt,.sub,.footer-note,.empty,.quick-hint{color:var(--soft-muted)!important}.field input,.field select,.field textarea{background:#fff!important;border:1px solid #d6e0ec!important;color:var(--soft-text)!important}.field input:focus,.field select:focus,.field textarea:focus{border-color:#8db0d8!important;box-shadow:0 0 0 3px rgba(75,127,194,.12)!important}.data-table th{background:#f7f9fc!important;border-bottom:1px solid #e8eef5!important}.data-table td{border-bottom:1px solid #edf2f8!important}.data-table tbody tr:hover{background:#fbfdff!important}.notice,.empty{background:#f8fbff!important;border-color:#e4ecf5!important;color:#47637f!important}
-.central-hero{background:linear-gradient(90deg,rgba(32,54,84,.96) 0%,rgba(42,68,103,.88) 46%,rgba(60,93,136,.28) 100%), url('ajc-banner-v16.png?v=16.1') center/cover no-repeat!important;border:1px solid rgba(77,114,160,.14)!important;box-shadow:0 18px 34px rgba(35,53,80,.10)!important}.central-hero h2{font-size:48px!important}.central-hero p{color:#deebf8!important}.central-date-box,.central-role{background:rgba(255,255,255,.12)!important;border:1px solid rgba(255,255,255,.16)!important}.central-eyebrow{color:#e9f2ff!important}
+.central-hero{background:linear-gradient(90deg,rgba(32,54,84,.96) 0%,rgba(42,68,103,.88) 46%,rgba(60,93,136,.28) 100%), url('ajc-banner-v14.svg?v=17.7') center/cover no-repeat!important;border:1px solid rgba(77,114,160,.14)!important;box-shadow:0 18px 34px rgba(35,53,80,.10)!important}.central-hero h2{font-size:48px!important}.central-hero p{color:#deebf8!important}.central-date-box,.central-role{background:rgba(255,255,255,.12)!important;border:1px solid rgba(255,255,255,.16)!important}.central-eyebrow{color:#e9f2ff!important}
 .tabs{gap:8px!important}.tab{background:#fff!important;border:1px solid #dce6f1!important;color:#31465f!important;box-shadow:none!important}.tab.active{background:linear-gradient(135deg,#4d7fbd,#709dd8)!important;color:#fff!important;border-color:#6995cf!important;box-shadow:0 12px 22px rgba(66,105,156,.16)!important}
 .stage-action-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:8px}.stage-action-btn{padding:11px 10px!important;border-radius:14px!important;font-size:12px!important;font-weight:800!important;line-height:1.15!important;min-height:46px}.stage-action-btn.active{background:linear-gradient(135deg,#4f7fbe,#6b98d6)!important;color:#fff!important;border-color:#6b98d6!important}.stage-action-btn.simple{background:#fff!important;color:#395576!important;border:1px solid #dbe5ef!important}.stage-action-btn.wash{background:#f3f8fb!important;color:#4f7c88!important;border:1px solid #dbe9ee!important}.stage-action-btn.done{background:#f2f7f4!important;color:#4f8771!important;border:1px solid #d5e8dc!important}.stage-action-btn:disabled{opacity:.92;cursor:default}
 .operation-card-actions{display:flex;flex-direction:column;gap:10px;min-width:440px}.operation-secondary{display:flex;flex-wrap:wrap;gap:8px}.stage-strip{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.stage-pill{padding:6px 10px;border-radius:999px;font-size:10px;font-weight:800;border:1px solid #dfe6f0;background:#f9fbfd;color:#72839a}.stage-pill.done{background:#eef7f1;color:#4d866e;border-color:#d4e9db}.stage-pill.current{background:#edf4fb;color:#315f95;border-color:#d6e4f3}.priority-strip{margin-top:8px}.priority-chip{background:#f4f7fb!important;color:#5c6f86!important;border:1px solid #e0e8f1}
@@ -151,8 +152,7 @@ body[data-app-role="administrador"] .tab.active,body[data-app-role="administrado
 @media(max-width:680px){.comp-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.comp-kpi .value{font-size:22px}}
 
 </style>
-<link rel="manifest" href="manifest.json">
-<title>AJC Oficina • V17.8 • Instalável</title>
+<title>AJC Oficina • V17.7</title>
 <style>
 :root{--bg:#f3f6fa;--card:#fff;--ink:#0f172a;--muted:#64748b;--line:#dce3ec;--nav:#0f172a;--blue:#2563eb;--blue2:#dbeafe;--green:#16a34a;--green2:#dcfce7;--orange:#d97706;--orange2:#ffedd5;--red:#dc2626;--red2:#fee2e2;--purple:#7c3aed;--purple2:#ede9fe;--shadow:0 4px 14px rgba(15,23,42,.07)}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}
@@ -2178,68 +2178,50 @@ function serviceSummary(v){const all=v.services||[],done=all.filter(s=>serviceSt
 
 
 function executarBuscaGlobal(){const q=(document.getElementById('globalQuickSearch')?.value||'').trim();if(!q){switchTab('operacao');document.getElementById('opBusca')?.focus();return}switchTab('operacao');const op=document.getElementById('opBusca');if(op){op.value=q;renderOperacao();op.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>op.focus(),120)}}
+
 const AJC_PWA_URL='https://alexdsjma-svg.github.io/Oficina-Sinop/';
 function isStandaloneApp(){return window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true}
-function isPublishedPwa(){try{return location.protocol==='https:'&&location.hostname==='alexdsjma-svg.github.io'&&location.pathname.startsWith('/Oficina-Sinop/')}catch(e){return false}}
+function isPublishedPwa(){try{return location.origin==='https://alexdsjma-svg.github.io'&&location.pathname.startsWith('/Oficina-Sinop/')}catch(e){return false}}
 async function ensurePwaReady(){
-  if(!isPublishedPwa()||!('serviceWorker' in navigator))return false;
-  const reg=await navigator.serviceWorker.register('./sw.js',{scope:'./',updateViaCache:'none'});
-  try{await reg.update()}catch(e){}
-  await navigator.serviceWorker.ready;
-  return true;
+  if(!('serviceWorker' in navigator)||!isPublishedPwa())return false;
+  try{
+    await navigator.serviceWorker.register('./sw.js',{scope:'./'});
+    await navigator.serviceWorker.ready;
+    return true;
+  }catch(e){console.warn('service worker',e);return false}
 }
 function updateInstallStatusUI(){
   const box=$('#installStatusBox'),btn=$('#installActionBtn'),topBtn=$('#installBtn');
-  if(!box)return;
-  const isiOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
-  const isAndroid=/android/i.test(navigator.userAgent);
-  const desktop=!isiOS&&!isAndroid;
   if(isStandaloneApp()){
-    box.innerHTML='<strong>✓ AJC Oficina instalado neste dispositivo.</strong><br>Abra pelo Menu Iniciar/Área de Trabalho. O aplicativo funcionará em janela própria.';
+    if(box)box.innerHTML='<strong>✓ AJC Oficina instalado.</strong><br>O aplicativo está sendo executado em janela própria.';
     if(btn){btn.textContent='✓ App instalado';btn.disabled=true}
     if(topBtn)topBtn.hidden=true;
     return;
   }
   if(!isPublishedPwa()){
-    box.innerHTML='<strong>Instalação disponível na versão oficial.</strong><br>Abra o endereço do GitHub Pages para instalar como na V9.3.';
-    if(btn){btn.textContent=desktop?'💻 Abrir instalador no computador':'🌐 Abrir versão instalável';btn.disabled=false}
-    if(topBtn){topBtn.hidden=false;topBtn.textContent=desktop?'💻 Instalar no computador':'Instalar App'}
+    if(box)box.innerHTML='<strong>Versão instalável oficial.</strong><br>Abra a versão publicada no GitHub Pages para instalar o AJC Oficina.';
+    if(btn){btn.textContent='🌐 Abrir versão instalável';btn.disabled=false}
+    if(topBtn){topBtn.hidden=false;topBtn.textContent='Instalar App'}
     return;
   }
   if(deferredPrompt){
-    box.innerHTML='<strong>✓ Instalação disponível.</strong><br>'+ (desktop?'Clique em <b>Instalar no computador</b>. O Chrome/Edge abrirá a confirmação.':'Clique em instalar para adicionar o AJC Oficina ao dispositivo.');
-    if(btn){btn.textContent=desktop?'💻 Instalar no computador':'⬇ Instalar agora';btn.disabled=false}
-    if(topBtn){topBtn.hidden=false;topBtn.textContent=desktop?'💻 Instalar App':'Instalar App'}
-    return;
+    if(box)box.innerHTML='<strong>Instalação disponível.</strong><br>Este computador já permite instalar o AJC Oficina como aplicativo.';
+    if(btn){btn.textContent='⬇ Instalar agora';btn.disabled=false}
+    if(topBtn){topBtn.hidden=false;topBtn.textContent='Instalar App'}
+  }else{
+    const isiOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+    if(box)box.innerHTML=isiOS?'<strong>iPhone/iPad:</strong><br>No Safari, toque em Compartilhar → Adicionar à Tela de Início.':'<strong>Preparando instalação.</strong><br>No Edge ou Chrome, aguarde alguns segundos. Se o botão não for liberado, use o menu do navegador → Instalar aplicativo.';
+    if(btn){btn.textContent=isiOS?'Ver instruções':'Instalar / ver instruções';btn.disabled=false}
+    if(topBtn){topBtn.hidden=false;topBtn.textContent='Instalar App'}
   }
-  if(isiOS){
-    box.innerHTML='<strong>iPhone/iPad:</strong><br>No Safari, toque em Compartilhar → Adicionar à Tela de Início.';
-    if(btn){btn.textContent='Ver instruções no Safari';btn.disabled=false}
-    return;
-  }
-  box.innerHTML=desktop
-    ?'<strong>Preparando instalação no computador…</strong><br>O serviço de instalação está sendo ativado. Aguarde alguns segundos. Se o botão não abrir a confirmação, use o ícone de instalação na barra de endereço do Chrome/Edge.'
-    :'<strong>Preparando instalação…</strong><br>Aguarde alguns segundos e toque novamente em instalar.';
-  if(btn){btn.textContent=desktop?'💻 Instalar no computador':'⬇ Instalar agora';btn.disabled=false}
-  if(topBtn){topBtn.hidden=false;topBtn.textContent=desktop?'💻 Instalar App':'Instalar App'}
 }
 async function solicitarInstalacaoApp(){
   if(isStandaloneApp()){toast('O AJC Oficina já está instalado neste dispositivo.');updateInstallStatusUI();return}
-  const desktop=!/iphone|ipad|ipod|android/i.test(navigator.userAgent);
-  if(!isPublishedPwa()){toast('Abra a versão oficial em alexdsjma-svg.github.io/Oficina-Sinop para instalar.');return}
-  try{await ensurePwaReady()}catch(e){console.warn('PWA ready',e)}
-  if(deferredPrompt){
-    try{
-      deferredPrompt.prompt();
-      const choice=await deferredPrompt.userChoice;
-      if(choice?.outcome==='accepted')toast('Instalação iniciada. O AJC Oficina será adicionado ao computador.');
-      else toast('Instalação cancelada. Você pode instalar quando quiser.');
-    }catch(e){console.warn('install prompt',e)}
-    deferredPrompt=null;updateInstallStatusUI();return;
-  }
-  updateInstallStatusUI();
-  if(desktop)toast('No Chrome/Edge, aguarde alguns segundos e clique novamente. Se necessário, use o ícone Instalar na barra de endereço.');
-  else{switchTab('instalar');toast('Use a opção de instalação do navegador.');}
+  if(!isPublishedPwa()){location.href=AJC_PWA_URL+'?v=17.7';return}
+  await ensurePwaReady();
+  if(!deferredPrompt){switchTab('instalar');updateInstallStatusUI();toast('Aguarde o navegador liberar a instalação ou use o menu Instalar aplicativo.');return}
+  try{deferredPrompt.prompt();await deferredPrompt.userChoice}catch(e){console.warn('install prompt',e)}
+  deferredPrompt=null;updateInstallStatusUI();
 }
 function parseMentionUsers(raw){return [...new Set(String(raw||'').split(';').map(x=>x.trim()).filter(Boolean))]}
 function usernameFromName(name){const resolved=window.oficinaCloud?.resolveRecipientUsername?.(name);return resolved||('name:'+String(name||'').trim())}
@@ -2747,7 +2729,7 @@ let deferredPrompt;const installBtn=$('#installBtn');
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;installBtn.hidden=false;updateInstallStatusUI()});
 installBtn.addEventListener('click',solicitarInstalacaoApp);
 window.addEventListener('appinstalled',()=>{deferredPrompt=null;installBtn.hidden=true;updateInstallStatusUI();toast('AJC Oficina instalado com sucesso neste dispositivo.')});
-if('serviceWorker' in navigator&&location.protocol!=='file:'){window.addEventListener('load',async()=>{try{await ensurePwaReady();setTimeout(updateInstallStatusUI,500);setTimeout(updateInstallStatusUI,2000)}catch(e){console.warn('service worker',e);updateInstallStatusUI()}})}
+if('serviceWorker' in navigator&&isPublishedPwa()){window.addEventListener('load',async()=>{try{await ensurePwaReady();setTimeout(updateInstallStatusUI,500);setTimeout(updateInstallStatusUI,2000)}catch(e){console.warn('service worker',e);updateInstallStatusUI()}})}
 updateInstallStatusUI();
 </script>
 <script>

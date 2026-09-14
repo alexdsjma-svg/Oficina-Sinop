@@ -1,6 +1,6 @@
-# AJC Oficina V17.8
+# AJC Oficina V17.7
 
-PWA instalável pelo GitHub Pages, seguindo a mesma arquitetura que funcionava nas versões V9.
+Layout e funcionalidades da V17.7, publicados como PWA instalável no GitHub Pages.
 
 Acesso:
-https://alexdsjma-svg.github.io/Oficina-Sinop/?v=17.8
+https://alexdsjma-svg.github.io/Oficina-Sinop/?v=17.7

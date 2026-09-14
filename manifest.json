@@ -1,10 +1,10 @@
 {
   "id": "./",
-  "name": "AJC Oficina V17.8",
+  "name": "AJC Oficina V17.7",
   "short_name": "AJC Oficina",
   "description": "Gestão da jornada do cliente e operação da oficina.",
   "lang": "pt-BR",
-  "start_url": "./?v=17.8",
+  "start_url": "./?v=17.7",
   "scope": "./",
   "display": "standalone",
   "display_override": ["window-controls-overlay","standalone","minimal-ui"],
