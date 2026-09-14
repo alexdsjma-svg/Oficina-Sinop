@@ -1,0 +1,21 @@
+/* AJC V18.6 mobile/tablet additions — preserves V17.7 visual layout */
+#ajcRealtimeBadge{position:fixed;right:max(10px,env(safe-area-inset-right));bottom:max(10px,env(safe-area-inset-bottom));z-index:10000;display:flex;align-items:center;gap:7px;padding:8px 11px;border-radius:999px;background:rgba(3,18,43,.94);border:1px solid rgba(54,154,255,.45);box-shadow:0 8px 24px rgba(0,0,0,.18);color:#dcecff;font:800 11px/1.1 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;backdrop-filter:blur(10px)}
+#ajcRealtimeBadge .ajc-rt-dot{width:8px;height:8px;border-radius:50%;background:#f59e0b;box-shadow:0 0 9px currentColor}
+#ajcRealtimeBadge[data-state="live"] .ajc-rt-dot{background:#22c55e}
+#ajcRealtimeBadge[data-state="offline"] .ajc-rt-dot{background:#ef4444}
+#ajcRealtimeBadge[data-state="sync"] .ajc-rt-dot{background:#38bdf8}
+html{touch-action:manipulation;-webkit-text-size-adjust:100%}
+body{overscroll-behavior-y:none;padding-bottom:env(safe-area-inset-bottom)}
+button,.btn,.tab{-webkit-tap-highlight-color:transparent}
+@media(max-width:900px){
+  .top-actions{overflow-x:auto!important;flex-wrap:nowrap!important;scrollbar-width:none}
+  .top-actions::-webkit-scrollbar,.tabs::-webkit-scrollbar{display:none}
+  .top-actions>*{flex:0 0 auto}
+  .tabs{overflow-x:auto!important;-webkit-overflow-scrolling:touch}
+  .table-wrap{overflow:auto!important;-webkit-overflow-scrolling:touch}
+  dialog{max-width:96vw!important;max-height:92dvh!important}
+}
+@media(max-width:560px){
+  #ajcRealtimeBadge{right:8px;bottom:max(8px,env(safe-area-inset-bottom));font-size:10px;padding:7px 9px}
+}
+@media(display-mode:standalone){header{padding-top:env(safe-area-inset-top)}}

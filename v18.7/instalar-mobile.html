@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#061831">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AJC Oficina">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="./ajc-icon-192.png">
+<link rel="apple-touch-icon" href="./ajc-icon-192.png">
+<title>Instalar AJC Oficina</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+body{background:linear-gradient(180deg,#03122d,#071e43 70%,#0a2a55);color:#eef6ff;padding:max(18px,env(safe-area-inset-top)) 16px max(24px,env(safe-area-inset-bottom));display:grid;place-items:center}
+.card{width:min(680px,100%);background:rgba(8,38,80,.94);border:1px solid rgba(50,177,255,.32);border-radius:26px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.32)}
+.hero{padding:28px 24px 20px;display:flex;gap:18px;align-items:center;background:linear-gradient(135deg,#082650,#0e3e78)}
+.logo{width:76px;height:76px;border-radius:19px;object-fit:cover;border:1px solid rgba(112,210,255,.45);box-shadow:0 10px 28px rgba(0,0,0,.28)}
+h1{font-size:26px;line-height:1.05;margin:0}.sub{margin-top:6px;color:#bcd2eb;font-size:13px;line-height:1.4}
+.body{padding:22px 24px 26px}.badge{display:inline-flex;align-items:center;gap:7px;border-radius:999px;padding:8px 11px;background:#0b315f;border:1px solid #21558d;color:#d9ecff;font-size:12px;font-weight:800;margin-bottom:16px}
+.btn{width:100%;min-height:54px;border-radius:14px;border:0;font-weight:900;font-size:16px;cursor:pointer}.primary{background:linear-gradient(135deg,#139cff,#28c1ff);color:#fff;box-shadow:0 12px 26px rgba(17,150,240,.25)}.secondary{margin-top:10px;background:#0a244a;color:#dcecff;border:1px solid #23558a}
+.status{margin-top:14px;border-radius:13px;padding:12px 14px;background:#0a244a;border:1px solid #1c4b7e;color:#bdd1e8;font-size:13px;line-height:1.45}.status.ok{background:#0b3a2c;border-color:#1f7655;color:#c9f7df}.status.warn{background:#493612;border-color:#8d6b25;color:#ffe9b5}
+.steps{margin-top:18px;padding-top:16px;border-top:1px solid rgba(116,164,221,.2)}.steps h3{margin:0 0 9px;font-size:14px}.steps ol{margin:0;padding-left:22px;color:#b7cbe2;line-height:1.7;font-size:13px}
+.version{text-align:center;margin-top:17px;color:#7f9cbc;font-size:11px}
+@media(max-width:520px){.hero{padding:22px 18px}.body{padding:19px 18px 22px}.logo{width:66px;height:66px}h1{font-size:23px}}
+</style>
+</head>
+<body>
+<main class="card">
+  <section class="hero">
+    <img class="logo" src="./ajc-icon-192.png" alt="AJC Oficina">
+    <div><h1>AJC Oficina</h1><div class="sub">Instalação oficial para celular e tablet • Sincronização em tempo real</div></div>
+  </section>
+  <section class="body">
+    <div class="badge" id="device">📲 Detectando dispositivo...</div>
+    <button class="btn primary" id="install">Instalar AJC Oficina</button>
+    <button class="btn secondary" id="open">Abrir AJC Oficina agora</button>
+    <div class="status" id="status">Preparando a instalação...</div>
+    <div class="steps"><h3>Como instalar</h3><ol id="steps"></ol></div>
+    <div class="version">AJC Oficina V18.7 • Layout V17.7 • Mobile/Tablet</div>
+  </section>
+</main>
+<script>
+let deferredPrompt=null;
+const install=document.getElementById('install'),statusBox=document.getElementById('status'),device=document.getElementById('device'),steps=document.getElementById('steps');
+const ua=navigator.userAgent||'';
+const ios=/iPhone|iPad|iPod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const android=/Android/i.test(ua);
+const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+function show(){
+ if(ios){device.textContent='🍎 iPhone / iPad';steps.innerHTML='<li>Abra esta página no <b>Safari</b>.</li><li>Toque no botão <b>Compartilhar</b>.</li><li>Escolha <b>Adicionar à Tela de Início</b>.</li><li>Confirme em <b>Adicionar</b>.</li>';install.textContent='Como instalar no iPhone/iPad';}
+ else if(android){device.textContent='🤖 Android / Tablet';steps.innerHTML='<li>Abra esta página no <b>Google Chrome</b>.</li><li>Toque em <b>Instalar AJC Oficina</b>.</li><li>Confirme a instalação.</li>';}
+ else {device.textContent='💻 Navegador detectado';steps.innerHTML='<li>No Chrome/Edge use <b>Instalar app</b> no menu do navegador.</li><li>No celular use Chrome ou Safari.</li>';}
+ if(standalone()){install.textContent='✅ AJC Oficina já instalado';install.disabled=true;statusBox.textContent='O aplicativo já está instalado neste dispositivo.';statusBox.className='status ok';}
+}
+show();
+if('serviceWorker'in navigator){
+ navigator.serviceWorker.register('./sw.js',{scope:'./',updateViaCache:'none'}).then(()=>{if(!standalone()){statusBox.textContent='Aplicativo preparado. Aguarde o botão de instalação ficar disponível.';}}).catch(()=>{statusBox.textContent='O navegador não liberou a instalação automática. Use as instruções abaixo.';statusBox.className='status warn';});
+}
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;install.disabled=false;statusBox.textContent='Pronto para instalar. Toque em “Instalar AJC Oficina”.';statusBox.className='status ok';});
+window.addEventListener('appinstalled',()=>{install.textContent='✅ Instalado';install.disabled=true;statusBox.textContent='Instalação concluída. O ícone AJC Oficina foi adicionado ao dispositivo.';statusBox.className='status ok';});
+install.addEventListener('click',async()=>{
+ if(standalone())return;
+ if(ios){statusBox.textContent='No Safari: Compartilhar → Adicionar à Tela de Início.';statusBox.className='status warn';return;}
+ if(deferredPrompt){deferredPrompt.prompt();const r=await deferredPrompt.userChoice;statusBox.textContent=r.outcome==='accepted'?'Instalação iniciada.':'Instalação cancelada; você pode tentar novamente.';statusBox.className=r.outcome==='accepted'?'status ok':'status warn';deferredPrompt=null;return;}
+ statusBox.textContent=android?'No Chrome, toque no menu ⋮ e escolha “Instalar app” ou “Adicionar à tela inicial”.':'Use a opção “Instalar app” do navegador.';statusBox.className='status warn';
+});
+document.getElementById('open').onclick=()=>location.href='./?v=18.7';
+</script>
+</body>
+</html>
