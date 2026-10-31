@@ -1,10 +1,10 @@
 {
   "id": "./?app=ajc-oficina-v18-8",
-  "name": "AJC Oficina V18.8 — Layout V17.7",
+  "name": "AJC Oficina V18.7.3 — Compartilhada",
   "short_name": "AJC Oficina",
-  "description": "AJC Oficina V18.7 com Home V17.7 restaurada, instalação PWA e sincronização em tempo real.",
+  "description": "AJC Oficina V18.7.3 com recepção, cronômetros e sincronização em tempo real entre computador, celular e tablet.",
   "lang": "pt-BR",
-  "start_url": "./?v=18.8",
+  "start_url": "./v18.7.3.html?v=shared-realtime-20261031",
   "scope": "./",
   "display": "standalone",
   "display_override": [
