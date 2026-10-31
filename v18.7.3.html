@@ -4427,5 +4427,288 @@ main{max-width:none!important;width:100%!important;margin:0!important;padding:0 
   document.addEventListener('DOMContentLoaded',()=>{const b=document.getElementById('topCheckinBtn');if(b)b.textContent='▶ Recepção';setTimeout(()=>{try{renderAll()}catch(e){console.error(e)}},100)});
 })();
 </script>
+
+<script id="ajc-importador-agenda-completo-v1873">
+(function(){
+  const AJC_AGENDA_ALIASES={
+    placa:['placa','plate','veiculoplaca','placadoveiculo'],
+    cliente:['cliente','nomecliente','nomedocliente','proprietario','nomeproprietario','nome'],
+    modelo:['veiculo','modelo','carro','modeloveiculo','descricaoveiculo','veiculomodelo'],
+    hora:['hora','horario','horarioagendamento','horariodoagendamento','agendamento','horaagenda','horaagendada','entrada'],
+    relato:['relato','observacao','observacoes','solicitacao','solicitacoes','queixa','motivo','comentario','comentarios','descricao','observacaocliente'],
+    consultor:['consultor','consultora','consultortecnico','consultoratecnica','consultortec','responsavel','consultorresponsavel'],
+    telefone:['telefone','celular','fone','whatsapp','contato','telefonecliente'],
+    os:['os','ordemdeservico','ordemservico','numeroos','numerodaos','ordem'],
+    data:['data','dataagendamento','datadoagendamento','dia','dataagenda'],
+    codigos:['codigo','codigos','codigoservico','codigosdeservico','codigodeoperacao','codigosdeoperacao','operacao','operacoes','op','servicos','codop']
+  };
+
+  function headerKey(v){return norm(String(v??''))}
+  function isAlias(field,key){
+    return (AJC_AGENDA_ALIASES[field]||[]).some(a=>key===norm(a)||key.includes(norm(a)));
+  }
+  function detectAgendaHeader(matrix=[]){
+    const rows=(matrix||[]).filter(r=>Array.isArray(r));
+    let best=null;
+    for(let ri=0;ri<Math.min(rows.length,50);ri++){
+      const row=rows[ri]||[];
+      const map={},codeCols=[];
+      let score=0;
+      row.forEach((cell,ci)=>{
+        const key=headerKey(cell);
+        if(!key)return;
+        for(const field of ['placa','cliente','modelo','hora','relato','consultor','telefone','os','data']){
+          if(map[field]===undefined&&isAlias(field,key)){map[field]=ci;score+=field==='placa'?5:1;break}
+        }
+        if(isAlias('codigos',key)){codeCols.push(ci);score+=1}
+      });
+      if(map.placa!==undefined && (map.cliente!==undefined || map.modelo!==undefined || map.consultor!==undefined)){
+        const candidate={rowIndex:ri,map,codeCols,score};
+        if(!best||candidate.score>best.score)best=candidate;
+      }
+    }
+    return best;
+  }
+  function parseAgendaDate(v,fallback=''){
+    if(v instanceof Date&&!isNaN(v))return localISO(v);
+    if(typeof v==='number'&&isFinite(v)&&v>20000){
+      const d=new Date(Date.UTC(1899,11,30)+Math.floor(v)*86400000);
+      return localISO(d);
+    }
+    const raw=String(v??'').trim();
+    if(!raw)return fallback;
+    let m=raw.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/);
+    if(m)return m[1]+'-'+String(m[2]).padStart(2,'0')+'-'+String(m[3]).padStart(2,'0');
+    m=raw.match(/^(\d{1,2})[-\/\.](\d{1,2})[-\/\.](\d{2,4})/);
+    if(m){
+      let y=m[3]; if(y.length===2)y='20'+y;
+      return y+'-'+String(m[2]).padStart(2,'0')+'-'+String(m[1]).padStart(2,'0');
+    }
+    const d=new Date(raw);
+    return isNaN(d)?fallback:localISO(d);
+  }
+  function parseAgendaTime(v){
+    if(v instanceof Date&&!isNaN(v))return String(v.getHours()).padStart(2,'0')+':'+String(v.getMinutes()).padStart(2,'0');
+    if(typeof v==='number'&&isFinite(v)){
+      const frac=((v%1)+1)%1,total=Math.round(frac*1440)%1440;
+      return String(Math.floor(total/60)).padStart(2,'0')+':'+String(total%60).padStart(2,'0');
+    }
+    const raw=String(v??'').trim().toLowerCase();
+    if(!raw)return '';
+    const m=raw.match(/(?:^|\s)([0-2]?\d)\s*(?:[:h\.])\s*([0-5]\d)(?:\s|$)/);
+    if(m){
+      const h=Math.min(23,Number(m[1])),min=Number(m[2]);
+      return String(h).padStart(2,'0')+':'+String(min).padStart(2,'0');
+    }
+    if(/^\d{1,2}$/.test(raw)){
+      const h=Number(raw);if(h>=0&&h<=23)return String(h).padStart(2,'0')+':00';
+    }
+    return '';
+  }
+  function joinCodes(row,cols=[]){
+    const vals=[];
+    cols.forEach(i=>{
+      const raw=String(row?.[i]??'').trim();
+      if(raw)vals.push(...raw.split(/[;,|\n]+/).map(x=>x.trim()).filter(Boolean));
+    });
+    return [...new Set(vals)].join('; ');
+  }
+  function mapAgendaMatrix(matrix=[]){
+    const rows=(matrix||[]).filter(r=>Array.isArray(r)&&r.some(v=>String(v??'').trim()!==''));
+    if(!rows.length)return [];
+    const detected=detectAgendaHeader(rows);
+    if(detected){
+      const {rowIndex,map,codeCols}=detected;
+      return rows.slice(rowIndex+1).map(r=>{
+        const placa=cleanPlate(r?.[map.placa]);
+        if(!isValidAgendaPlate(placa))return null;
+        return {
+          placa,
+          cliente:map.cliente!==undefined?String(r?.[map.cliente]??'').trim():'',
+          modelo:map.modelo!==undefined?String(r?.[map.modelo]??'').trim():'',
+          hora:map.hora!==undefined?parseAgendaTime(r?.[map.hora]):'',
+          relato:map.relato!==undefined?String(r?.[map.relato]??'').trim():'',
+          consultor:map.consultor!==undefined?String(r?.[map.consultor]??'').trim():'',
+          telefone:map.telefone!==undefined?String(r?.[map.telefone]??'').trim():'',
+          os:map.os!==undefined?String(r?.[map.os]??'').trim():'',
+          data:map.data!==undefined?parseAgendaDate(r?.[map.data],''):'',
+          codigos:joinCodes(r,codeCols)
+        };
+      }).filter(Boolean);
+    }
+    const start=typeof fixedAgendaStartIndex==='function'?fixedAgendaStartIndex(rows):-1;
+    if(start<0)return [];
+    return rows.slice(start).map(r=>({
+      cliente:String(r?.[0]??'').trim(),
+      placa:cleanPlate(r?.[1]),
+      modelo:String(r?.[3]??'').trim(),
+      consultor:String(r?.[4]??'').trim(),
+      relato:String(r?.[5]??'').trim(),
+      hora:parseAgendaTime(r?.[2]),
+      data:'',
+      telefone:'',
+      os:'',
+      codigos:''
+    })).filter(r=>isValidAgendaPlate(r.placa));
+  }
+
+  rowsFromFixedAgendaMatrix=function(matrix=[]){return mapAgendaMatrix(matrix)};
+
+  importarAgendaAutomatica=async function(rows=[]){
+    if(!requireAccess(isAdmin()||isChefe()||isControle()||isAgendamento()))return;
+    const fallback=$('#agendaData').value||selectedDate()||tomorrow();
+    let added=0,updated=0,ignored=0,codesAdded=0;
+    for(const r of rows){
+      const placa=cleanPlate(r.placa);
+      if(!isValidAgendaPlate(placa)){ignored++;continue}
+      const rowDate=parseAgendaDate(r.data,fallback)||fallback;
+      const rowTime=parseAgendaTime(r.hora);
+      const incoming={
+        data:rowDate,
+        placa,
+        cliente:clientePrimeiroNome(String(r.cliente||'').trim()),
+        modelo:String(r.modelo||'').trim(),
+        relato:String(r.relato||'').trim(),
+        consultor:String(r.consultor||'').trim(),
+        telefone:String(r.telefone||'').trim(),
+        os:String(r.os||'').trim()
+      };
+      if(rowTime)incoming.hora=rowTime;
+
+      const consultorPossivelmenteObservacao=incoming.consultor&&(
+        incoming.consultor.length>35||
+        /revis|observa|cliente relata|campanha|valor combinado|hor[aá]rio combinado|sem preferencia/i.test(incoming.consultor)
+      );
+      if(consultorPossivelmenteObservacao){
+        if(!incoming.relato)incoming.relato=incoming.consultor;
+        incoming.consultor='';
+      }
+
+      let v=veiculos.find(x=>x.data===rowDate&&cleanPlate(x.placa)===placa);
+      const existed=!!v;
+      const before=v?JSON.stringify({
+        cliente:v.cliente,modelo:v.modelo,relato:v.relato,consultor:v.consultor,
+        hora:v.hora,telefone:v.telefone,os:v.os,services:(v.services||[]).map(s=>s.code)
+      }):'';
+
+      if(v){
+        if(incoming.cliente&&incoming.cliente!=='—')v.cliente=incoming.cliente;
+        if(incoming.modelo)v.modelo=incoming.modelo;
+        if(incoming.relato)v.relato=incoming.relato;
+        if(incoming.consultor)v.consultor=incoming.consultor;
+        if(incoming.telefone)v.telefone=incoming.telefone;
+        if(incoming.os)v.os=incoming.os;
+        if(incoming.hora)v.hora=incoming.hora;
+        v.data=rowDate;
+        updated++;
+      }else{
+        v={
+          id:uid(),data:rowDate,hora:incoming.hora||'',placa,
+          cliente:incoming.cliente||'',modelo:incoming.modelo||'',relato:incoming.relato||'',
+          consultor:incoming.consultor||'',telefone:incoming.telefone||'',os:incoming.os||'',
+          etapa:'Aguardando chegada',responsavel:'',prioridadeTecnica:false,prioridadeLavagem:false,
+          services:[],stageLog:[],tipoVeiculo:'CLIENTE',lavador:''
+        };
+        veiculos.push(v);added++;
+      }
+
+      const codes=[...new Set(String(r.codigos||'').split(/[;,|\n]+/).map(cleanCode).filter(Boolean))];
+      for(const code of codes){
+        const beforeCount=(v.services||[]).length;
+        ensureService(v,code);
+        if((v.services||[]).length>beforeCount)codesAdded++;
+      }
+
+      if(v.consultor){
+        const after=JSON.stringify({
+          cliente:v.cliente,modelo:v.modelo,relato:v.relato,consultor:v.consultor,
+          hora:v.hora,telefone:v.telefone,os:v.os,services:(v.services||[]).map(s=>s.code)
+        });
+        if(!existed||before!==after){
+          await oficinaCloud?.notifyConsultant?.(
+            v,existed?'ALTERACAO':'ATRIBUICAO',
+            (existed?'Agenda atualizada':'Novo cliente atribuído')+': '+clientePrimeiroNome(v.cliente)+' • '+v.placa+'.'
+          );
+        }
+      }
+    }
+
+    $('#agendaFile').value='';
+    $('#opData').value=fallback;
+    $('#agendaData').value=fallback;
+    if($('#dashData'))$('#dashData').value=fallback;
+    if($('#lavData'))$('#lavData').value=fallback;
+    if($('#lavMes'))$('#lavMes').value=fallback.slice(0,7);
+    if($('#dashMes'))$('#dashMes').value=fallback.slice(0,7);
+
+    persist();
+    renderCarteiraConsultoras();
+    switchTab('operacao');
+
+    if(window.oficinaCloud?.ready&&navigator.onLine!==false){
+      try{
+        setSyncStatus('Nuvem: enviando agenda completa…','busy');
+        await window.oficinaCloud.syncNow(false);
+        await window.oficinaCloud.flushNotificationOutbox?.();
+        setSyncStatus('Nuvem: agenda sincronizada','ok');
+        toast('Agenda completa sincronizada: '+added+' novos, '+updated+' atualizados'+
+          (codesAdded?', '+codesAdded+' serviço(s) incluído(s)':'')+
+          (ignored?', '+ignored+' linha(s) ignorada(s)':''));
+      }catch(e){
+        console.error(e);
+        setSyncStatus('Nuvem: envio pendente','error');
+        toast('Agenda salva neste aparelho; sincronização online pendente.');
+      }
+    }else{
+      toast('Agenda salva offline. Será enviada ao reconectar.');
+    }
+  };
+
+  lerArquivoAgenda=function(){
+    const input=$('#agendaFile'),file=input?.files?.[0];
+    if(!file){toast('Selecione uma planilha');return}
+    const ext=(file.name.split('.').pop()||'').toLowerCase(),reader=new FileReader();
+    reader.onload=async e=>{
+      try{
+        let matrix=[];
+        if(['csv','txt'].includes(ext)){
+          matrix=parseCSVMatrix(String(e.target.result));
+        }else{
+          if(typeof XLSX==='undefined'){toast('Biblioteca XLSX indisponível. Conecte à internet ou use CSV.');return}
+          const wb=XLSX.read(e.target.result,{type:'array',cellDates:true});
+          const ws=wb.Sheets[wb.SheetNames[0]];
+          matrix=XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:true});
+        }
+        const rows=mapAgendaMatrix(matrix);
+        if(!rows.length){
+          toast('Nenhuma linha válida encontrada. Verifique se a planilha possui ao menos a coluna Placa.');
+          return;
+        }
+        await importarAgendaAutomatica(rows);
+      }catch(err){
+        console.error('agenda import',err);
+        toast('Não foi possível ler a planilha. Confira o arquivo e tente novamente.');
+      }
+    };
+    ['csv','txt'].includes(ext)?reader.readAsText(file,'UTF-8'):reader.readAsArrayBuffer(file);
+  };
+
+  baixarModeloCSV=function(){
+    const data='Data;Horário;Cliente;Placa;Modelo;Consultor Técnico;Observações;Telefone;OS;Códigos de Serviço\n31/10/2026;08:30;CLIENTE EXEMPLO;ABC1D23;CRETA;Kelly;Revisão e verificar ruído;66999999999;123456;001;\n';
+    const blob=new Blob(['\ufeff'+data],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='modelo_agenda_AJC_V18_7_3.csv';
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),1200);
+  };
+
+  function updateAgendaImportHelp(){
+    const notice=document.querySelector('#agenda .notice');
+    if(notice)notice.innerHTML='<strong>Leitura inteligente:</strong> reconhece automaticamente Data, Horário, Cliente, Placa, Modelo, Consultor Técnico, Observações, Telefone, O.S. e Códigos de Serviço. Também mantém compatibilidade com o formato antigo: Cliente | Placa | coluna ignorada | Modelo | Consultor | Observações.';
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',updateAgendaImportHelp);
+  else updateAgendaImportHelp();
+})();
+</script>
 </body>
 </html>
