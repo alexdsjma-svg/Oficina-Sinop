@@ -2815,188 +2815,7 @@ function sairModoApresentacao(){$('#presOverlay').classList.remove('show');if(do
 window.addEventListener('keydown',e=>{if(!$('#presOverlay')?.classList.contains('show'))return;if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();mudarSlideApresentacao(1)}else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();mudarSlideApresentacao(-1)}else if(e.key==='Escape')sairModoApresentacao()});
 function imprimirApresentacao(){renderPresentation();const w=window.open('','_blank');if(!w){toast('Libere pop-ups para imprimir');return}w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Fechamento mensal</title><style>body{font-family:Arial,sans-serif;margin:0;background:#fff;color:#0f172a}.presentation-slide-card{width:297mm;height:167mm;box-sizing:border-box;padding:12mm 14mm;position:relative;page-break-after:always;overflow:hidden}.presentation-slide-card:before{content:"";position:absolute;left:0;top:0;right:0;height:3mm;background:#2563eb}.presentation-slide-card h3{font-size:24pt;margin:0 0 2mm}.slide-sub{color:#64748b;font-size:10pt;margin-bottom:5mm}.pres-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:3mm}.pres-kpi,.pres-mini,.pres-team-card{border:1px solid #ddd;border-radius:3mm;padding:3mm;background:#f8fafc}.pres-kpi .v{font-size:20pt;font-weight:700}.pres-kpi .l,.pres-team-card strong{font-size:8pt;font-weight:700;color:#475569}.pres-kpi .s{font-size:8pt;color:#94a3b8}.pres-grid2{display:grid;grid-template-columns:1fr 1fr;gap:4mm}.pres-team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2.5mm}.pres-team-card div{font-size:8pt;line-height:1.4}.pres-table{width:100%;border-collapse:collapse;font-size:7.5pt}.pres-table th{background:#f1f5f9;text-align:left;padding:1.5mm}.pres-table td{padding:1.5mm;border-bottom:1px solid #eee}.pres-callout{padding:3mm;border:1px solid #bfdbfe;background:#eff6ff;border-radius:3mm;font-size:9pt}.pres-attention{background:#fff7ed;border-color:#fed7aa}.pres-footer{position:absolute;left:14mm;right:14mm;bottom:5mm;display:flex;justify-content:space-between;color:#94a3b8;font-size:7pt}@page{size:landscape;margin:0}@media print{body{print-color-adjust:exact;-webkit-print-color-adjust:exact}}</style></head><body>${presSlides.join('')}
 
-<script id="ajc-recepcao-v1873-js">
-(function(){
-  function canReception(v){
-    if(isAdmin()||isChefe()||isControle())return true;
-    if(!isConsultor())return false;
-    if(!v?.consultor)return true;
-    const assigned=norm(v.consultor),logged=norm(currentUser?.name||'');
-    if(!logged)return false;
-    const first=(currentUser?.name||'').trim().split(/\s+/)[0]||'';
-    return assigned===logged||(first&&assigned.includes(norm(first)));
-  }
-  function firstReceptionStart(v){
-    const logs=(v?.stageLog||[]).filter(l=>!l.voidedAt&&l.startAt);
-    const rec=logs.find(l=>l.stage==='Recepção');
-    return rec?.startAt||v?.checkinAt||null;
-  }
-  window.vehicleJourneyElapsed=function(v){
-    const start=firstReceptionStart(v);
-    if(!start)return 0;
-    let end=v?.completedAt||null;
-    if(!end&&v?.etapa==='Concluído')end=[...(v.stageLog||[])].reverse().find(l=>l.endAt)?.endAt||null;
-    return Math.max(0,new Date(end||Date.now())-new Date(start));
-  };
-  window.iniciarRecepcao=function(id){
-    const v=getVehicle(id);if(!v)return;
-    if(!requireAccess(canReception(v),'Somente o consultor responsável ou a liderança pode iniciar a recepção.'))return;
-    if(v.etapa==='Recepção'&&getOpenStage(v)){toast(v.placa+': recepção já está em andamento');return}
-    moveToStage(v,'Recepção',true,'Início recepção');
-    const open=getOpenStage(v),now=open?.startAt||new Date().toISOString();
-    v.checkinAt=v.checkinAt||now;
-    v.receptionStartedAt=v.receptionStartedAt||now;
-    persist();
-    notificarEtapaConsultora(v,'RECEPCAO','Recepção iniciada para '+clientePrimeiroNome(v.cliente)+' • '+v.placa+'.');
-    renderAll();
-    toast(v.placa+': recepção iniciada');
-  };
-  window.concluirRecepcao=function(id){
-    const v=getVehicle(id);if(!v)return;
-    if(!requireAccess(canReception(v),'Somente o consultor responsável ou a liderança pode concluir a recepção.'))return;
-    if(v.etapa!=='Recepção'){toast('O veículo não está em recepção.');return}
-    if(!getOpenStage(v))moveToStage(v,'Recepção',true,'Início recepção');
-    const now=new Date().toISOString();
-    moveToStage(v,'Aguardando serviço',true,'Recepção concluída');
-    v.receptionCompletedAt=now;v.prioridadeTecnica=true;
-    persist();
-    notificarEtapaConsultora(v,'RECEPCAO','Recepção concluída: '+clientePrimeiroNome(v.cliente)+' • '+v.placa+' está aguardando serviço.');
-    renderAll();
-    toast(v.placa+': recepção concluída • aguardando serviço');
-  };
-  window.iniciarServicoVeiculo=function(id){
-    const v=getVehicle(id);if(!v)return;
-    if(!requireAccess(canManageFlow()||isTecnico()||isConsultor(),'Seu perfil não pode iniciar o serviço.'))return;
-    if(v.etapa!=='Aguardando serviço'){toast('O veículo precisa estar em Aguardando serviço.');return}
-    moveToStage(v,'Em serviço',true,'Início serviço');v.prioridadeTecnica=false;
-    persist();
-    notificarEtapaConsultora(v,'TECNICA','Serviço iniciado para '+clientePrimeiroNome(v.cliente)+' • '+v.placa+'.');
-    renderAll();toast(v.placa+': serviço iniciado');
-  };
-  window.receptionQuickAction=function(v){
-    if(!v)return '';
-    if(v.etapa==='Recepção'&&canReception(v))return '<div class="reception-quick"><button class="btn success small" onclick="concluirRecepcao(\''+v.id+'\')">✓ Concluir recepção</button><span class="reception-live">⏱ <span data-stage-vid="'+v.id+'">'+fmtClock(stageElapsedNow(v))+'</span></span></div>';
-    if(v.etapa==='Aguardando serviço'&&(canManageFlow()||isTecnico()||isConsultor()))return '<div class="reception-quick"><button class="btn primary small" onclick="iniciarServicoVeiculo(\''+v.id+'\')">▶ Iniciar serviço</button><span class="reception-live">Espera ⏱ <span data-stage-vid="'+v.id+'">'+fmtClock(stageElapsedNow(v))+'</span></span></div>';
-    const had=(v.stageLog||[]).some(l=>l.stage==='Recepção'&&!l.voidedAt);
-    if(!had&&['Aguardando chegada','Em serviço'].includes(v.etapa)&&canReception(v))return '<div class="reception-quick"><button class="btn primary small" onclick="checkinVehicle(\''+v.id+'\')">▶ Recepção</button><span class="smalltxt">Inicia o cronômetro do atendimento</span></div>';
-    return '';
-  };
 
-  canChangeToStage=function(stage,v){
-    if(isAdmin()||isChefe()||isControle())return true;
-    if(isConsultor())return ['Recepção','Aguardando serviço','Em serviço','Orçamento complementar','Aguardando lavagem','Realizar check list','Disponível para entrega','Concluído'].includes(stage);
-    if(isTecnico())return ['Aguardando serviço','Em serviço','Orçamento complementar','Realizar check list'].includes(stage);
-    if(isLavador())return ['Aguardando lavagem','Em lavagem','Realizar check list','Disponível para entrega'].includes(stage);
-    if(isAgendamento())return ['Aguardando chegada'].includes(stage);
-    return false;
-  };
-
-  stageActionButtons=function(v){
-    const roleCls=consultorStageClass(v.consultor);
-    const order=['Em serviço','Orçamento complementar','Aguardando lavagem','Em lavagem','Realizar check list','Disponível para entrega','Concluído'];
-    return receptionQuickAction(v)+'<div class="stage-action-grid">'+order.map(stage=>{
-      const current=v.etapa===stage,kind=current?'active':stage==='Em lavagem'?'wash':stage==='Concluído'?'done':'simple';
-      return '<button class="btn stage-action-btn '+kind+' '+(current?'active ':'')+roleCls+'" '+(current?'disabled':'')+' title="Mover para '+stage+'" onclick="setVehicleStage(\''+v.id+'\',\''+stage.replace(/'/g,"\\'")+'\')">'+esc(stage)+'</button>';
-    }).join('')+'</div>';
-  };
-
-  const originalApplyAccessUIReception=applyAccessUI;
-  applyAccessUI=function(){originalApplyAccessUIReception();document.querySelectorAll('.admin-time-col').forEach(x=>x.classList.remove('hidden'))};
-
-  const originalAbrirNovoVeiculoReception=abrirNovoVeiculo;
-  abrirNovoVeiculo=function(){originalAbrirNovoVeiculoReception();const s=document.getElementById('vEtapa');if(s)s.value='Aguardando chegada'};
-
-  abrirCheckinRapido=function(){
-    if(!requireAccess(canManageAgenda()))return;
-    originalAbrirNovoVeiculoReception();
-    document.getElementById('vData').value=localISO(new Date());
-    document.getElementById('vHora').value=new Date().toTimeString().slice(0,5);
-    document.getElementById('vEtapa').value='Recepção';
-    if(isConsultor())document.getElementById('vConsultor').value=currentUser?.name||'';
-    document.getElementById('dlgVeiculoTitle').textContent='Recepção de cliente';
-  };
-
-  const originalSalvarVeiculoReception=salvarVeiculo;
-  salvarVeiculo=function(){
-    const rec=document.getElementById('vEtapa')?.value==='Recepção';
-    const plate=cleanPlate(document.getElementById('vPlaca')?.value||''),date=document.getElementById('vData')?.value||selectedDate();
-    originalSalvarVeiculoReception();
-    if(rec&&plate){
-      const v=veiculos.find(x=>x.data===date&&cleanPlate(x.placa)===plate);
-      if(v&&!getOpenStage(v)){moveToStage(v,'Recepção',true,'Início recepção');v.checkinAt=v.checkinAt||new Date().toISOString();persist();renderAll()}
-    }
-  };
-
-  const originalConfirmarCheckinReception=confirmarCheckinCliente;
-  confirmarCheckinCliente=function(){
-    const id=document.getElementById('checkinVehicleId')?.value;
-    originalConfirmarCheckinReception();
-    const v=id?getVehicle(id):null;
-    if(v&&v.etapa==='Recepção'){v.receptionStartedAt=v.receptionStartedAt||getOpenStage(v)?.startAt||new Date().toISOString();persist(false)}
-  };
-
-  const originalImportReception=importarAgendaAutomatica;
-  importarAgendaAutomatica=async function(rows){
-    await originalImportReception(rows);
-    const date=document.getElementById('agendaData')?.value||selectedDate();
-    let changed=false;
-    veiculos.forEach(v=>{
-      if(v.data===date&&v.tipoVeiculo!=='NOVO'&&v.etapa==='Em serviço'&&!(v.stageLog||[]).length&&!v.checkinAt){v.etapa='Aguardando chegada';changed=true}
-    });
-    if(changed){persist(false);renderAll();try{await window.oficinaCloud?.syncNow?.(false)}catch(e){console.warn(e)}}
-  };
-
-  renderAgenda=function(){
-    renderCarteiraConsultoras();
-    const list=agendaListAtual(),body=document.getElementById('agendaBody');if(!body)return;
-    body.innerHTML=list.length?list.map(v=>{
-      const sel=agendaSelectedIds.has(v.id),quick=receptionQuickAction(v);
-      return '<tr class="'+consultorRowClass(v.consultor)+(sel?' agenda-row-selected':'')+'"><td class="agenda-select-cell"><input class="agenda-checkbox" data-vehicle-id="'+esc(v.id)+'" type="checkbox" '+(sel?'checked':'')+' onchange="toggleAgendaSelection(\''+v.id+'\',this.checked)" aria-label="Selecionar '+esc(v.placa)+'"></td><td><button class="plate-link" onclick="abrirDetalheVeiculo(\''+v.id+'\')" title="Ver observação">'+esc(v.placa)+'</button><div class="smalltxt">'+esc(v.etapa||'')+'</div></td><td><span class="vehicle-name">'+esc(clientePrimeiroNome(v.cliente)||'')+'</span><div class="smalltxt">'+consultorBadge(v.consultor)+'</div></td><td>'+quick+'<div class="row-actions"><button class="btn secondary small" onclick="abrirDetalheVeiculo(\''+v.id+'\')">📝 Observação</button><button class="btn ghost small" onclick="editarVeiculo(\''+v.id+'\')">Editar</button><button class="btn danger small" onclick="excluirVeiculo(\''+v.id+'\')">Excluir</button></div></td></tr>';
-    }).join(''):'<tr><td colspan="4"><div class="empty">Nenhum veículo cadastrado para esta data.</div></td></tr>';
-    renderAgendaSelectionCount();
-  };
-
-  const originalAbrirServicosReception=abrirServicos;
-  abrirServicos=function(vid){
-    const v=getVehicle(vid);
-    if(v?.etapa==='Aguardando chegada'){toast('Inicie a recepção do cliente antes de abrir os serviços.');return}
-    if(v?.etapa==='Recepção'){toast('Conclua a recepção antes de iniciar o serviço.');return}
-    if(v?.etapa==='Aguardando serviço')iniciarServicoVeiculo(vid);
-    originalAbrirServicosReception(vid);
-  };
-
-  nextStageInfo=function(v){
-    switch(v.etapa){
-      case 'Aguardando chegada':return {label:'Iniciar recepção',hint:'Inicia o cronômetro do atendimento',run:"checkinVehicle('"+v.id+"')",kind:'primary'};
-      case 'Recepção':return {label:'Concluir recepção',hint:'Envia automaticamente para Aguardando serviço',run:"concluirRecepcao('"+v.id+"')",kind:'success'};
-      case 'Aguardando serviço':return {label:'Iniciar serviço',hint:'Inicia o cronômetro técnico',run:"iniciarServicoVeiculo('"+v.id+"')",kind:'primary'};
-      case 'Em serviço':return {label:'Enviar para lavagem',hint:'Encaminha para a fila de lavagem',run:"enviarParaLavagem('"+v.id+"')",kind:'primary'};
-      case 'Aguardando lavagem':return {label:'Iniciar lavagem',hint:'Inicia a etapa de lavagem',run:"quickAdvanceVehicle('"+v.id+"')",kind:'primary'};
-      case 'Em lavagem':return {label:'Pronto para entrega',hint:'Libera o veículo para entrega',run:"quickAdvanceVehicle('"+v.id+"')",kind:'primary'};
-      case 'Disponível para entrega':return {label:'Entregue',hint:'Concluir atendimento',run:"concluirAtendimento('"+v.id+"')",kind:'success'};
-      default:return null;
-    }
-  };
-  quickAdvanceVehicle=function(id){
-    const v=getVehicle(id);if(!v)return;
-    if(v.etapa==='Aguardando serviço'){iniciarServicoVeiculo(id);return}
-    if(v.etapa==='Aguardando lavagem'){if(!requireAccess(canManageFlow()||isLavador()||isConsultor()))return;if(advanceJourney(v,'Em lavagem','Início lavagem')){persist();notificarEtapaConsultora(v,'LAVAGEM','Seu cliente '+clientePrimeiroNome(v.cliente)+' • '+v.placa+' entrou em lavagem.');toast(v.placa+': lavagem iniciada')}return}
-    if(v.etapa==='Em lavagem'){if(!requireAccess(canManageFlow()||isLavador()||isConsultor()))return;if(advanceJourney(v,'Disponível para entrega','Pronto para entrega')){persist();notificarEtapaConsultora(v,'PRONTO','Seu cliente '+clientePrimeiroNome(v.cliente)+' • '+v.placa+' está pronto para entrega.');toast(v.placa+': pronto para entrega')}return}
-    toast('Ação rápida indisponível para a etapa atual.');
-  };
-  acionarTecnica=function(id){const v=getVehicle(id);if(!v)return;if(v.etapa==='Recepção'){concluirRecepcao(id);return}if(v.etapa==='Aguardando serviço'){iniciarServicoVeiculo(id);return}if(!requireAccess(canManageFlow()||isConsultor()))return;moveToStage(v,'Aguardando serviço',true,'Aguardando serviço');v.prioridadeTecnica=true;persist();renderAll()};
-
-  renderVehicleStageHistory=function(v){
-    const logs=(v.stageLog||[]).filter(l=>!l.voidedAt).slice().sort((a,b)=>new Date(a.startAt)-new Date(b.startAt));
-    const rows=logs.map(l=>'<tr><td><strong>'+esc(l.stage)+'</strong></td><td>'+fmtDT(l.startAt)+'</td><td>'+(l.endAt?fmtDT(l.endAt):'<span class="badge green">Em andamento</span>')+'</td><td>'+esc(l.startedBy||l.responsible||'—')+'</td><td>'+esc(l.completedBy||'—')+'</td><td><span class="timer" '+(!l.endAt?'data-stage-log="'+v.id+'|'+l.id+'"':'')+'>'+fmtClock(l.endAt?stageElapsedLog(l):(new Date()-new Date(l.startAt)))+'</span></td></tr>').join('');
-    const el=document.getElementById('vehicleStageHistory');el.className='';
-    el.innerHTML='<div class="journey-summary"><div class="journey-summary-card"><span>Etapa atual</span><strong>'+esc(v.etapa||'—')+'</strong></div><div class="journey-summary-card"><span>Tempo etapa atual</span><strong data-stage-vid="'+v.id+'">'+fmtClock(stageElapsedNow(v))+'</strong></div><div class="journey-summary-card"><span>Tempo total na concessionária</span><strong data-journey-vid="'+v.id+'">'+fmtClock(vehicleJourneyElapsed(v))+'</strong></div></div><div class="table-wrap"><table class="data-table" style="min-width:700px"><thead><tr><th>Etapa</th><th>Início</th><th>Conclusão</th><th>Iniciado por</th><th>Concluído por</th><th>Duração</th></tr></thead><tbody>'+(rows||'<tr><td colspan="6"><div class="empty">Nenhuma etapa iniciada.</div></td></tr>')+'</tbody></table></div>';
-  };
-
-  setInterval(()=>document.querySelectorAll('[data-journey-vid]').forEach(el=>{const v=getVehicle(el.dataset.journeyVid);if(v)el.textContent=fmtClock(vehicleJourneyElapsed(v))}),1000);
-  document.addEventListener('DOMContentLoaded',()=>{const b=document.getElementById('topCheckinBtn');if(b)b.textContent='▶ Recepção';setTimeout(()=>{try{renderAll()}catch(e){console.error(e)}},100)});
-})();
-</script>
 </body></html>`);w.document.close();setTimeout(()=>w.print(),300)}
 function pptxTitle(slide,title,sub){slide.background={color:'FFFFFF'};slide.addShape(pptx.ShapeType.rect,{x:0,y:0,w:13.333,h:.08,fill:{color:'2563EB'},line:{color:'2563EB'}});slide.addText(title,{x:.55,y:.32,w:8.8,h:.45,fontFace:'Arial',fontSize:24,bold:true,color:'0F172A',margin:0});slide.addText(sub,{x:.55,y:.84,w:8.8,h:.25,fontFace:'Arial',fontSize:9,color:'64748B',margin:0})}
 function pptxFooter(slide,n,total){slide.addText('Oficina Sinop • Fechamento Mensal',{x:.55,y:7.16,w:4.2,h:.18,fontSize:7,color:'94A3B8',margin:0});slide.addText(`${n}/${total}`,{x:12.15,y:7.16,w:.6,h:.18,fontSize:7,color:'94A3B8',align:'right',margin:0})}
@@ -4338,6 +4157,189 @@ main{max-width:none!important;width:100%!important;margin:0!important;padding:0 
   const ok=location.protocol==='https:'||location.hostname==='localhost'||location.hostname==='127.0.0.1';
   if(!ok)return;
   window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{scope:'./',updateViaCache:'none'}).then(r=>r.update().catch(()=>{})).catch(e=>console.warn('SW',e)));
+})();
+</script>
+
+<script id="ajc-recepcao-v1873-js">
+(function(){
+  function canReception(v){
+    if(isAdmin()||isChefe()||isControle())return true;
+    if(!isConsultor())return false;
+    if(!v?.consultor)return true;
+    const assigned=norm(v.consultor),logged=norm(currentUser?.name||'');
+    if(!logged)return false;
+    const first=(currentUser?.name||'').trim().split(/\s+/)[0]||'';
+    return assigned===logged||(first&&assigned.includes(norm(first)));
+  }
+  function firstReceptionStart(v){
+    const logs=(v?.stageLog||[]).filter(l=>!l.voidedAt&&l.startAt);
+    const rec=logs.find(l=>l.stage==='Recepção');
+    return rec?.startAt||v?.checkinAt||null;
+  }
+  window.vehicleJourneyElapsed=function(v){
+    const start=firstReceptionStart(v);
+    if(!start)return 0;
+    let end=v?.completedAt||null;
+    if(!end&&v?.etapa==='Concluído')end=[...(v.stageLog||[])].reverse().find(l=>l.endAt)?.endAt||null;
+    return Math.max(0,new Date(end||Date.now())-new Date(start));
+  };
+  window.iniciarRecepcao=function(id){
+    const v=getVehicle(id);if(!v)return;
+    if(!requireAccess(canReception(v),'Somente o consultor responsável ou a liderança pode iniciar a recepção.'))return;
+    if(v.etapa==='Recepção'&&getOpenStage(v)){toast(v.placa+': recepção já está em andamento');return}
+    moveToStage(v,'Recepção',true,'Início recepção');
+    const open=getOpenStage(v),now=open?.startAt||new Date().toISOString();
+    v.checkinAt=v.checkinAt||now;
+    v.receptionStartedAt=v.receptionStartedAt||now;
+    persist();
+    notificarEtapaConsultora(v,'RECEPCAO','Recepção iniciada para '+clientePrimeiroNome(v.cliente)+' • '+v.placa+'.');
+    renderAll();
+    toast(v.placa+': recepção iniciada');
+  };
+  window.concluirRecepcao=function(id){
+    const v=getVehicle(id);if(!v)return;
+    if(!requireAccess(canReception(v),'Somente o consultor responsável ou a liderança pode concluir a recepção.'))return;
+    if(v.etapa!=='Recepção'){toast('O veículo não está em recepção.');return}
+    if(!getOpenStage(v))moveToStage(v,'Recepção',true,'Início recepção');
+    const now=new Date().toISOString();
+    moveToStage(v,'Aguardando serviço',true,'Recepção concluída');
+    v.receptionCompletedAt=now;v.prioridadeTecnica=true;
+    persist();
+    notificarEtapaConsultora(v,'RECEPCAO','Recepção concluída: '+clientePrimeiroNome(v.cliente)+' • '+v.placa+' está aguardando serviço.');
+    renderAll();
+    toast(v.placa+': recepção concluída • aguardando serviço');
+  };
+  window.iniciarServicoVeiculo=function(id){
+    const v=getVehicle(id);if(!v)return;
+    if(!requireAccess(canManageFlow()||isTecnico()||isConsultor(),'Seu perfil não pode iniciar o serviço.'))return;
+    if(v.etapa!=='Aguardando serviço'){toast('O veículo precisa estar em Aguardando serviço.');return}
+    moveToStage(v,'Em serviço',true,'Início serviço');v.prioridadeTecnica=false;
+    persist();
+    notificarEtapaConsultora(v,'TECNICA','Serviço iniciado para '+clientePrimeiroNome(v.cliente)+' • '+v.placa+'.');
+    renderAll();toast(v.placa+': serviço iniciado');
+  };
+  window.receptionQuickAction=function(v){
+    if(!v)return '';
+    if(v.etapa==='Recepção'&&canReception(v))return '<div class="reception-quick"><button class="btn success small" onclick="concluirRecepcao(\''+v.id+'\')">✓ Concluir recepção</button><span class="reception-live">⏱ <span data-stage-vid="'+v.id+'">'+fmtClock(stageElapsedNow(v))+'</span></span></div>';
+    if(v.etapa==='Aguardando serviço'&&(canManageFlow()||isTecnico()||isConsultor()))return '<div class="reception-quick"><button class="btn primary small" onclick="iniciarServicoVeiculo(\''+v.id+'\')">▶ Iniciar serviço</button><span class="reception-live">Espera ⏱ <span data-stage-vid="'+v.id+'">'+fmtClock(stageElapsedNow(v))+'</span></span></div>';
+    const had=(v.stageLog||[]).some(l=>l.stage==='Recepção'&&!l.voidedAt);
+    if(!had&&['Aguardando chegada','Em serviço'].includes(v.etapa)&&canReception(v))return '<div class="reception-quick"><button class="btn primary small" onclick="checkinVehicle(\''+v.id+'\')">▶ Recepção</button><span class="smalltxt">Inicia o cronômetro do atendimento</span></div>';
+    return '';
+  };
+
+  canChangeToStage=function(stage,v){
+    if(isAdmin()||isChefe()||isControle())return true;
+    if(isConsultor())return ['Recepção','Aguardando serviço','Em serviço','Orçamento complementar','Aguardando lavagem','Realizar check list','Disponível para entrega','Concluído'].includes(stage);
+    if(isTecnico())return ['Aguardando serviço','Em serviço','Orçamento complementar','Realizar check list'].includes(stage);
+    if(isLavador())return ['Aguardando lavagem','Em lavagem','Realizar check list','Disponível para entrega'].includes(stage);
+    if(isAgendamento())return ['Aguardando chegada'].includes(stage);
+    return false;
+  };
+
+  stageActionButtons=function(v){
+    const roleCls=consultorStageClass(v.consultor);
+    const order=['Em serviço','Orçamento complementar','Aguardando lavagem','Em lavagem','Realizar check list','Disponível para entrega','Concluído'];
+    return receptionQuickAction(v)+'<div class="stage-action-grid">'+order.map(stage=>{
+      const current=v.etapa===stage,kind=current?'active':stage==='Em lavagem'?'wash':stage==='Concluído'?'done':'simple';
+      return '<button class="btn stage-action-btn '+kind+' '+(current?'active ':'')+roleCls+'" '+(current?'disabled':'')+' title="Mover para '+stage+'" onclick="setVehicleStage(\''+v.id+'\',\''+stage.replace(/'/g,"\\'")+'\')">'+esc(stage)+'</button>';
+    }).join('')+'</div>';
+  };
+
+  const originalApplyAccessUIReception=applyAccessUI;
+  applyAccessUI=function(){originalApplyAccessUIReception();document.querySelectorAll('.admin-time-col').forEach(x=>x.classList.remove('hidden'))};
+
+  const originalAbrirNovoVeiculoReception=abrirNovoVeiculo;
+  abrirNovoVeiculo=function(){originalAbrirNovoVeiculoReception();const s=document.getElementById('vEtapa');if(s)s.value='Aguardando chegada'};
+
+  abrirCheckinRapido=function(){
+    if(!requireAccess(canManageAgenda()))return;
+    originalAbrirNovoVeiculoReception();
+    document.getElementById('vData').value=localISO(new Date());
+    document.getElementById('vHora').value=new Date().toTimeString().slice(0,5);
+    document.getElementById('vEtapa').value='Recepção';
+    if(isConsultor())document.getElementById('vConsultor').value=currentUser?.name||'';
+    document.getElementById('dlgVeiculoTitle').textContent='Recepção de cliente';
+  };
+
+  const originalSalvarVeiculoReception=salvarVeiculo;
+  salvarVeiculo=function(){
+    const rec=document.getElementById('vEtapa')?.value==='Recepção';
+    const plate=cleanPlate(document.getElementById('vPlaca')?.value||''),date=document.getElementById('vData')?.value||selectedDate();
+    originalSalvarVeiculoReception();
+    if(rec&&plate){
+      const v=veiculos.find(x=>x.data===date&&cleanPlate(x.placa)===plate);
+      if(v&&!getOpenStage(v)){moveToStage(v,'Recepção',true,'Início recepção');v.checkinAt=v.checkinAt||new Date().toISOString();persist();renderAll()}
+    }
+  };
+
+  const originalConfirmarCheckinReception=confirmarCheckinCliente;
+  confirmarCheckinCliente=function(){
+    const id=document.getElementById('checkinVehicleId')?.value;
+    originalConfirmarCheckinReception();
+    const v=id?getVehicle(id):null;
+    if(v&&v.etapa==='Recepção'){v.receptionStartedAt=v.receptionStartedAt||getOpenStage(v)?.startAt||new Date().toISOString();persist(false)}
+  };
+
+  const originalImportReception=importarAgendaAutomatica;
+  importarAgendaAutomatica=async function(rows){
+    await originalImportReception(rows);
+    const date=document.getElementById('agendaData')?.value||selectedDate();
+    let changed=false;
+    veiculos.forEach(v=>{
+      if(v.data===date&&v.tipoVeiculo!=='NOVO'&&v.etapa==='Em serviço'&&!(v.stageLog||[]).length&&!v.checkinAt){v.etapa='Aguardando chegada';changed=true}
+    });
+    if(changed){persist(false);renderAll();try{await window.oficinaCloud?.syncNow?.(false)}catch(e){console.warn(e)}}
+  };
+
+  renderAgenda=function(){
+    renderCarteiraConsultoras();
+    const list=agendaListAtual(),body=document.getElementById('agendaBody');if(!body)return;
+    body.innerHTML=list.length?list.map(v=>{
+      const sel=agendaSelectedIds.has(v.id),quick=receptionQuickAction(v);
+      return '<tr class="'+consultorRowClass(v.consultor)+(sel?' agenda-row-selected':'')+'"><td class="agenda-select-cell"><input class="agenda-checkbox" data-vehicle-id="'+esc(v.id)+'" type="checkbox" '+(sel?'checked':'')+' onchange="toggleAgendaSelection(\''+v.id+'\',this.checked)" aria-label="Selecionar '+esc(v.placa)+'"></td><td><button class="plate-link" onclick="abrirDetalheVeiculo(\''+v.id+'\')" title="Ver observação">'+esc(v.placa)+'</button><div class="smalltxt">'+esc(v.etapa||'')+'</div></td><td><span class="vehicle-name">'+esc(clientePrimeiroNome(v.cliente)||'')+'</span><div class="smalltxt">'+consultorBadge(v.consultor)+'</div></td><td>'+quick+'<div class="row-actions"><button class="btn secondary small" onclick="abrirDetalheVeiculo(\''+v.id+'\')">📝 Observação</button><button class="btn ghost small" onclick="editarVeiculo(\''+v.id+'\')">Editar</button><button class="btn danger small" onclick="excluirVeiculo(\''+v.id+'\')">Excluir</button></div></td></tr>';
+    }).join(''):'<tr><td colspan="4"><div class="empty">Nenhum veículo cadastrado para esta data.</div></td></tr>';
+    renderAgendaSelectionCount();
+  };
+
+  const originalAbrirServicosReception=abrirServicos;
+  abrirServicos=function(vid){
+    const v=getVehicle(vid);
+    if(v?.etapa==='Aguardando chegada'){toast('Inicie a recepção do cliente antes de abrir os serviços.');return}
+    if(v?.etapa==='Recepção'){toast('Conclua a recepção antes de iniciar o serviço.');return}
+    if(v?.etapa==='Aguardando serviço')iniciarServicoVeiculo(vid);
+    originalAbrirServicosReception(vid);
+  };
+
+  nextStageInfo=function(v){
+    switch(v.etapa){
+      case 'Aguardando chegada':return {label:'Iniciar recepção',hint:'Inicia o cronômetro do atendimento',run:"checkinVehicle('"+v.id+"')",kind:'primary'};
+      case 'Recepção':return {label:'Concluir recepção',hint:'Envia automaticamente para Aguardando serviço',run:"concluirRecepcao('"+v.id+"')",kind:'success'};
+      case 'Aguardando serviço':return {label:'Iniciar serviço',hint:'Inicia o cronômetro técnico',run:"iniciarServicoVeiculo('"+v.id+"')",kind:'primary'};
+      case 'Em serviço':return {label:'Enviar para lavagem',hint:'Encaminha para a fila de lavagem',run:"enviarParaLavagem('"+v.id+"')",kind:'primary'};
+      case 'Aguardando lavagem':return {label:'Iniciar lavagem',hint:'Inicia a etapa de lavagem',run:"quickAdvanceVehicle('"+v.id+"')",kind:'primary'};
+      case 'Em lavagem':return {label:'Pronto para entrega',hint:'Libera o veículo para entrega',run:"quickAdvanceVehicle('"+v.id+"')",kind:'primary'};
+      case 'Disponível para entrega':return {label:'Entregue',hint:'Concluir atendimento',run:"concluirAtendimento('"+v.id+"')",kind:'success'};
+      default:return null;
+    }
+  };
+  quickAdvanceVehicle=function(id){
+    const v=getVehicle(id);if(!v)return;
+    if(v.etapa==='Aguardando serviço'){iniciarServicoVeiculo(id);return}
+    if(v.etapa==='Aguardando lavagem'){if(!requireAccess(canManageFlow()||isLavador()||isConsultor()))return;if(advanceJourney(v,'Em lavagem','Início lavagem')){persist();notificarEtapaConsultora(v,'LAVAGEM','Seu cliente '+clientePrimeiroNome(v.cliente)+' • '+v.placa+' entrou em lavagem.');toast(v.placa+': lavagem iniciada')}return}
+    if(v.etapa==='Em lavagem'){if(!requireAccess(canManageFlow()||isLavador()||isConsultor()))return;if(advanceJourney(v,'Disponível para entrega','Pronto para entrega')){persist();notificarEtapaConsultora(v,'PRONTO','Seu cliente '+clientePrimeiroNome(v.cliente)+' • '+v.placa+' está pronto para entrega.');toast(v.placa+': pronto para entrega')}return}
+    toast('Ação rápida indisponível para a etapa atual.');
+  };
+  acionarTecnica=function(id){const v=getVehicle(id);if(!v)return;if(v.etapa==='Recepção'){concluirRecepcao(id);return}if(v.etapa==='Aguardando serviço'){iniciarServicoVeiculo(id);return}if(!requireAccess(canManageFlow()||isConsultor()))return;moveToStage(v,'Aguardando serviço',true,'Aguardando serviço');v.prioridadeTecnica=true;persist();renderAll()};
+
+  renderVehicleStageHistory=function(v){
+    const logs=(v.stageLog||[]).filter(l=>!l.voidedAt).slice().sort((a,b)=>new Date(a.startAt)-new Date(b.startAt));
+    const rows=logs.map(l=>'<tr><td><strong>'+esc(l.stage)+'</strong></td><td>'+fmtDT(l.startAt)+'</td><td>'+(l.endAt?fmtDT(l.endAt):'<span class="badge green">Em andamento</span>')+'</td><td>'+esc(l.startedBy||l.responsible||'—')+'</td><td>'+esc(l.completedBy||'—')+'</td><td><span class="timer" '+(!l.endAt?'data-stage-log="'+v.id+'|'+l.id+'"':'')+'>'+fmtClock(l.endAt?stageElapsedLog(l):(new Date()-new Date(l.startAt)))+'</span></td></tr>').join('');
+    const el=document.getElementById('vehicleStageHistory');el.className='';
+    el.innerHTML='<div class="journey-summary"><div class="journey-summary-card"><span>Etapa atual</span><strong>'+esc(v.etapa||'—')+'</strong></div><div class="journey-summary-card"><span>Tempo etapa atual</span><strong data-stage-vid="'+v.id+'">'+fmtClock(stageElapsedNow(v))+'</strong></div><div class="journey-summary-card"><span>Tempo total na concessionária</span><strong data-journey-vid="'+v.id+'">'+fmtClock(vehicleJourneyElapsed(v))+'</strong></div></div><div class="table-wrap"><table class="data-table" style="min-width:700px"><thead><tr><th>Etapa</th><th>Início</th><th>Conclusão</th><th>Iniciado por</th><th>Concluído por</th><th>Duração</th></tr></thead><tbody>'+(rows||'<tr><td colspan="6"><div class="empty">Nenhuma etapa iniciada.</div></td></tr>')+'</tbody></table></div>';
+  };
+
+  setInterval(()=>document.querySelectorAll('[data-journey-vid]').forEach(el=>{const v=getVehicle(el.dataset.journeyVid);if(v)el.textContent=fmtClock(vehicleJourneyElapsed(v))}),1000);
+  document.addEventListener('DOMContentLoaded',()=>{const b=document.getElementById('topCheckinBtn');if(b)b.textContent='▶ Recepção';setTimeout(()=>{try{renderAll()}catch(e){console.error(e)}},100)});
 })();
 </script>
 </body>
