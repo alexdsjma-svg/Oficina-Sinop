@@ -1,0 +1,3 @@
+AJC Oficina V18.7.3
+Realtime hardened: 2026-10-31
+Commit funcional: 8fafefe01b6670eebab85d2b679300dbb93ef7e2
