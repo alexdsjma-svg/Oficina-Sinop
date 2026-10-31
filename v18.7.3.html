@@ -1676,7 +1676,7 @@ window.OFICINA_SUPABASE = {
     cloud.syncTimer=setTimeout(()=>syncNow(false).catch(e=>{
       console.error('syncNow',e);
       notice('Alteração salva neste aparelho; sincronização online pendente.');
-    }),500);
+    }),120);
   }
 
   const NOTIF_OUTBOX_KEY='ajcNotificationOutboxV172',USER_CACHE_KEY='ajcCurrentUserOfflineV172';
@@ -4121,34 +4121,119 @@ main{max-width:none!important;width:100%!important;margin:0!important;padding:0 
 <script id="ajc-v187-realtime">
 (function(){
   'use strict';
-  let client=null, channel=null, token='', pullTimer=null, notifTimer=null, reconnectTimer=null;
+  let client=null,channel=null,token='',pullTimer=null,notifTimer=null,profileTimer=null,reconnectTimer=null;
   const cfg=window.OFICINA_SUPABASE||{};
   const workspace=cfg.workspace||'oficina-sinop';
   const badge=()=>document.getElementById('ajcRealtimeBadge');
-  function status(state,text){const el=badge();if(!el)return;el.dataset.state=state;const t=el.querySelector('.txt');if(t)t.textContent=text;}
+
+  function status(state,text){
+    const el=badge();if(!el)return;
+    el.dataset.state=state;
+    const t=el.querySelector('.txt');if(t)t.textContent=text;
+  }
   function online(){return navigator.onLine!==false}
-  function debouncedPull(){clearTimeout(pullTimer);pullTimer=setTimeout(async()=>{try{status('sync','Tempo real: atualizando…');await window.oficinaCloud?.pullNow?.();status('live','Tempo real: conectado')}catch(e){console.warn('realtime pull',e);status(online()?'sync':'offline',online()?'Tempo real: reconectando':'Offline • sincroniza ao voltar')}},180)}
-  function debouncedNotifications(){clearTimeout(notifTimer);notifTimer=setTimeout(async()=>{try{await window.oficinaCloud?.refreshNotifications?.()}catch(e){console.warn('realtime notif',e)}},120)}
-  async function disconnect(){try{if(client&&channel)await client.removeChannel(channel)}catch(e){} channel=null;client=null;token='';}
+  function currentCloud(){return window.oficinaCloud||null}
+
+  function debouncedPull(payload){
+    const cloud=currentCloud();
+    const changedBy=payload?.new?.updated_by||payload?.old?.updated_by||'';
+    if(changedBy&&cloud?._userId&&String(changedBy)===String(cloud._userId)){
+      status('live','Tempo real: conectado');
+      return;
+    }
+    clearTimeout(pullTimer);
+    pullTimer=setTimeout(async()=>{
+      try{
+        status('sync','Tempo real: recebendo alteração…');
+        await cloud?.pullNow?.();
+        status('live','Tempo real: conectado');
+      }catch(e){
+        console.warn('realtime pull',e);
+        status(online()?'sync':'offline',online()?'Tempo real: reconectando':'Offline • sincroniza ao voltar');
+      }
+    },80);
+  }
+
+  function debouncedNotifications(){
+    clearTimeout(notifTimer);
+    notifTimer=setTimeout(async()=>{
+      try{await currentCloud()?.refreshNotifications?.()}
+      catch(e){console.warn('realtime notif',e)}
+    },80);
+  }
+
+  function debouncedProfiles(payload){
+    clearTimeout(profileTimer);
+    profileTimer=setTimeout(async()=>{
+      try{
+        const cloud=currentCloud();
+        await cloud?.refreshDirectory?.();
+        const ownId=payload?.new?.user_id||payload?.old?.user_id||'';
+        if(ownId&&cloud?._userId&&String(ownId)===String(cloud._userId)){
+          await cloud?.restore?.();
+        }else{
+          window.applyAccessUI?.();
+        }
+        status('live','Tempo real: conectado');
+      }catch(e){
+        console.warn('realtime profile',e);
+      }
+    },100);
+  }
+
+  async function disconnect(){
+    try{if(client&&channel)await client.removeChannel(channel)}catch(e){}
+    channel=null;client=null;token='';
+  }
+
   async function connect(){
     if(!online()){status('offline','Offline • sincroniza ao voltar');return}
-    const cloud=window.oficinaCloud;const nextToken=cloud?.session?.access_token||'';
-    if(!cloud?.ready||!nextToken||!cfg.url||!cfg.publishableKey||!window.supabase?.createClient){status('sync','Tempo real: aguardando login');return}
-    if(channel&&token===nextToken)return;await disconnect();token=nextToken;
+    const cloud=currentCloud();
+    const nextToken=cloud?.session?.access_token||'';
+    if(!cloud?.ready||!nextToken||!cfg.url||!cfg.publishableKey||!window.supabase?.createClient){
+      status('sync','Tempo real: aguardando login');
+      return;
+    }
+    if(channel&&token===nextToken)return;
+    await disconnect();
+    token=nextToken;
     try{
-      client=window.supabase.createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false},realtime:{params:{eventsPerSecond:20}}});
+      client=window.supabase.createClient(cfg.url,cfg.publishableKey,{
+        auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false},
+        realtime:{params:{eventsPerSecond:30}}
+      });
       client.realtime.setAuth(token);
       channel=client.channel('ajc-oficina-live-'+workspace,{config:{broadcast:{self:false}}})
         .on('postgres_changes',{event:'*',schema:'public',table:'entities',filter:'workspace=eq.'+workspace},debouncedPull)
         .on('postgres_changes',{event:'*',schema:'public',table:'notifications'},debouncedNotifications)
-        .subscribe((s)=>{if(s==='SUBSCRIBED')status('live','Tempo real: conectado');else if(s==='CHANNEL_ERROR'||s==='TIMED_OUT'||s==='CLOSED')status(online()?'sync':'offline',online()?'Tempo real: reconectando':'Offline • sincroniza ao voltar')});
-    }catch(e){console.warn('realtime connect',e);status('sync','Tempo real: reconectando')}
+        .on('postgres_changes',{event:'*',schema:'public',table:'profiles'},debouncedProfiles)
+        .subscribe((state)=>{
+          if(state==='SUBSCRIBED'){
+            status('live','Tempo real: conectado');
+          }else if(state==='CHANNEL_ERROR'||state==='TIMED_OUT'||state==='CLOSED'){
+            status(online()?'sync':'offline',online()?'Tempo real: reconectando':'Offline • sincroniza ao voltar');
+          }
+        });
+    }catch(e){
+      console.warn('realtime connect',e);
+      status('sync','Tempo real: reconectando');
+    }
   }
-  function schedule(){clearInterval(reconnectTimer);reconnectTimer=setInterval(connect,2500);connect()}
+
+  function schedule(){
+    clearInterval(reconnectTimer);
+    reconnectTimer=setInterval(connect,4000);
+    connect();
+  }
+
   window.addEventListener('online',()=>{status('sync','Tempo real: reconectando');connect()});
   window.addEventListener('offline',()=>status('offline','Offline • sincroniza ao voltar'));
+  window.addEventListener('focus',()=>connect());
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')connect()});
-  window.addEventListener('load',schedule);setTimeout(schedule,1200);window.ajcRealtime={connect,disconnect,status};
+  window.addEventListener('load',schedule);
+  setTimeout(schedule,700);
+
+  window.ajcRealtime={connect,disconnect,status};
 })();
 </script>
 <script id="ajc-v187-pwa-register">
