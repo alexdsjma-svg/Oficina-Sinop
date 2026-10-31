@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+<script id="ajc-v1873-pwa-entry">
+(function(){
+  try{
+    var q=new URLSearchParams(location.search);
+    var standalone=(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)||window.navigator.standalone===true;
+    var legacyPwa=q.get('v')==='18.8'||q.get('app')==='ajc-oficina-v18-8'||q.get('v')==='18.7.3';
+    if((standalone||legacyPwa)&&!location.pathname.endsWith('/v18.7.3.html')){
+      location.replace('./v18.7.3.html?v=shared-realtime-20261031'+location.hash);
+    }
+  }catch(e){}
+})();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#041230">
