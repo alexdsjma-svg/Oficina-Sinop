@@ -1139,6 +1139,22 @@ button,.btn,.tab{-webkit-tap-highlight-color:transparent}
 </style>
 
 <meta name="ajc-build-v187" content="18.7-home-v17.7-restaurada">
+
+<style id="ajc-recepcao-v1873-css">
+.reception-quick{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:7px;padding:7px;border-radius:10px;background:rgba(22,199,255,.08);border:1px solid rgba(22,199,255,.20)}
+.reception-quick .btn{font-weight:900}
+.reception-live{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:900;color:#7ddcff;background:rgba(0,0,0,.18);border-radius:999px;padding:5px 8px}
+.journey-time-cell .timer{font-size:14px;font-weight:950}
+.journey-time-cell .journey-total{margin-top:4px;font-size:9px;color:#9fb9dc;white-space:nowrap}
+.journey-summary{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}
+.journey-summary-card{min-width:170px;padding:10px 12px;border-radius:11px;background:rgba(22,199,255,.08);border:1px solid rgba(22,199,255,.20)}
+.journey-summary-card span{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#9fb9dc;font-weight:900}
+.journey-summary-card strong{display:block;margin-top:4px;font-size:17px;color:#eef7ff}
+.stage-card.sc-reception{border-color:rgba(22,199,255,.45)!important}
+.stage-card.sc-wait{border-color:rgba(240,170,42,.42)!important}
+.stage-card.sc-arrival{border-color:rgba(148,163,184,.35)!important}
+@media(max-width:700px){.reception-quick{display:grid;grid-template-columns:1fr}.reception-quick .btn{width:100%}.journey-summary-card{min-width:0;flex:1}}
+</style>
 </head>
 <body>
 <div id="ajcRealtimeBadge" data-state="sync" aria-live="polite"><span class="dot"></span><span class="txt">Tempo real: preparando</span></div>
@@ -1900,14 +1916,15 @@ window.OFICINA_SUPABASE = {
 const DEFAULT_TEAM=[
 ['BRUNO DOS SANTOS RODRIGUES','TÉCNICO'],['CARLA GOMES FERRARI','CONSULTORA TÉCNICA'],['FABRICIO DE JESUS SOARES','TÉCNICO'],['JAELSON SILVA SOUSA','LAVADOR'],['JESSICA RODRIGUES NASCIMENTO','CONSULTORA TÉCNICA'],['JHONATAN GOMES DE JESUS FURTADO','LAVADOR'],['JHONI EDUARDO SOARES','TÉCNICO'],['JOAO VITOR NEGREIRO DE ARAUJO LIMA','TÉCNICO'],['KELLY CRISTINA OLIVEIRA DOS SANTOS','CONSULTORA TÉCNICA'],['LUANA FERMINO CANUTO','AGENDAMENTO'],['MANUEL SANTANA ALVES','GARANTISTA'],['MARCILIO AUGUSTO PINTO DE SOUZA','TÉCNICO'],['MARIA EDUARDA DA SILVA SEBA','CONTROLE DE QUADRO'],['PATRICK ANTONIO DAMASCENO BARBOSA','CHEFE DE OFICINA'],['RENAN SILVA NUNES','TÉCNICO'],['SARA DE SOUZA','CONSULTORA TÉCNICA'],['TAIS CARDOSO DOS SANTOS','CONSULTORA TÉCNICA'],['THAIZ DA ROCHA SARAIVA','AGENDAMENTO'],['ZUSLIMAR ROSAY MOTA PALMA','LAVADOR'],['MAYCON DOUGLAS DE SOUZA SANTOS','LAVADOR'],['RENATO GOMES FAVELA','TÉCNICO']
 ];
-const ETAPAS=['Em serviço','Orçamento complementar','Aguardando lavagem','Em lavagem','Realizar check list','Disponível para entrega','Concluído'];
-const SLA_ETAPAS={'Em serviço':120,'Orçamento complementar':45,'Aguardando lavagem':20,'Em lavagem':35,'Realizar check list':20,'Disponível para entrega':30,'Concluído':0};
+const ETAPAS=['Aguardando chegada','Recepção','Aguardando serviço','Em serviço','Orçamento complementar','Aguardando lavagem','Em lavagem','Realizar check list','Disponível para entrega','Concluído'];
+const SLA_ETAPAS={'Aguardando chegada':0,'Recepção':0,'Aguardando serviço':0,'Em serviço':120,'Orçamento complementar':45,'Aguardando lavagem':20,'Em lavagem':35,'Realizar check list':20,'Disponível para entrega':30,'Concluído':0};
 const STAGE_META={
+ 'Aguardando chegada':{icon:'📅',cls:'sc-arrival'},'Recepção':{icon:'🤝',cls:'sc-reception'},'Aguardando serviço':{icon:'⏳',cls:'sc-wait'},
  'Em serviço':{icon:'🛠️',cls:'sc-tech'},'Orçamento complementar':{icon:'🧩',cls:'sc-complement'},
  'Aguardando lavagem':{icon:'💧',cls:'sc-qwash'},'Em lavagem':{icon:'🫧',cls:'sc-wash'},
  'Realizar check list':{icon:'☑️',cls:'sc-check'},'Disponível para entrega':{icon:'✅',cls:'sc-delivery'},'Concluído':{icon:'🏁',cls:'sc-done'}
 };
-const STAGE_ALIASES={'Aguardando chegada':'Em serviço','Recepção':'Em serviço','Aguardando linha técnica':'Em serviço','Em linha técnica':'Em serviço','Pronto para entrega':'Disponível para entrega'};
+const STAGE_ALIASES={'Aguardando linha técnica':'Aguardando serviço','Em linha técnica':'Em serviço','Pronto para entrega':'Disponível para entrega'};
 const CONSULTOR_MAP={kelly:{label:'Kelly',cls:'consultor-kelly',row:'consultor-row-kelly'},tais:{label:'Tais',cls:'consultor-tais',row:'consultor-row-tais'},carla:{label:'Carla',cls:'consultor-carla',row:'consultor-row-carla'},jessica:{label:'Jessica',cls:'consultor-jessica',row:'consultor-row-jessica'},luciane:{label:'Luciane',cls:'consultor-luciane',row:'consultor-row-luciane'}};
 const WASH_BOXES={
   'Box 1':['ZUSLIMAR ROSAY MOTA PALMA','JHONATAN GOMES DE JESUS FURTADO'],
@@ -2302,7 +2319,7 @@ function renderLavagem(){
 
 function serviceState(s){const e=(s.events||[]).slice().sort((a,b)=>new Date(a.at)-new Date(b.at));if(!e.length)return 'Pendente';const t=e[e.length-1].type;return t==='complete'?'Concluído':t==='pause'?'Pausado':t==='paralyze'?'Paralisado':['start','resume','return'].includes(t)?'Em execução':'Pendente'}
 function serviceDurations(s,now=new Date()){const events=(s.events||[]).slice().sort((a,b)=>new Date(a.at)-new Date(b.at));let state='idle',last=null,first=null,end=null,productive=0,paused=0,paralyzed=0;const accrue=to=>{if(!last)return;const d=Math.max(0,to-last);if(state==='running')productive+=d;else if(state==='paused')paused+=d;else if(state==='paralyzed')paralyzed+=d};for(const e of events){const t=new Date(e.at).getTime();if(isNaN(t))continue;accrue(t);if(e.type==='start'){if(!first)first=t;state='running'}else if(e.type==='pause')state='paused';else if(e.type==='resume')state='running';else if(e.type==='paralyze')state='paralyzed';else if(e.type==='return')state='running';else if(e.type==='complete'){state='completed';end=t}last=t}if(last&&state!=='completed')accrue(now.getTime());const total=first?Math.max(0,(end||now.getTime())-first):0;return {productive,paused,paralyzed,total,first,end,state}}
-function serviceAction(vid,sid,type){const v=getVehicle(vid),s=v?.services.find(x=>x.id===sid);if(!s)return;if(!requireAccess(canOperateService(s),'Somente o técnico responsável, chefe de oficina ou administrador pode apontar este serviço.'))return;const state=serviceState(s),allowed={start:['Pendente'],pause:['Em execução'],resume:['Pausado'],paralyze:['Em execução','Pausado'],return:['Paralisado'],complete:['Em execução','Pausado','Paralisado']};if(!allowed[type]?.includes(state)){toast('Ação não disponível neste status');return}if(type==='start'&&!s.technician){toast('Selecione o responsável antes de iniciar');return}let note='';if(type==='paralyze'){note=prompt('Motivo da paralisação:','')||'';if(!note.trim()){toast('Informe o motivo da paralisação');return}}const labels={start:'start',pause:'pause',resume:'resume',paralyze:'paralyze',return:'return',complete:'complete'};s.events.push({id:uid(),type:labels[type],at:new Date().toISOString(),note,by:currentUser?.name||''});if(type==='start'){moveToStage(v,s.area==='LAVAGEM'?'Em lavagem':'Em linha técnica',true,'Serviço iniciado')}s.status=serviceState(s);persist(false);renderAll();renderServiceModal();if(type==='pause'||type==='paralyze'){const d=serviceDurations(s);toast(`${v.placa}: total aberto ${fmtMin(d.total)} • produtivo ${fmtMin(d.productive)}`)}else toast(`${s.code}: ${serviceState(s)}`)}
+function serviceAction(vid,sid,type){const v=getVehicle(vid),s=v?.services.find(x=>x.id===sid);if(!s)return;if(!requireAccess(canOperateService(s),'Somente o técnico responsável, chefe de oficina ou administrador pode apontar este serviço.'))return;const state=serviceState(s),allowed={start:['Pendente'],pause:['Em execução'],resume:['Pausado'],paralyze:['Em execução','Pausado'],return:['Paralisado'],complete:['Em execução','Pausado','Paralisado']};if(!allowed[type]?.includes(state)){toast('Ação não disponível neste status');return}if(type==='start'&&!s.technician){toast('Selecione o responsável antes de iniciar');return}let note='';if(type==='paralyze'){note=prompt('Motivo da paralisação:','')||'';if(!note.trim()){toast('Informe o motivo da paralisação');return}}const labels={start:'start',pause:'pause',resume:'resume',paralyze:'paralyze',return:'return',complete:'complete'};s.events.push({id:uid(),type:labels[type],at:new Date().toISOString(),note,by:currentUser?.name||''});if(type==='start'){moveToStage(v,s.area==='LAVAGEM'?'Em lavagem':'Em serviço',true,'Serviço iniciado')}s.status=serviceState(s);persist(false);renderAll();renderServiceModal();if(type==='pause'||type==='paralyze'){const d=serviceDurations(s);toast(`${v.placa}: total aberto ${fmtMin(d.total)} • produtivo ${fmtMin(d.productive)}`)}else toast(`${s.code}: ${serviceState(s)}`)}
 function updateServiceTechnician(vid,sid,name){if(!requireAccess(canAssignService()))return;const v=getVehicle(vid),s=v?.services.find(x=>x.id===sid);if(!s)return;s.technician=name;persist(false);renderEquipe();renderDashboard()}
 function serviceClass(state){return state==='Em execução'?'service-running':state==='Pausado'?'service-paused':state==='Paralisado'?'service-paralyzed':''}
 function serviceSummary(v){const all=v.services||[],done=all.filter(s=>serviceState(s)==='Concluído').length,run=all.filter(s=>serviceState(s)==='Em execução').length,par=all.filter(s=>serviceState(s)==='Paralisado').length;return all.length?`<strong>${done}/${all.length}</strong> concluídos${run?`<div class="smalltxt kpi-good">${run} em execução</div>`:''}${par?`<div class="smalltxt kpi-bad">${par} paralisado(s)</div>`:''}`:'<span class="muted">Sem códigos</span>'}
@@ -2428,7 +2445,7 @@ function renderOperacao(){
   renderStageBoard();renderGestaoAlerts(all);
   $('#operacaoBody').innerHTML=list.length?list.map(v=>{
     const sla=slaInfo(v);
-    const adminTime=(isAdmin()||isControle())?'<td class="admin-time-col"><span class="timer" data-stage-vid="'+v.id+'">'+fmtClock(stageElapsedNow(v))+'</span></td>':'<td class="admin-time-col hidden"></td>';
+    const adminTime='<td class="admin-time-col journey-time-cell"><span class="timer" data-stage-vid="'+v.id+'">'+fmtClock(stageElapsedNow(v))+'</span><div class="journey-total">Total: <strong data-journey-vid="'+v.id+'">'+fmtClock(window.vehicleJourneyElapsed?vehicleJourneyElapsed(v):0)+'</strong></div></td>';
     const actions='<div class="operation-card-actions"><div class="operation-secondary"><button class="btn secondary small obs-inline-btn" onclick="abrirDetalheVeiculo(\''+v.id+'\')">📝 Observação</button></div></div>';
     return '<tr class="'+consultorRowClass(v.consultor)+' '+(sla.cls==='red'?'sla-row-red':sla.cls==='orange'?'sla-row-orange':'')+'">'+
       '<td><div class="plate-checkin"><button class="plate-link" onclick="abrirDetalheVeiculo(\''+v.id+'\')">'+esc(v.placa)+'</button></div></td>'+
@@ -2797,6 +2814,189 @@ function mudarSlideApresentacao(dir){presSlideIndex+=dir;renderOverlaySlide()}
 function sairModoApresentacao(){$('#presOverlay').classList.remove('show');if(document.fullscreenElement)document.exitFullscreen?.().catch(()=>{})}
 window.addEventListener('keydown',e=>{if(!$('#presOverlay')?.classList.contains('show'))return;if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();mudarSlideApresentacao(1)}else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();mudarSlideApresentacao(-1)}else if(e.key==='Escape')sairModoApresentacao()});
 function imprimirApresentacao(){renderPresentation();const w=window.open('','_blank');if(!w){toast('Libere pop-ups para imprimir');return}w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Fechamento mensal</title><style>body{font-family:Arial,sans-serif;margin:0;background:#fff;color:#0f172a}.presentation-slide-card{width:297mm;height:167mm;box-sizing:border-box;padding:12mm 14mm;position:relative;page-break-after:always;overflow:hidden}.presentation-slide-card:before{content:"";position:absolute;left:0;top:0;right:0;height:3mm;background:#2563eb}.presentation-slide-card h3{font-size:24pt;margin:0 0 2mm}.slide-sub{color:#64748b;font-size:10pt;margin-bottom:5mm}.pres-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:3mm}.pres-kpi,.pres-mini,.pres-team-card{border:1px solid #ddd;border-radius:3mm;padding:3mm;background:#f8fafc}.pres-kpi .v{font-size:20pt;font-weight:700}.pres-kpi .l,.pres-team-card strong{font-size:8pt;font-weight:700;color:#475569}.pres-kpi .s{font-size:8pt;color:#94a3b8}.pres-grid2{display:grid;grid-template-columns:1fr 1fr;gap:4mm}.pres-team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2.5mm}.pres-team-card div{font-size:8pt;line-height:1.4}.pres-table{width:100%;border-collapse:collapse;font-size:7.5pt}.pres-table th{background:#f1f5f9;text-align:left;padding:1.5mm}.pres-table td{padding:1.5mm;border-bottom:1px solid #eee}.pres-callout{padding:3mm;border:1px solid #bfdbfe;background:#eff6ff;border-radius:3mm;font-size:9pt}.pres-attention{background:#fff7ed;border-color:#fed7aa}.pres-footer{position:absolute;left:14mm;right:14mm;bottom:5mm;display:flex;justify-content:space-between;color:#94a3b8;font-size:7pt}@page{size:landscape;margin:0}@media print{body{print-color-adjust:exact;-webkit-print-color-adjust:exact}}</style></head><body>${presSlides.join('')}
+
+<script id="ajc-recepcao-v1873-js">
+(function(){
+  function canReception(v){
+    if(isAdmin()||isChefe()||isControle())return true;
+    if(!isConsultor())return false;
+    if(!v?.consultor)return true;
+    const assigned=norm(v.consultor),logged=norm(currentUser?.name||'');
+    if(!logged)return false;
+    const first=(currentUser?.name||'').trim().split(/\s+/)[0]||'';
+    return assigned===logged||(first&&assigned.includes(norm(first)));
+  }
+  function firstReceptionStart(v){
+    const logs=(v?.stageLog||[]).filter(l=>!l.voidedAt&&l.startAt);
+    const rec=logs.find(l=>l.stage==='Recepção');
+    return rec?.startAt||v?.checkinAt||null;
+  }
+  window.vehicleJourneyElapsed=function(v){
+    const start=firstReceptionStart(v);
+    if(!start)return 0;
+    let end=v?.completedAt||null;
+    if(!end&&v?.etapa==='Concluído')end=[...(v.stageLog||[])].reverse().find(l=>l.endAt)?.endAt||null;
+    return Math.max(0,new Date(end||Date.now())-new Date(start));
+  };
+  window.iniciarRecepcao=function(id){
+    const v=getVehicle(id);if(!v)return;
+    if(!requireAccess(canReception(v),'Somente o consultor responsável ou a liderança pode iniciar a recepção.'))return;
+    if(v.etapa==='Recepção'&&getOpenStage(v)){toast(v.placa+': recepção já está em andamento');return}
+    moveToStage(v,'Recepção',true,'Início recepção');
+    const open=getOpenStage(v),now=open?.startAt||new Date().toISOString();
+    v.checkinAt=v.checkinAt||now;
+    v.receptionStartedAt=v.receptionStartedAt||now;
+    persist();
+    notificarEtapaConsultora(v,'RECEPCAO','Recepção iniciada para '+clientePrimeiroNome(v.cliente)+' • '+v.placa+'.');
+    renderAll();
+    toast(v.placa+': recepção iniciada');
+  };
+  window.concluirRecepcao=function(id){
+    const v=getVehicle(id);if(!v)return;
+    if(!requireAccess(canReception(v),'Somente o consultor responsável ou a liderança pode concluir a recepção.'))return;
+    if(v.etapa!=='Recepção'){toast('O veículo não está em recepção.');return}
+    if(!getOpenStage(v))moveToStage(v,'Recepção',true,'Início recepção');
+    const now=new Date().toISOString();
+    moveToStage(v,'Aguardando serviço',true,'Recepção concluída');
+    v.receptionCompletedAt=now;v.prioridadeTecnica=true;
+    persist();
+    notificarEtapaConsultora(v,'RECEPCAO','Recepção concluída: '+clientePrimeiroNome(v.cliente)+' • '+v.placa+' está aguardando serviço.');
+    renderAll();
+    toast(v.placa+': recepção concluída • aguardando serviço');
+  };
+  window.iniciarServicoVeiculo=function(id){
+    const v=getVehicle(id);if(!v)return;
+    if(!requireAccess(canManageFlow()||isTecnico()||isConsultor(),'Seu perfil não pode iniciar o serviço.'))return;
+    if(v.etapa!=='Aguardando serviço'){toast('O veículo precisa estar em Aguardando serviço.');return}
+    moveToStage(v,'Em serviço',true,'Início serviço');v.prioridadeTecnica=false;
+    persist();
+    notificarEtapaConsultora(v,'TECNICA','Serviço iniciado para '+clientePrimeiroNome(v.cliente)+' • '+v.placa+'.');
+    renderAll();toast(v.placa+': serviço iniciado');
+  };
+  window.receptionQuickAction=function(v){
+    if(!v)return '';
+    if(v.etapa==='Recepção'&&canReception(v))return '<div class="reception-quick"><button class="btn success small" onclick="concluirRecepcao(\''+v.id+'\')">✓ Concluir recepção</button><span class="reception-live">⏱ <span data-stage-vid="'+v.id+'">'+fmtClock(stageElapsedNow(v))+'</span></span></div>';
+    if(v.etapa==='Aguardando serviço'&&(canManageFlow()||isTecnico()||isConsultor()))return '<div class="reception-quick"><button class="btn primary small" onclick="iniciarServicoVeiculo(\''+v.id+'\')">▶ Iniciar serviço</button><span class="reception-live">Espera ⏱ <span data-stage-vid="'+v.id+'">'+fmtClock(stageElapsedNow(v))+'</span></span></div>';
+    const had=(v.stageLog||[]).some(l=>l.stage==='Recepção'&&!l.voidedAt);
+    if(!had&&['Aguardando chegada','Em serviço'].includes(v.etapa)&&canReception(v))return '<div class="reception-quick"><button class="btn primary small" onclick="checkinVehicle(\''+v.id+'\')">▶ Recepção</button><span class="smalltxt">Inicia o cronômetro do atendimento</span></div>';
+    return '';
+  };
+
+  canChangeToStage=function(stage,v){
+    if(isAdmin()||isChefe()||isControle())return true;
+    if(isConsultor())return ['Recepção','Aguardando serviço','Em serviço','Orçamento complementar','Aguardando lavagem','Realizar check list','Disponível para entrega','Concluído'].includes(stage);
+    if(isTecnico())return ['Aguardando serviço','Em serviço','Orçamento complementar','Realizar check list'].includes(stage);
+    if(isLavador())return ['Aguardando lavagem','Em lavagem','Realizar check list','Disponível para entrega'].includes(stage);
+    if(isAgendamento())return ['Aguardando chegada'].includes(stage);
+    return false;
+  };
+
+  stageActionButtons=function(v){
+    const roleCls=consultorStageClass(v.consultor);
+    const order=['Em serviço','Orçamento complementar','Aguardando lavagem','Em lavagem','Realizar check list','Disponível para entrega','Concluído'];
+    return receptionQuickAction(v)+'<div class="stage-action-grid">'+order.map(stage=>{
+      const current=v.etapa===stage,kind=current?'active':stage==='Em lavagem'?'wash':stage==='Concluído'?'done':'simple';
+      return '<button class="btn stage-action-btn '+kind+' '+(current?'active ':'')+roleCls+'" '+(current?'disabled':'')+' title="Mover para '+stage+'" onclick="setVehicleStage(\''+v.id+'\',\''+stage.replace(/'/g,"\\'")+'\')">'+esc(stage)+'</button>';
+    }).join('')+'</div>';
+  };
+
+  const originalApplyAccessUIReception=applyAccessUI;
+  applyAccessUI=function(){originalApplyAccessUIReception();document.querySelectorAll('.admin-time-col').forEach(x=>x.classList.remove('hidden'))};
+
+  const originalAbrirNovoVeiculoReception=abrirNovoVeiculo;
+  abrirNovoVeiculo=function(){originalAbrirNovoVeiculoReception();const s=document.getElementById('vEtapa');if(s)s.value='Aguardando chegada'};
+
+  abrirCheckinRapido=function(){
+    if(!requireAccess(canManageAgenda()))return;
+    originalAbrirNovoVeiculoReception();
+    document.getElementById('vData').value=localISO(new Date());
+    document.getElementById('vHora').value=new Date().toTimeString().slice(0,5);
+    document.getElementById('vEtapa').value='Recepção';
+    if(isConsultor())document.getElementById('vConsultor').value=currentUser?.name||'';
+    document.getElementById('dlgVeiculoTitle').textContent='Recepção de cliente';
+  };
+
+  const originalSalvarVeiculoReception=salvarVeiculo;
+  salvarVeiculo=function(){
+    const rec=document.getElementById('vEtapa')?.value==='Recepção';
+    const plate=cleanPlate(document.getElementById('vPlaca')?.value||''),date=document.getElementById('vData')?.value||selectedDate();
+    originalSalvarVeiculoReception();
+    if(rec&&plate){
+      const v=veiculos.find(x=>x.data===date&&cleanPlate(x.placa)===plate);
+      if(v&&!getOpenStage(v)){moveToStage(v,'Recepção',true,'Início recepção');v.checkinAt=v.checkinAt||new Date().toISOString();persist();renderAll()}
+    }
+  };
+
+  const originalConfirmarCheckinReception=confirmarCheckinCliente;
+  confirmarCheckinCliente=function(){
+    const id=document.getElementById('checkinVehicleId')?.value;
+    originalConfirmarCheckinReception();
+    const v=id?getVehicle(id):null;
+    if(v&&v.etapa==='Recepção'){v.receptionStartedAt=v.receptionStartedAt||getOpenStage(v)?.startAt||new Date().toISOString();persist(false)}
+  };
+
+  const originalImportReception=importarAgendaAutomatica;
+  importarAgendaAutomatica=async function(rows){
+    await originalImportReception(rows);
+    const date=document.getElementById('agendaData')?.value||selectedDate();
+    let changed=false;
+    veiculos.forEach(v=>{
+      if(v.data===date&&v.tipoVeiculo!=='NOVO'&&v.etapa==='Em serviço'&&!(v.stageLog||[]).length&&!v.checkinAt){v.etapa='Aguardando chegada';changed=true}
+    });
+    if(changed){persist(false);renderAll();try{await window.oficinaCloud?.syncNow?.(false)}catch(e){console.warn(e)}}
+  };
+
+  renderAgenda=function(){
+    renderCarteiraConsultoras();
+    const list=agendaListAtual(),body=document.getElementById('agendaBody');if(!body)return;
+    body.innerHTML=list.length?list.map(v=>{
+      const sel=agendaSelectedIds.has(v.id),quick=receptionQuickAction(v);
+      return '<tr class="'+consultorRowClass(v.consultor)+(sel?' agenda-row-selected':'')+'"><td class="agenda-select-cell"><input class="agenda-checkbox" data-vehicle-id="'+esc(v.id)+'" type="checkbox" '+(sel?'checked':'')+' onchange="toggleAgendaSelection(\''+v.id+'\',this.checked)" aria-label="Selecionar '+esc(v.placa)+'"></td><td><button class="plate-link" onclick="abrirDetalheVeiculo(\''+v.id+'\')" title="Ver observação">'+esc(v.placa)+'</button><div class="smalltxt">'+esc(v.etapa||'')+'</div></td><td><span class="vehicle-name">'+esc(clientePrimeiroNome(v.cliente)||'')+'</span><div class="smalltxt">'+consultorBadge(v.consultor)+'</div></td><td>'+quick+'<div class="row-actions"><button class="btn secondary small" onclick="abrirDetalheVeiculo(\''+v.id+'\')">📝 Observação</button><button class="btn ghost small" onclick="editarVeiculo(\''+v.id+'\')">Editar</button><button class="btn danger small" onclick="excluirVeiculo(\''+v.id+'\')">Excluir</button></div></td></tr>';
+    }).join(''):'<tr><td colspan="4"><div class="empty">Nenhum veículo cadastrado para esta data.</div></td></tr>';
+    renderAgendaSelectionCount();
+  };
+
+  const originalAbrirServicosReception=abrirServicos;
+  abrirServicos=function(vid){
+    const v=getVehicle(vid);
+    if(v?.etapa==='Aguardando chegada'){toast('Inicie a recepção do cliente antes de abrir os serviços.');return}
+    if(v?.etapa==='Recepção'){toast('Conclua a recepção antes de iniciar o serviço.');return}
+    if(v?.etapa==='Aguardando serviço')iniciarServicoVeiculo(vid);
+    originalAbrirServicosReception(vid);
+  };
+
+  nextStageInfo=function(v){
+    switch(v.etapa){
+      case 'Aguardando chegada':return {label:'Iniciar recepção',hint:'Inicia o cronômetro do atendimento',run:"checkinVehicle('"+v.id+"')",kind:'primary'};
+      case 'Recepção':return {label:'Concluir recepção',hint:'Envia automaticamente para Aguardando serviço',run:"concluirRecepcao('"+v.id+"')",kind:'success'};
+      case 'Aguardando serviço':return {label:'Iniciar serviço',hint:'Inicia o cronômetro técnico',run:"iniciarServicoVeiculo('"+v.id+"')",kind:'primary'};
+      case 'Em serviço':return {label:'Enviar para lavagem',hint:'Encaminha para a fila de lavagem',run:"enviarParaLavagem('"+v.id+"')",kind:'primary'};
+      case 'Aguardando lavagem':return {label:'Iniciar lavagem',hint:'Inicia a etapa de lavagem',run:"quickAdvanceVehicle('"+v.id+"')",kind:'primary'};
+      case 'Em lavagem':return {label:'Pronto para entrega',hint:'Libera o veículo para entrega',run:"quickAdvanceVehicle('"+v.id+"')",kind:'primary'};
+      case 'Disponível para entrega':return {label:'Entregue',hint:'Concluir atendimento',run:"concluirAtendimento('"+v.id+"')",kind:'success'};
+      default:return null;
+    }
+  };
+  quickAdvanceVehicle=function(id){
+    const v=getVehicle(id);if(!v)return;
+    if(v.etapa==='Aguardando serviço'){iniciarServicoVeiculo(id);return}
+    if(v.etapa==='Aguardando lavagem'){if(!requireAccess(canManageFlow()||isLavador()||isConsultor()))return;if(advanceJourney(v,'Em lavagem','Início lavagem')){persist();notificarEtapaConsultora(v,'LAVAGEM','Seu cliente '+clientePrimeiroNome(v.cliente)+' • '+v.placa+' entrou em lavagem.');toast(v.placa+': lavagem iniciada')}return}
+    if(v.etapa==='Em lavagem'){if(!requireAccess(canManageFlow()||isLavador()||isConsultor()))return;if(advanceJourney(v,'Disponível para entrega','Pronto para entrega')){persist();notificarEtapaConsultora(v,'PRONTO','Seu cliente '+clientePrimeiroNome(v.cliente)+' • '+v.placa+' está pronto para entrega.');toast(v.placa+': pronto para entrega')}return}
+    toast('Ação rápida indisponível para a etapa atual.');
+  };
+  acionarTecnica=function(id){const v=getVehicle(id);if(!v)return;if(v.etapa==='Recepção'){concluirRecepcao(id);return}if(v.etapa==='Aguardando serviço'){iniciarServicoVeiculo(id);return}if(!requireAccess(canManageFlow()||isConsultor()))return;moveToStage(v,'Aguardando serviço',true,'Aguardando serviço');v.prioridadeTecnica=true;persist();renderAll()};
+
+  renderVehicleStageHistory=function(v){
+    const logs=(v.stageLog||[]).filter(l=>!l.voidedAt).slice().sort((a,b)=>new Date(a.startAt)-new Date(b.startAt));
+    const rows=logs.map(l=>'<tr><td><strong>'+esc(l.stage)+'</strong></td><td>'+fmtDT(l.startAt)+'</td><td>'+(l.endAt?fmtDT(l.endAt):'<span class="badge green">Em andamento</span>')+'</td><td>'+esc(l.startedBy||l.responsible||'—')+'</td><td>'+esc(l.completedBy||'—')+'</td><td><span class="timer" '+(!l.endAt?'data-stage-log="'+v.id+'|'+l.id+'"':'')+'>'+fmtClock(l.endAt?stageElapsedLog(l):(new Date()-new Date(l.startAt)))+'</span></td></tr>').join('');
+    const el=document.getElementById('vehicleStageHistory');el.className='';
+    el.innerHTML='<div class="journey-summary"><div class="journey-summary-card"><span>Etapa atual</span><strong>'+esc(v.etapa||'—')+'</strong></div><div class="journey-summary-card"><span>Tempo etapa atual</span><strong data-stage-vid="'+v.id+'">'+fmtClock(stageElapsedNow(v))+'</strong></div><div class="journey-summary-card"><span>Tempo total na concessionária</span><strong data-journey-vid="'+v.id+'">'+fmtClock(vehicleJourneyElapsed(v))+'</strong></div></div><div class="table-wrap"><table class="data-table" style="min-width:700px"><thead><tr><th>Etapa</th><th>Início</th><th>Conclusão</th><th>Iniciado por</th><th>Concluído por</th><th>Duração</th></tr></thead><tbody>'+(rows||'<tr><td colspan="6"><div class="empty">Nenhuma etapa iniciada.</div></td></tr>')+'</tbody></table></div>';
+  };
+
+  setInterval(()=>document.querySelectorAll('[data-journey-vid]').forEach(el=>{const v=getVehicle(el.dataset.journeyVid);if(v)el.textContent=fmtClock(vehicleJourneyElapsed(v))}),1000);
+  document.addEventListener('DOMContentLoaded',()=>{const b=document.getElementById('topCheckinBtn');if(b)b.textContent='▶ Recepção';setTimeout(()=>{try{renderAll()}catch(e){console.error(e)}},100)});
+})();
+</script>
 </body></html>`);w.document.close();setTimeout(()=>w.print(),300)}
 function pptxTitle(slide,title,sub){slide.background={color:'FFFFFF'};slide.addShape(pptx.ShapeType.rect,{x:0,y:0,w:13.333,h:.08,fill:{color:'2563EB'},line:{color:'2563EB'}});slide.addText(title,{x:.55,y:.32,w:8.8,h:.45,fontFace:'Arial',fontSize:24,bold:true,color:'0F172A',margin:0});slide.addText(sub,{x:.55,y:.84,w:8.8,h:.25,fontFace:'Arial',fontSize:9,color:'64748B',margin:0})}
 function pptxFooter(slide,n,total){slide.addText('Oficina Sinop • Fechamento Mensal',{x:.55,y:7.16,w:4.2,h:.18,fontSize:7,color:'94A3B8',margin:0});slide.addText(`${n}/${total}`,{x:12.15,y:7.16,w:.6,h:.18,fontSize:7,color:'94A3B8',align:'right',margin:0})}
@@ -3101,7 +3301,7 @@ updateInstallStatusUI();
   function renderKPIs(vs,ts){
     const active=vs.filter(v=>v.etapa!=='Concluído');
     const risk=active.filter(v=>promiseRisk(v).cls==='red').length;
-    const tech=active.filter(v=>['Em serviço','Orçamento complementar'].includes(v.etapa)).length;
+    const tech=active.filter(v=>['Aguardando serviço','Em serviço','Orçamento complementar'].includes(v.etapa)).length;
     const wash=active.filter(v=>['Aguardando lavagem','Em lavagem'].includes(v.etapa)).length;
     const overdue=ts.filter(treatmentOverdue).length;
     setText('centralTotal',vs.length);setText('centralAtivos',active.length);setText('centralRisco',risk);setText('centralTecnica',tech);setText('centralLavagem',wash);setText('centralTratativas',overdue);
@@ -3162,7 +3362,7 @@ function renderCentralCommand(vs,ts){
       return `<div class="central-consult-item ${consultorStageClass(k)}"><button onclick="${js}"><strong>${esc(m.label)}</strong><span>${arr.filter(v=>v.etapa!=='Concluído').length} em andamento • ${arr.filter(v=>v.etapa==='Disponível para entrega').length} prontos</span></button><span class="central-count-badge blue">${arr.length}</span></div>`;
     }).join('');
   }
-  const tecnica=vs.filter(v=>['Em serviço','Orçamento complementar'].includes(v.etapa)).sort((a,b)=>(a.hora||'99:99').localeCompare(b.hora||'99:99')).slice(0,8);
+  const tecnica=vs.filter(v=>['Aguardando serviço','Em serviço','Orçamento complementar'].includes(v.etapa)).sort((a,b)=>(a.hora||'99:99').localeCompare(b.hora||'99:99')).slice(0,8);
   renderCentralMiniList('centralFilaTecnica', tecnica.map(v => `<div class="central-mini-item"><button onclick="centralFiltrarEtapa('${String(v.etapa).replace(/'/g,"\\'")}')"><strong>${esc(v.placa)} • ${esc(clientePrimeiroNome(v.cliente))}</strong><span>${esc(v.etapa)} • ${esc(v.consultor||'Sem consultora')}</span></button><span class="central-count-badge blue">${fmtMin(stageElapsedNow(v))}</span></div>`), 'Sem veículos na fila técnica.');
   const lavagem=vs.filter(v=>['Aguardando lavagem','Em lavagem'].includes(v.etapa)).sort((a,b)=>(a.hora||'99:99').localeCompare(b.hora||'99:99')).slice(0,8);
   renderCentralMiniList('centralFilaLavagem', lavagem.map(v => `<div class="central-mini-item"><button onclick="centralFiltrarEtapa('${String(v.etapa).replace(/'/g,"\\'")}')"><strong>${esc(v.placa)} • ${esc(clientePrimeiroNome(v.cliente))}</strong><span>${esc(v.etapa)}${v.lavador?' • '+esc(v.lavador):''}</span></button><span class="central-count-badge blue">${fmtMin(stageElapsedNow(v))}</span></div>`), 'Sem veículos na fila de lavagem.');
@@ -3580,7 +3780,7 @@ function renderCentralV15(){
   renderOperacao = function(){
     const data=selectedDate(), q=norm(document.getElementById('opBusca')?.value), et=document.getElementById('opEtapa')?.value || '', cf=document.getElementById('opConsultor')?.value || '';
     let all=agendaForDate(data);
-    if(isTecnico()) all=all.filter(v=>(v.services||[]).some(s=>s.technician===currentUser?.name)||['Em serviço','Orçamento complementar','Realizar check list'].includes(v.etapa));
+    if(isTecnico()) all=all.filter(v=>(v.services||[]).some(s=>s.technician===currentUser?.name)||['Aguardando serviço','Em serviço','Orçamento complementar','Realizar check list'].includes(v.etapa));
     if(isLavador()) all=all.filter(v=>['Aguardando lavagem','Em lavagem','Realizar check list','Disponível para entrega'].includes(v.etapa)||v.prioridadeLavagem);
     const list=all.filter(v=>(!et||v.etapa===et)&&(!cf||consultorKey(v.consultor)===cf)&&(!q||norm([v.placa,v.cliente,v.modelo,v.relato,v.consultor,v.os,vehicleCodes(v)].join(' ')).includes(q)));
     const services=all.flatMap(v=>v.services||[]);
@@ -3594,7 +3794,7 @@ function renderCentralV15(){
     renderStageBoard(); renderGestaoAlerts(all);
     document.getElementById('operacaoBody').innerHTML=list.length ? list.map(v=>{
       const sla=slaInfo(v);
-      const adminTime=(isAdmin()||isControle())?'<td class="admin-time-col"><span class="timer" data-stage-vid="'+v.id+'">'+fmtClock(stageElapsedNow(v))+'</span></td>':'<td class="admin-time-col hidden"></td>';
+      const adminTime='<td class="admin-time-col journey-time-cell"><span class="timer" data-stage-vid="'+v.id+'">'+fmtClock(stageElapsedNow(v))+'</span><div class="journey-total">Total: <strong data-journey-vid="'+v.id+'">'+fmtClock(window.vehicleJourneyElapsed?vehicleJourneyElapsed(v):0)+'</strong></div></td>';
       const actions='<div class="operation-card-actions"><div class="operation-secondary"><button class="btn secondary small obs-inline-btn" onclick="abrirDetalheVeiculo(\''+v.id+'\')">📝 Observação</button></div></div>';
       return '<tr class="'+consultorRowClass(v.consultor)+' '+(sla.cls==='red'?'sla-row-red':sla.cls==='orange'?'sla-row-orange':'')+'">'+
         '<td><div class="plate-checkin"><button class="plate-link" onclick="abrirDetalheVeiculo(\''+v.id+'\')">'+esc(v.placa)+'</button></div></td>'+
@@ -3806,7 +4006,7 @@ function renderCentralV15(){
   renderOperacao=function(){
     const data=selectedDate(),q=norm($('#opBusca').value),et=$('#opEtapa').value,cf=$('#opConsultor')?.value||'';
     let all=agendaForDate(data);
-    if(isTecnico())all=all.filter(v=>(v.services||[]).some(s=>s.technician===currentUser?.name)||['Em serviço','Orçamento complementar','Realizar check list'].includes(v.etapa));
+    if(isTecnico())all=all.filter(v=>(v.services||[]).some(s=>s.technician===currentUser?.name)||['Aguardando serviço','Em serviço','Orçamento complementar','Realizar check list'].includes(v.etapa));
     if(isLavador())all=all.filter(v=>['Aguardando lavagem','Em lavagem','Realizar check list','Disponível para entrega'].includes(v.etapa)||v.prioridadeLavagem);
     let list=all.filter(v=>(!et||v.etapa===et)&&(!cf||consultorKey(v.consultor)===cf)&&(!q||norm([v.placa,v.cliente,v.modelo,v.relato,v.consultor,v.os,vehicleCodes(v)].join(' ')).includes(q)));
     const sf=window.__v175SpecialFilter||'';
@@ -3814,7 +4014,7 @@ function renderCentralV15(){
     if(sf==='late')list=list.filter(v=>slaInfo(v).cls==='red'||promiseRiskForV175(v)==='red');
     if(sf==='idle')list=list.filter(isIdle);
     if(sf==='blocked')list=list.filter(v=>v.blockage?.active);
-    if(sf==='tech')list=list.filter(v=>['Em serviço','Orçamento complementar'].includes(v.etapa));
+    if(sf==='tech')list=list.filter(v=>['Aguardando serviço','Em serviço','Orçamento complementar'].includes(v.etapa));
     if(sf==='wash')list=list.filter(v=>['Aguardando lavagem','Em lavagem'].includes(v.etapa));
     if(sf==='checklist')list=list.filter(v=>v.etapa==='Realizar check list'&&!qualityStats(v).complete);
     if(sf==='ready')list=list.filter(v=>v.etapa==='Disponível para entrega');
@@ -3822,7 +4022,7 @@ function renderCentralV15(){
     $('#opTotal').textContent=all.length;$('#opEtapasAtivas').textContent=all.filter(v=>v.etapa!=='Concluído').length;$('#opServicosAtivos').textContent=services.filter(s=>serviceState(s)==='Em execução').length;$('#opPausados').textContent=services.filter(s=>serviceState(s)==='Pausado').length;$('#opParalisados').textContent=services.filter(s=>serviceState(s)==='Paralisado').length;$('#opConcluidos').textContent=all.filter(v=>v.etapa==='Concluído').length;if($('#opAtrasados'))$('#opAtrasados').textContent=all.filter(v=>slaInfo(v).cls==='red').length;renderStageBoard();renderGestaoAlerts(all);
     let banner=document.getElementById('v175SpecialBanner');if(!banner){const section=document.querySelector('#operacao .section');if(section){banner=document.createElement('div');banner.id='v175SpecialBanner';banner.className='v175-special-banner hidden';section.querySelector('.section-head')?.after(banner)}}
     if(banner){if(sf){const labels={active:'Em andamento',late:'Painel de atrasos',idle:'Sem movimentação',blocked:'Bloqueados',tech:'Fila técnica',wash:'Fila de lavagem',checklist:'Checklists pendentes',ready:'Prontos para entrega',all:'Todos'};banner.classList.remove('hidden');banner.innerHTML='<span>Filtro da Central: '+esc(labels[sf]||sf)+' • '+list.length+' veículo(s)</span><button class="btn ghost small" onclick="v175ClearSpecial()">Limpar filtro</button>'}else banner.classList.add('hidden')}
-    $('#operacaoBody').innerHTML=list.length?list.map(v=>{const sla=slaInfo(v);const adminTime=(isAdmin()||isControle())?'<td class="admin-time-col"><span class="timer" data-stage-vid="'+v.id+'">'+fmtClock(stageElapsedNow(v))+'</span></td>':'<td class="admin-time-col hidden"></td>';const st=qualityStats(v);const actions='<div class="v175-op-actions"><button class="btn secondary small obs-inline-btn" onclick="abrirDetalheVeiculo(\''+v.id+'\')">📝 Observação</button><button class="btn '+(v.blockage?.active?'success':'warn')+' small" onclick="abrirBloqueioV175(\''+v.id+'\')">'+(v.blockage?.active?'▶ Retomar':'⏸ Bloquear')+'</button>'+((v.etapa==='Realizar check list'||st.done>0)?'<button class="btn ghost small" onclick="abrirChecklistV175(\''+v.id+'\')">☑ '+st.done+'/'+st.total+'</button>':'')+'</div>';return '<tr class="'+consultorRowClass(v.consultor)+' '+(v.blockage?.active?'v175-block-active ':'')+(isIdle(v)?'v175-idle-row ':'')+(sla.cls==='red'?'sla-row-red':sla.cls==='orange'?'sla-row-orange':'')+'"><td><div class="plate-checkin"><button class="plate-link" onclick="abrirDetalheVeiculo(\''+v.id+'\')">'+esc(v.placa)+'</button></div></td><td><span class="vehicle-name">'+esc(clientePrimeiroNome(v.cliente)||'Sem nome')+'</span><div class="smalltxt">'+consultorBadge(v.consultor)+'</div>'+vehicleStatusChips(v)+'</td><td>'+stageActionButtons(v)+'</td>'+adminTime+'<td>'+serviceSummary(v)+'</td><td>'+actions+'</td></tr>'}).join(''):'<tr><td colspan="6"><div class="empty">Nenhum veículo para '+fmtDate(data)+'.</div></td></tr>';applyAccessUI();
+    $('#operacaoBody').innerHTML=list.length?list.map(v=>{const sla=slaInfo(v);const adminTime='<td class="admin-time-col journey-time-cell"><span class="timer" data-stage-vid="'+v.id+'">'+fmtClock(stageElapsedNow(v))+'</span><div class="journey-total">Total: <strong data-journey-vid="'+v.id+'">'+fmtClock(window.vehicleJourneyElapsed?vehicleJourneyElapsed(v):0)+'</strong></div></td>';const st=qualityStats(v);const actions='<div class="v175-op-actions"><button class="btn secondary small obs-inline-btn" onclick="abrirDetalheVeiculo(\''+v.id+'\')">📝 Observação</button><button class="btn '+(v.blockage?.active?'success':'warn')+' small" onclick="abrirBloqueioV175(\''+v.id+'\')">'+(v.blockage?.active?'▶ Retomar':'⏸ Bloquear')+'</button>'+((v.etapa==='Realizar check list'||st.done>0)?'<button class="btn ghost small" onclick="abrirChecklistV175(\''+v.id+'\')">☑ '+st.done+'/'+st.total+'</button>':'')+'</div>';return '<tr class="'+consultorRowClass(v.consultor)+' '+(v.blockage?.active?'v175-block-active ':'')+(isIdle(v)?'v175-idle-row ':'')+(sla.cls==='red'?'sla-row-red':sla.cls==='orange'?'sla-row-orange':'')+'"><td><div class="plate-checkin"><button class="plate-link" onclick="abrirDetalheVeiculo(\''+v.id+'\')">'+esc(v.placa)+'</button></div></td><td><span class="vehicle-name">'+esc(clientePrimeiroNome(v.cliente)||'Sem nome')+'</span><div class="smalltxt">'+consultorBadge(v.consultor)+'</div>'+vehicleStatusChips(v)+'</td><td>'+stageActionButtons(v)+'</td>'+adminTime+'<td>'+serviceSummary(v)+'</td><td>'+actions+'</td></tr>'}).join(''):'<tr><td colspan="6"><div class="empty">Nenhum veículo para '+fmtDate(data)+'.</div></td></tr>';applyAccessUI();
   };
 
   function promiseRiskForV175(v){try{if(typeof promiseStatusV15==='function')return promiseStatusV15(v)?.cls||''}catch(e){}try{const p=(window.__v175CentralPromiseRisk&&window.__v175CentralPromiseRisk(v))||null;return p?.cls||''}catch(e){}return ''}
@@ -3833,13 +4033,13 @@ function renderCentralV15(){
     const late=active.filter(v=>slaInfo(v).cls==='red').sort((a,b)=>slaInfo(b).ratio-slaInfo(a).ratio).slice(0,8);put('centralLateList',late.map(v=>miniItem(v,v.etapa+' • '+slaInfo(v).label,'!','red')),'Sem atrasos críticos nesta data.');
     const idle=active.filter(isIdle).sort((a,b)=>idleMs(b)-idleMs(a)).slice(0,8);put('centralIdleList',idle.map(v=>miniItem(v,v.etapa+' • sem ação '+fmtMin(idleMs(v)),'⏱','orange')),'Nenhum veículo sem movimentação há mais de '+IDLE_MIN+' min.');
     const blocked=active.filter(v=>v.blockage?.active).sort((a,b)=>blockedMs(b)-blockedMs(a)).slice(0,8);put('centralBlockedList',blocked.map(v=>miniItem(v,(v.blockage.reason||'Bloqueado')+' • '+fmtMin(blockedMs(v)),'⏸','orange')),'Nenhum veículo bloqueado.');
-    const tech=active.filter(v=>['Em serviço','Orçamento complementar'].includes(v.etapa)).slice(0,8);put('centralFilaTecnica',tech.map(v=>miniItem(v,v.etapa+' • '+(v.consultor||'Sem consultora'),fmtMin(stageElapsedNow(v)),'blue')),'Fila técnica vazia.');
+    const tech=active.filter(v=>['Aguardando serviço','Em serviço','Orçamento complementar'].includes(v.etapa)).slice(0,8);put('centralFilaTecnica',tech.map(v=>miniItem(v,v.etapa+' • '+(v.consultor||'Sem consultora'),fmtMin(stageElapsedNow(v)),'blue')),'Fila técnica vazia.');
     const wash=active.filter(v=>['Aguardando lavagem','Em lavagem'].includes(v.etapa)).slice(0,8);put('centralFilaLavagem',wash.map(v=>miniItem(v,v.etapa+(v.lavador?' • '+v.lavador:''),fmtMin(stageElapsedNow(v)),'blue')),'Fila de lavagem vazia.');
     const checks=active.filter(v=>v.etapa==='Realizar check list'&&!qualityStats(v).complete).slice(0,8);put('centralChecklistList',checks.map(v=>{const s=qualityStats(v);return miniItem(v,'Checklist '+s.done+'/'+s.total,s.done+'/'+s.total,'orange')}),'Nenhum checklist pendente.');
     const ready=active.filter(v=>v.etapa==='Disponível para entrega').slice(0,8);put('centralProntosEntrega',ready.map(v=>miniItem(v,'Disponível para entrega • '+(v.promessa||'sem promessa'),'OK','green')),'Nenhum veículo disponível para entrega.');
     const crit=ts.filter(t=>t.status!=='Concluída'&&((t.prazo&&new Date(t.prazo)<new Date())||t.prioridade==='Alta')).slice(0,8);const critEl=document.getElementById('centralTratativasCriticas');if(critEl)critEl.innerHTML=crit.length?crit.map(t=>'<div class="central-mini-item"><button onclick="switchTab(\'tratativas\')"><strong>'+esc(t.assunto||'Tratativa')+'</strong><span>'+esc(t.placa||'Sem placa')+' • '+esc(t.responsavel||'Sem responsável')+'</span></button><span class="central-count-badge '+((t.prazo&&new Date(t.prazo)<new Date())?'red':'orange')+'">!</span></div>').join(''):'<div class="v175-empty">Nenhuma tratativa crítica.</div>';
     const cons=document.getElementById('centralConsultoras');if(cons){const groups={};vs.forEach(v=>{const k=consultorKey(v.consultor)||'sem';(groups[k]||(groups[k]=[])).push(v)});cons.innerHTML=Object.entries(groups).sort((a,b)=>b[1].length-a[1].length).map(([k,arr])=>{const label=(CONSULTOR_MAP[k]?.label)||arr[0]?.consultor||'Sem consultora';return '<div class="central-consult-item '+consultorStageClass(k)+'"><button onclick="v175FilterConsultora(\''+k+'\')"><strong>'+esc(label)+'</strong><span>'+arr.filter(v=>v.etapa!=='Concluído').length+' em andamento • '+arr.filter(v=>v.etapa==='Disponível para entrega').length+' prontos</span></button><span class="central-count-badge blue">'+arr.length+'</span></div>'}).join('')}
-    const set=(id,n)=>{const el=document.getElementById(id);if(el)el.textContent=n};set('centralRisco',late.length);set('centralTecnica',active.filter(v=>['Em serviço','Orçamento complementar'].includes(v.etapa)).length);set('centralLavagem',active.filter(v=>['Aguardando lavagem','Em lavagem'].includes(v.etapa)).length);set('centralTratativas',crit.length);
+    const set=(id,n)=>{const el=document.getElementById(id);if(el)el.textContent=n};set('centralRisco',late.length);set('centralTecnica',active.filter(v=>['Aguardando serviço','Em serviço','Orçamento complementar'].includes(v.etapa)).length);set('centralLavagem',active.filter(v=>['Aguardando lavagem','Em lavagem'].includes(v.etapa)).length);set('centralTratativas',crit.length);
   };
   window.v175OpenSpecial=function(type){window.__v175SpecialFilter=type==='all'?'':type;if(document.getElementById('opEtapa'))document.getElementById('opEtapa').value='';if(document.getElementById('opBusca'))document.getElementById('opBusca').value='';switchTab('operacao');renderOperacao()};
   window.v175ClearSpecial=function(){window.__v175SpecialFilter='';renderOperacao()};
